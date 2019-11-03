@@ -11,6 +11,10 @@
 |
 */
 
+$router->post('/register','AuthController@register');
+$router->post('/login','AuthController@login');
+$router->post('/logout','AuthController@logout');
+
 $router->get('/klinik', 'KlinikController@getKlinik');
 $router->get('/klinik/{id}', 'KlinikController@getKlinikById');
 $router->post('/klinik', 'KlinikController@saveKlinik');

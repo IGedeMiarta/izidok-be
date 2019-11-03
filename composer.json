@@ -6,6 +6,8 @@
     "type": "project",
     "require": {
         "php": ">=7.1.3",
+        "flipbox/lumen-generator": "^6.0",
+        "laravel/helpers": "^1.1",
         "laravel/lumen-framework": "5.8.*"
     },
     "require-dev": {
