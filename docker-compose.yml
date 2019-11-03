@@ -7,6 +7,8 @@ services:
     redis:
       image: redis:alpine
       container_name: hospital-redis
+      networks:
+      - app-network
 
     mysql:
       image: mysql:8.0
@@ -21,6 +23,8 @@ services:
         - MYSQL_PASSWORD=root
       ports:
         - "9002:3306"
+      networks:
+      - app-network
 
     webserver:
       image: nginx:alpine
@@ -31,6 +35,8 @@ services:
           - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       ports:
        - "9000:80"
+      networks:
+      - app-network
 
     php-fpm:
       build: phpdocker/php-fpm
@@ -39,4 +45,10 @@ services:
       volumes:
         - .:/application
         - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.3/fpm/conf.d/99-overrides.ini
+      networks:
+      - app-network
 
+    #Docker Networks
+networks:
+  app-network:
+    driver: bridge
