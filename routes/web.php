@@ -11,6 +11,8 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+$router->get('/klinik', 'KlinikController@getKlinik');
+$router->get('/klinik/{id}', 'KlinikController@getKlinikById');
+$router->post('/klinik', 'KlinikController@saveKlinik');
+$router->post('/klinik/{id}', 'KlinikController@updateKlinik');
+$router->delete('/klinik/{id}', 'KlinikController@deleteKlinik');
