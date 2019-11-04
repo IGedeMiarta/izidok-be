@@ -14,7 +14,7 @@ $router->get('/key', function() {
     return str_random(32);
 });
 
-$router->post('/register','AuthController@register');
+$router->post('/add_user','AuthController@add_user');
 $router->post('/login','AuthController@login');
 $router->post('/logout','AuthController@logout');
 
