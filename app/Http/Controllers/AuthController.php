@@ -10,19 +10,46 @@ class AuthController extends Controller
 {
 
 	public function index(){
-
+		$user = User::with('roles')->get();
+        if ($user === null) {
+            return response()->json(['status' => false]);
+        }else{
+            return response()->json(['status' => true, 'data' => $user]);
+        }
 	}
 
 	public function show($id = null){
-
+		$user = User::with('roles')->find($id);
+        if ($user === null) {
+            return response()->json(['status' => false]);
+        }else{
+            return response()->json(['status' => true, 'data' => $user]);
+        }
 	}
 
 	public function delete($id = null){
+		$user = User::find($id);
 
+        if ($user === null) {            
+            return response()->json(['status' => false]);
+        }else{
+            $username = $user->username;
+            $user->delete();
+            return response()->json(['status' => true, 'message' => 'User \''.$username.'\' has been deleted']);
+        }
 	}
 
 	public function update(Request $request){
-
+		$user = User::find($request->id);
+        if ($user === null) {            
+            return response()->json(['status' => false]);
+        }else{
+			$user->email = $request->email;
+			$user->nama = $request->nama;
+			$user->nomor_telp = $request->nomor_telp;
+            $user->save();
+            return response()->json(['status' => true, 'data' => $user]);
+        }
 	}
 
 
@@ -30,7 +57,7 @@ class AuthController extends Controller
     {
     	$username = $request->input('username');
     	$email = $request->input('email');
-    	$nama_lengkap = $request->input('nama_lengkap');
+    	$nama = $request->input('nama');
     	$no_telp = $request->input('no_telp');
     	$password = Hash::make($request->input('password'));
 
@@ -38,7 +65,7 @@ class AuthController extends Controller
     		"username" => $username,
     		"email" => $email,
     		"password" => $password,
-    		"nama_lengkap" => $nama_lengkap,
+    		"nama" => $nama,
     		"no_telp" => $no_telp
     	]);
 

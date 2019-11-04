@@ -39,7 +39,7 @@ class KlinikController extends Controller
         $this->validate($request, [
             'nama_klinik' => 'required|string',
             'nama_pic' => 'required|string',
-            'nomor_hp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:10',
+            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:10',
             'email' => 'required|string|email',
             'password' => 'required'
         ]);
@@ -48,7 +48,7 @@ class KlinikController extends Controller
         $klinik = Klinik::create([
             'nama_klinik' => $request->nama_klinik,
             'nama_pic' => $request->nama_pic,
-            'nomor_hp' => $request->nomor_hp
+            'nomor_telp' => $request->nomor_telp
         ]);
         
         #data operator
@@ -62,8 +62,8 @@ class KlinikController extends Controller
     		"username" => $request->email,
     		"email" => $request->email,
     		"password" => app('hash')->make($request->password),
-    		"nama_lengkap" => $request->nama_lengkap,
-    		"no_telp" => $request->nomor_hp
+    		"nama" => $request->nama,
+    		"no_telp" => $request->nomor_telp
         ]);
         $user->roles()->attach(Constant::KLINIK_OPERATOR);
 
