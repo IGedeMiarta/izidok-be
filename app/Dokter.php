@@ -5,24 +5,24 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Operator extends Model 
+class Dokter extends Model 
 {
 
-    protected $table = 'operator';
+    protected $table = 'dokter';
     public $timestamps = true;
 
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
 
-    public function klinikOperator()
+    public function klinikDokter()
     {
-        return $this->hasMany('App\KlinikOperator', 'operator_id', 'id');
+        return $this->hasMany('App\KlinikDokter', 'dokter_id', 'id');
     }
 
     public function user()
     {
-        return $this->belongsTo('App\User', 'user_id', 'id');
+        return $this->belongsTo('App\Dokter', 'user_id', 'id');
     }
 
 }
