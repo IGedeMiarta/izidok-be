@@ -8,7 +8,7 @@ Use App\User;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function add_user(Request $request)
     {
     	$username = $request->input('username');
     	$email = $request->input('email');
@@ -76,7 +76,7 @@ class AuthController extends Controller
     	}
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         $api_token = $request->input('api_token');
 
@@ -92,7 +92,7 @@ class AuthController extends Controller
                 'message' => 'Logout Berhasil',
                 'data' => [
                     'user' => $user,
-                    'api_token' => $apiToken
+                    'api_token' => $api_token
                 ]
             ],201);
                 
