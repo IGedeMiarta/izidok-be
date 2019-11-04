@@ -26,7 +26,7 @@ class KlinikController extends Controller
         }
     }
 
-    public function get($id = null){
+    public function show($id = null){
         $klinik = Klinik::with('operators')->find($id);
         if ($klinik === null) {
             return response()->json(['status' => false]);

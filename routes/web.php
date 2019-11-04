@@ -14,12 +14,20 @@ $router->get('/key', function() {
     return str_random(32);
 });
 
-$router->post('/add_user','AuthController@add_user');
+#user
+$router->get('/user','AuthController@index');
+$router->post('/user','AuthController@store');
+$router->get('/user/{id}','AuthController@show');
+$router->put('/user/{id}','AuthController@update');
+$router->delete('/user/{id}','AuthController@delete');
 $router->post('/login','AuthController@login');
 $router->post('/logout','AuthController@logout');
 
-$router->get('/klinik', 'KlinikController@index');
-$router->get('/klinik/{id}', 'KlinikController@get');
-$router->post('/klinik', 'KlinikController@store');
-$router->put('/klinik/{id}', 'KlinikController@update');
-$router->delete('/klinik/{id}', 'KlinikController@delete');
+#klinik
+$router->group(['prefix'=>'api/v1'], function() use($app){
+    $router->get('/klinik', 'KlinikController@index');
+    $router->post('/klinik', 'KlinikController@store');
+    $router->get('/klinik/{id}', 'KlinikController@show');
+    $router->put('/klinik/{id}', 'KlinikController@update');
+    $router->delete('/klinik/{id}', 'KlinikController@delete');
+});

@@ -8,7 +8,25 @@ Use App\User;
 
 class AuthController extends Controller
 {
-    public function add_user(Request $request)
+
+	public function index(){
+
+	}
+
+	public function show($id = null){
+
+	}
+
+	public function delete($id = null){
+
+	}
+
+	public function update(Request $request){
+
+	}
+
+
+    public function store(Request $request)
     {
     	$username = $request->input('username');
     	$email = $request->input('email');
