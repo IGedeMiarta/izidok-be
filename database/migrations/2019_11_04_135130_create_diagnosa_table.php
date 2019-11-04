@@ -9,13 +9,13 @@ class CreateDiagnosaTable extends Migration {
 	{
 		Schema::create('diagnosa', function(Blueprint $table) {
 			$table->increments('id');
-			$table->timestamps();
-			$table->softDeletes();
 			$table->integer('kode_penyakit_id');
 			$table->text('notes');
-			$table->string('created_by', 50);
-			$table->string('updated_by', 50);
-			$table->string('deleted_by', 50);
+			$table->string('created_by', 50)->nullable();
+			$table->string('updated_by', 50)->nullable();
+			$table->string('deleted_by', 50)->nullable();
+			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

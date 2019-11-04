@@ -9,13 +9,13 @@ class CreateReferenceTable extends Migration {
 	{
 		Schema::create('reference', function(Blueprint $table) {
 			$table->increments('id');
-			$table->timestamps();
-			$table->softDeletes();
 			$table->string('key', 50)->index();
 			$table->string('value', 50);
-			$table->string('created_by', 50);
-			$table->string('updated_by', 50);
-			$table->string('deleted_by', 50);
+			$table->string('created_by', 50)->nullable();
+			$table->string('updated_by', 50)->nullable();
+			$table->string('deleted_by', 50)->nullable();
+			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

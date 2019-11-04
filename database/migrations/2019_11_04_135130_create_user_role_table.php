@@ -9,13 +9,13 @@ class CreateUserRoleTable extends Migration {
 	{
 		Schema::create('user_role', function(Blueprint $table) {
 			$table->increments('id');
-			$table->timestamps();
-			$table->softDeletes();
 			$table->integer('user_id');
 			$table->integer('role_id');
-			$table->string('created_by', 50);
-			$table->string('updated_by', 50);
-			$table->string('deleted_by', 50);
+			$table->string('created_by', 50)->nullable();
+			$table->string('updated_by', 50)->nullable();
+			$table->string('deleted_by', 50)->nullable();
+			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

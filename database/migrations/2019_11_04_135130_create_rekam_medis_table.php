@@ -9,16 +9,16 @@ class CreateRekamMedisTable extends Migration {
 	{
 		Schema::create('rekam_medis', function(Blueprint $table) {
 			$table->increments('id');
-			$table->timestamps();
-			$table->softDeletes();
 			$table->integer('nomor_rekam_medis')->index();
-			$table->integer('anamnesa_id')->unsigned();
+			$table->integer('anamnesa_id');
 			$table->integer('pemeriksaan_fisik_id');
 			$table->integer('diagnosa_id');
 			$table->integer('transklinik_id');
-			$table->string('created_by', 50);
-			$table->string('updated_by', 50);
-			$table->string('deleted_by', 50);
+			$table->string('created_by', 50)->nullable();
+			$table->string('updated_by', 50)->nullable();
+			$table->string('deleted_by', 50)->nullable();
+			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 
