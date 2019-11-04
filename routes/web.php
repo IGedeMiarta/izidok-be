@@ -14,7 +14,7 @@ $router->get('/key', function() {
     return str_random(32);
 });
 
-$router->group(['prefix'=>'api/v1'], function() use($app){
+$router->group(['prefix'=>'api/v1'], function() use($router){
     #user
     $router->get('/user','AuthController@index');
     $router->post('/user','AuthController@store');
