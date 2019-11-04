@@ -17,8 +17,8 @@ class KlinikController extends Controller
         //nothing
     }
 
-    public function getKlinik(){
-        $klinik = Klinik::all();
+    public function index(){
+        $klinik = Klinik::with('operators')->get();
         if ($klinik === null) {
             return response()->json(['status' => false]);
         }else{
@@ -26,8 +26,8 @@ class KlinikController extends Controller
         }
     }
 
-    public function getKlinikById($id = null){
-        $klinik = Klinik::find($id);
+    public function get($id = null){
+        $klinik = Klinik::with('operators')->find($id);
         if ($klinik === null) {
             return response()->json(['status' => false]);
         }else{
@@ -35,63 +35,64 @@ class KlinikController extends Controller
         }
     }
 
-    public function saveKlinik(Request $request){
-        #save klinik
-        $klinik = new Klinik;
-        $klinik->nama_klinik = $request->nama_klinik;
-        $klinik->nama_pic = $request->nama_pic;
-        $klinik->nomor_hp = $request->nomor_hp;
-        $klinik->save();
+    public function store(Request $request){
+        $this->validate($request, [
+            'nama_klinik' => 'required|string',
+            'nama_pic' => 'required|string',
+            'nomor_hp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:10',
+            'email' => 'required|string|email',
+            'password' => 'required'
+        ]);
 
-        #save operator
-        $operator = new Operator;
-        $operator->nama = $request->nama_pic;
-        $operator->save();
-
-        #save klinik-operator
-        $klinikOperator = new KlinikOperator;
-        $klinik->klinik_id = $klinik->id;
-        $klinik->operator_id = $operator->id;
-        $klinikOperator->save();
-
-        #save user
-        $user = new User;
-        $user->email = $request->email;
-        $user->nama = $request->nama;
-        $user->nomor_hp = $request->nomor_hp;
-        $user->password = app('hash')->make($request->password);
-        $user->save();
-
-        #save user-role
-        $userRole = new UserRole();
-        $userRole->user_id = $user->id;
-        $userRole->role_id = Constant::KLINIK_OPERATOR;
-        $userRole->save();
+        #data klinik
+        $klinik = Klinik::create([
+            'nama_klinik' => $request->nama_klinik,
+            'nama_pic' => $request->nama_pic,
+            'nomor_hp' => $request->nomor_hp
+        ]);
+        
+        #data operator
+        $operator = new Operator([
+            'nama' => $request->nama_pic
+        ]);
+        $klinik->operators()->save($operator);
+   
+        #data user
+        $user = User::create([
+    		"username" => $request->email,
+    		"email" => $request->email,
+    		"password" => app('hash')->make($request->password),
+    		"nama_lengkap" => $request->nama_lengkap,
+    		"no_telp" => $request->nomor_hp
+        ]);
+        $user->roles()->attach(Constant::KLINIK_OPERATOR);
 
         #send email right here...
 
         $data['klinik_id'] = $klinik->id;
-
         return response()->json(['status' => true, 'data' => $data]);
     }
 
-    public function updateKlinik(Request $request){
+    public function update(Request $request){
         $klinik = Klinik::find($request->id);
         if ($klinik === null) {            
             return response()->json(['status' => false]);
         }else{
-            
             $klinik->nama_klinik = $request->nama_klinik;
             $klinik->save();
-
             return response()->json(['status' => true, 'data' => $klinik]);
         }
     }
     
-    public function deleteKlinik($id = null){
+    public function delete($id = null){
         $klinik = Klinik::find($id);
-        $nama = $klinik->nama_klinik;
-        $klinik->delete();
-        return response()->json(['status' => true, 'msg' => 'Klinik \''.$nama.'\' has been deleted']);
+
+        if ($klinik === null) {            
+            return response()->json(['status' => false]);
+        }else{
+            $nama = $klinik->nama_klinik;
+            $klinik->delete();
+            return response()->json(['status' => true, 'message' => 'Klinik \''.$nama.'\' has been deleted']);
+        }
     }
 }

@@ -18,8 +18,8 @@ $router->post('/register','AuthController@register');
 $router->post('/login','AuthController@login');
 $router->post('/logout','AuthController@logout');
 
-$router->get('/klinik', 'KlinikController@getKlinik');
-$router->get('/klinik/{id}', 'KlinikController@getKlinikById');
-$router->post('/klinik', 'KlinikController@saveKlinik');
-$router->put('/klinik/{id}', 'KlinikController@updateKlinik');
-$router->delete('/klinik/{id}', 'KlinikController@deleteKlinik');
+$router->get('/klinik', 'KlinikController@index');
+$router->get('/klinik/{id}', 'KlinikController@get');
+$router->post('/klinik', 'KlinikController@store');
+$router->put('/klinik/{id}', 'KlinikController@update');
+$router->delete('/klinik/{id}', 'KlinikController@delete');
