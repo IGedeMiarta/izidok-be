@@ -18,6 +18,7 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
     
     $router->post('/user','AuthController@store');
     $router->post('/login','AuthController@login');
+    $router->post('/klinik', 'KlinikController@store');
 
     #reset password
     $router->post('/forgot','AuthController@forgot');
@@ -35,7 +36,6 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
 
         #klinik
         $router->get('/klinik', 'KlinikController@index');
-        $router->post('/klinik', 'KlinikController@store');
         $router->get('/klinik/{id}', 'KlinikController@show');
         $router->put('/klinik/{id}', 'KlinikController@update');
         $router->delete('/klinik/{id}', 'KlinikController@delete');

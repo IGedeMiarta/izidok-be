@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "fd7b22d7-2b29-4d1e-afd9-53cf8a5cb10e",
+		"_postman_id": "6c82f6f8-a0f2-4f71-bee2-7dbb0947a13b",
 		"name": "Izi Dok - Dev",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -66,11 +66,19 @@
 		{
 			"name": "add klinik",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "formdata",
 					"formdata": [
+						{
+							"key": "tipe_klinik",
+							"value": "1",
+							"type": "text"
+						},
 						{
 							"key": "nama_klinik",
 							"value": "Klinik Sehat",
@@ -82,30 +90,37 @@
 							"type": "text"
 						},
 						{
-							"key": "nomor_hp",
+							"key": "nomor_telp",
 							"value": "081212371",
 							"type": "text"
 						},
 						{
 							"key": "email",
-							"value": "zubaidah@gmail.com",
+							"value": "zubaidaha6@gmail.com",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "joss",
+							"value": "josssekali",
+							"type": "text"
+						},
+						{
+							"key": "password_confirmation",
+							"value": "josssekali",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/klinik",
+					"raw": "http://localhost:9000/api/v1/klinik",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "9000",
 					"path": [
+						"api",
+						"v1",
 						"klinik"
 					]
 				}
