@@ -89,25 +89,31 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-    	// $email = $request->input('email');
-    	$username = $request->input('username');
-    	$password = $request->input('password');
+    	$username = $request->username;
+    	$password = $request->password;
 
-    	$user = User::where('username',$username)->first();
+    	$user = User::where('username', $username)->first();
 
-    	if(Hash::check($password,$user->password))
+    	if(Hash::check($password, $user->password))
     	{
-    		$apiToken = base64_encode(str_random(40));
-    		$user->update([
-    			'api_token' => $apiToken
-    		]);
+    		$api_key = base64_encode(str_random(40));
+    		// $user->update([
+    		// 	'api_token' => $api_key
+			// ]);
+			
+			#save into tb ApiKey
+			$api_key = new Apikey;
+			$api_key->user_id = $user->id;
+			$api_key->expired_at = date('Y-m-d H:m:s', strtotime('+7 days'));
+			$api_key->api_key = $api_key;
+			$api_key->save();
 
     		return response()->json([
     			'success' => true,
     			'message' => 'Login Berhasil',
     			'data' => [
     				'user' => $user,
-    				'api_token' => $apiToken
+    				'api_key' => $api_key
     			]
     		],201);
     	}
@@ -123,21 +129,26 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $api_token = $request->input('api_token');
+        $api_key = $request->api_key;
 
-        $user = User::where('api_token',$api_token);
-        if($user)
+		// $user = User::where('api_token',$api_token);
+		$api_key = ApiKey::whereApiKey($api_key)->first();
+        if($api_key)
         {
-            $user->update([
-                'api_token' => ''
-            ]);
+            // $user->update([
+            //     'api_token' => ''
+            // ]);
+
+			#update api_key to expired
+			$api_key->logout_at = date('Y/m/d h:i:s');
+			$api_key->save();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Logout Berhasil',
                 'data' => [
-                    'user' => $user,
-                    'api_token' => $api_token
+                    'user' => $api_key->user,
+                    'api_key' => $api_key
                 ]
             ],201);
                 
