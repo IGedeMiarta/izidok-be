@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 Use App\User;
 Use App\ApiKey;
+use App\ForgotPassword;
 
 class AuthController extends Controller
 {
@@ -161,6 +162,75 @@ class AuthController extends Controller
                 'data' => ''
             ]); 
         }
+    }
 
+    public function forgot(Request $request)
+    {
+        $email = $request->input('email');
+        $user = User::where('email','=',$email)->first();
+
+        if(empty($user))
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'User tidak ditemukan'
+            ]);
+        }
+        else
+        {
+            $forgot_password = new ForgotPassword();
+            $forgot_password->token = base64_encode(str_random(40));
+            $forgot_password->user_id = $user->id;
+            $forgot_password->email = $email;
+            $forgot_password->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
+            $forgot_password->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'forgot password telah dibuat',
+                'data' => $forgot_password
+            ]);
+        }
+    }
+
+    public function reset(Request $request)
+    {
+        $token = $request->bearerToken();
+        $forgot_password = ForgotPassword::where('token',$token)->first();
+        $password = $request->input('password');
+        $konfirm_password = $request->input('konfirm_password');
+
+        if(empty($forgot_password))
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'user not found'
+            ]);
+        }
+        if($password != $konfirm_password)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'password dan konfirm passowrd tidak sama'
+            ]);   
+        }
+        else if(strtotime(date('Y-m-d H:i:s')) > strtotime($forgot_password->expired_at))
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'expired'
+            ]);      
+        }
+        else
+        {
+            $user = User::find($forgot_password->user_id);
+            $user->password = Hash::make($password);
+            $user->save();
+            $forgot_password->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Password has ben updated'
+            ]); 
+        }
     }
 }
