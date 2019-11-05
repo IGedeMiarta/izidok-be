@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Klinik;
 use App\Operator;
 use App\KlinikOperator;
@@ -78,15 +79,7 @@ class KlinikController extends Controller
     		"no_telp" => $request->nomor_telp
         ]);
         $user->roles()->attach(Constant::KLINIK_OPERATOR);
-            
-        #data operator
-        $operator = new Operator([
-            'nama' => $nama_pic,
-            'user_id' => $user->id
-        ]);
-        $klinik->operators()->save($operator);
 
-        #insert only for dokter praktek
         if(!$isKlinik){
             #data dokter
             $dokter = new Dokter([
@@ -94,9 +87,21 @@ class KlinikController extends Controller
                 'user_id' => $user->id
             ]);
             $klinik->dokters()->save($dokter);
+        }else{
+            #data operator
+            $operator = new Operator([
+                'nama' => $nama_pic,
+                'user_id' => $user->id
+            ]);
+            $klinik->operators()->save($operator);
         }
 
         #send email right here...
+        // Mail::raw('Message here...', function($msg) use ($request){ 
+        //     $msg->subject('Hi '.$request->nama_klinik.', please verify your Klinik account'); 
+        //     $msg->to([$request->email]); 
+        //     $msg->from(['izi-dok@gmail.com']); });
+        
 
         $data['klinik_id'] = $klinik->id;
         return response()->json(['status' => true, 'data' => $data]);
