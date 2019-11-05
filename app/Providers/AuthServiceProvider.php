@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\User;
+use App\ApiKey;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Request;
@@ -38,22 +39,22 @@ class AuthServiceProvider extends ServiceProvider
         //     }
         // });
 
-        Auth::viaRequest('auth', function (Request $request) {
+        Auth::viaRequest('api', function (Request $request) {
             $api_key = $request->bearerToken();
-
+            
             if ($api_key) {
                 $api_key = ApiKey::whereApiKey($api_key)
-                                            ->whereDate('expired_at', '>', date('Y-m-d'))
-                                            ->first();
-
-                $user = $api_key->user;
-
-                if(!empty($user)){
-                    $request->request->add(['user_id' => $user->id]);
+                                    ->whereDate('expired_at', '>', date('Y-m-d'))
+                                    ->where('logout_at', null)
+                                    ->first();
+               
+                if(!empty($api_key)){
+                    $request->request->add(['user_id' => $api_key->user->id]);
+                    return $api_key->user;
                 }
-                
-                    return $user;
             }
+
+            return null;
         });
     }
 }

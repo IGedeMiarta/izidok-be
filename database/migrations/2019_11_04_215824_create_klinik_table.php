@@ -9,8 +9,6 @@ class CreateKlinikTable extends Migration {
 	{
 		Schema::create('klinik', function(Blueprint $table) {
 			$table->increments('id');
-			$table->timestamps();
-			$table->softDeletes();
 			$table->string('nama_pic')->nullable();
 			$table->string('nama');
 			$table->string('nomor_telp')->nullable();
@@ -18,6 +16,8 @@ class CreateKlinikTable extends Migration {
 			$table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
+			$table->timestamps();
+            $table->softDeletes();
 		});
 	}
 

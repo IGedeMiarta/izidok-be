@@ -18,13 +18,13 @@ class CreateUsersTable extends Migration
             $table->string('username')->unique();
             $table->string('email');
             $table->string('password');
-            $table->string('nama_lengkap');
-            $table->string('no_telp')->nullable();
-            $table->string('api_token')->nullable();
+            $table->string('nama');
+            $table->string('nomor_telp')->nullable();
             $table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
         });
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 Use App\User;
+Use App\ApiKey;
 
 class AuthController extends Controller
 {
@@ -58,7 +59,7 @@ class AuthController extends Controller
     	$username = $request->input('username');
     	$email = $request->input('email');
     	$nama = $request->input('nama');
-    	$no_telp = $request->input('no_telp');
+    	$nomor_telp = $request->input('nomor_telp');
     	$password = Hash::make($request->input('password'));
 
     	$register = User::create([
@@ -66,7 +67,7 @@ class AuthController extends Controller
     		"email" => $email,
     		"password" => $password,
     		"nama" => $nama,
-    		"no_telp" => $no_telp
+    		"nomor_telp" => $nomor_telp
     	]);
 
     	if($register)
@@ -90,13 +91,13 @@ class AuthController extends Controller
     public function login(Request $request)
     {
     	$username = $request->username;
-    	$password = $request->password;
-
+		$password = $request->password;
+		
     	$user = User::where('username', $username)->first();
 
     	if(Hash::check($password, $user->password))
     	{
-    		$api_key = base64_encode(str_random(40));
+    		$token = base64_encode(str_random(40));
     		// $user->update([
     		// 	'api_token' => $api_key
 			// ]);
@@ -105,7 +106,7 @@ class AuthController extends Controller
 			$api_key = new Apikey;
 			$api_key->user_id = $user->id;
 			$api_key->expired_at = date('Y-m-d H:m:s', strtotime('+7 days'));
-			$api_key->api_key = $api_key;
+			$api_key->api_key = $token;
 			$api_key->save();
 
     		return response()->json([
@@ -113,7 +114,7 @@ class AuthController extends Controller
     			'message' => 'Login Berhasil',
     			'data' => [
     				'user' => $user,
-    				'api_key' => $api_key
+    				'token' => $token
     			]
     		],201);
     	}
@@ -129,10 +130,9 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $api_key = $request->api_key;
-
-		// $user = User::where('api_token',$api_token);
+        $api_key = $request->bearerToken();
 		$api_key = ApiKey::whereApiKey($api_key)->first();
+		
         if($api_key)
         {
             // $user->update([

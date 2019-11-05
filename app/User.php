@@ -12,10 +12,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
     use Authenticatable, Authorizable;
 
-    protected $table = 'user';
+    protected $table = 'users';
 
     protected $fillable = [
-        'email', 'password','username','api_token','nama_lengkap','no_telp'
+        'email', 'password','username','api_token','nama','nomor_telp'
     ];
 
     protected $hidden = [

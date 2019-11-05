@@ -9,13 +9,13 @@ class CreateDokterTable extends Migration {
 	{
 		Schema::create('dokter', function(Blueprint $table) {
 			$table->increments('id');
-			$table->timestamps();
-			$table->softDeletes();
 			$table->string('nama');
 			$table->integer('user_id');
 			$table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
+			$table->timestamps();
+            $table->softDeletes();
 		});
 	}
 

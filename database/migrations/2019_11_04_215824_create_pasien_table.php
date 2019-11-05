@@ -9,8 +9,6 @@ class CreatePasienTable extends Migration {
 	{
 		Schema::create('pasien', function(Blueprint $table) {
 			$table->increments('id');
-			$table->timestamps();
-			$table->softDeletes();
 			$table->string('nama');
 			$table->string('nik', 50);
 			$table->string('tempat_lahir', 50);
@@ -33,6 +31,8 @@ class CreatePasienTable extends Migration {
 			$table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
+			$table->timestamps();
+            $table->softDeletes();
 		});
 	}
 
