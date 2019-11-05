@@ -10,4 +10,6 @@ class Constant
 	const KLINIK_OPERATOR = 4;
 	const DOKTER = 5;
 
+	const TIPE_KLINIK = 1;
+	const TIPE_DOKTER = 2;
 }

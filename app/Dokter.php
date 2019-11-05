@@ -13,16 +13,22 @@ class Dokter extends Model
 
     use SoftDeletes;
 
+    protected $fillable = [
+        'nama', 'user_id'
+    ];
+
     protected $dates = ['deleted_at'];
 
-    public function klinikDokter()
+    public function kliniks()
     {
-        return $this->hasMany('App\KlinikDokter', 'dokter_id', 'id');
+        return $this->belongsToMany(Klinik::class, 'klinik_dokter');
     }
 
     public function user()
     {
         return $this->belongsTo('App\Dokter', 'user_id', 'id');
     }
+
+    
 
 }

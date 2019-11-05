@@ -13,12 +13,17 @@ class Operator extends Model
 
     use SoftDeletes;
 
+    protected $fillable = [
+        'nama', 'user_id'
+    ];
+
     protected $dates = ['deleted_at'];
 
-    public function klinikOperator()
+    public function kliniks()
     {
-        return $this->hasMany('App\KlinikOperator', 'operator_id', 'id');
+        return $this->belongsToMany(Klinik::class, 'klinik_operator');
     }
+
 
     public function user()
     {

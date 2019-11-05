@@ -15,19 +15,18 @@ class Klinik extends Model
 
     protected $dates = ['deleted_at'];
 
-    public function klinikDokter()
+    protected $fillable = [
+        'tipe_klinik', 'nama_klinik', 'nama_pic', 'nomor_telp'
+    ];
+
+    public function operators()
     {
-        return $this->hasMany('App\KlinikDokter', 'klinik_id', 'id');
+        return $this->belongsToMany(Operator::class, 'klinik_operator');
     }
 
-    public function klinikOperator()
+    public function dokters()
     {
-        return $this->hasMany('App\KlinikOperator', 'klinik_id', 'id');
-    }
-
-    public function transKlinik()
-    {
-        return $this->hasMany('App\TransKlinik', 'klinik_id', 'id');
+        return $this->belongsToMany(Dokter::class, 'klinik_dokter');
     }
 
 }

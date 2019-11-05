@@ -8,6 +8,7 @@ use App\KlinikOperator;
 use App\User;
 use App\UserRole;
 use App\Constant;
+use App\Dokter;
 
 
 class KlinikController extends Controller
@@ -36,36 +37,64 @@ class KlinikController extends Controller
     }
 
     public function store(Request $request){
-        $this->validate($request, [
+         $rules = [
+            'tipe_klinik' => 'required|min:1:max:2',
             'nama_klinik' => 'required|string',
-            'nama_pic' => 'required|string',
             'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:10',
-            'email' => 'required|string|email',
-            'password' => 'required'
-        ]);
+            'email' => 'required|unique:users|email',
+            'password' => 'required|confirmed|min:8'
+        ];
+        
+        $isKlinik = false;
+        if($request->tipe_klinik == Constant::TIPE_KLINIK){
+            $rules['nama_pic'] = 'required|string';
+            $isKlinik = true;
+        }
+        $this->validate($request,$rules);
+
+
+        if($isKlinik){
+            $nama_pic = $request->nama_pic;
+        }
+        else{
+            $nama_pic = $request->nama_klinik;
+            $nama_dokter = $request->nama_klinik;
+        }
 
         #data klinik
         $klinik = Klinik::create([
+            'tipe_klinik' => $request->tipe_klinik,
             'nama_klinik' => $request->nama_klinik,
-            'nama_pic' => $request->nama_pic,
+            'nama_pic' => $nama_pic,
             'nomor_telp' => $request->nomor_telp
         ]);
-        
-        #data operator
-        $operator = new Operator([
-            'nama' => $request->nama_pic
-        ]);
-        $klinik->operators()->save($operator);
    
         #data user
         $user = User::create([
     		"username" => $request->email,
     		"email" => $request->email,
     		"password" => app('hash')->make($request->password),
-    		"nama" => $request->nama,
+    		"nama" => $nama_pic,
     		"no_telp" => $request->nomor_telp
         ]);
         $user->roles()->attach(Constant::KLINIK_OPERATOR);
+            
+        #data operator
+        $operator = new Operator([
+            'nama' => $nama_pic,
+            'user_id' => $user->id
+        ]);
+        $klinik->operators()->save($operator);
+
+        #insert only for dokter praktek
+        if(!$isKlinik){
+            #data dokter
+            $dokter = new Dokter([
+                'nama' => $nama_dokter,
+                'user_id' => $user->id
+            ]);
+            $klinik->dokters()->save($dokter);
+        }
 
         #send email right here...
 
