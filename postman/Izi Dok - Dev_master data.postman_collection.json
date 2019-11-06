@@ -6,118 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "add dokter",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "Y0pyOElFbWRsVDF6TWU0QmZPQklYMldIVTFmTVhzRk1MTjdobnY4Yg==",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "nama",
-							"value": "ibnu",
-							"type": "text"
-						},
-						{
-							"key": "username",
-							"value": "ibnu",
-							"type": "text"
-						},
-						{
-							"key": "email",
-							"value": "ibnu@gmail.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "beraksi123",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://localhost:9000/api/v1/dokter",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"api",
-						"v1",
-						"dokter"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "add operator",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "Y0pyOElFbWRsVDF6TWU0QmZPQklYMldIVTFmTVhzRk1MTjdobnY4Yg==",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "nama",
-							"value": "rezpa",
-							"type": "text"
-						},
-						{
-							"key": "username",
-							"value": "rezpa",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "beraksi123",
-							"type": "text"
-						},
-						{
-							"key": "email",
-							"value": "rezpa.snk@gmail.com",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://localhost:9000/api/v1/operator",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"api",
-						"v1",
-						"operator"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "add role",
 			"request": {
 				"auth": {
@@ -239,39 +127,22 @@
 			"response": []
 		},
 		{
-			"name": "update dokter",
+			"name": "delete role",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "Y0pyOElFbWRsVDF6TWU0QmZPQklYMldIVTFmTVhzRk1MTjdobnY4Yg==",
+							"value": "SVdOcmYwdElxdlJCR01DbWRaaUdKY3B5bDRsT2JRVVhLekZWbUtLUA==",
 							"type": "string"
 						}
 					]
 				},
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "nama",
-							"value": "ibnu jamil",
-							"type": "text"
-						}
-					]
-				},
+				"method": "DELETE",
+				"header": [],
 				"url": {
-					"raw": "http://localhost:9000/api/v1/dokter/1",
+					"raw": "http://localhost:9000/api/v1/role/2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -280,8 +151,8 @@
 					"path": [
 						"api",
 						"v1",
-						"dokter",
-						"1"
+						"role",
+						"2"
 					]
 				}
 			},
@@ -302,6 +173,62 @@
 				},
 				"method": "GET",
 				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/api/v1/operator",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"operator"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add operator",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Y0pyOElFbWRsVDF6TWU0QmZPQklYMldIVTFmTVhzRk1MTjdobnY4Yg==",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nama",
+							"value": "rezpa",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "rezpa",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "beraksi123",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "rezpa.snk@gmail.com",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
 					"raw": "http://localhost:9000/api/v1/operator",
 					"protocol": "http",
@@ -351,6 +278,55 @@
 			"response": []
 		},
 		{
+			"name": "update operator",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Y0pyOElFbWRsVDF6TWU0QmZPQklYMldIVTFmTVhzRk1MTjdobnY4Yg==",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "nama",
+							"value": "Bli Respa",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/v1/operator/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"operator",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "list dokter",
 			"request": {
 				"auth": {
@@ -382,22 +358,47 @@
 			"response": []
 		},
 		{
-			"name": "list klinik",
+			"name": "add dokter",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "c0VRTkdrWWg3eWx4Y2hhcUROaGFRS1pZQ1VyeVo3OUE2NGV4R29uVA==",
+							"value": "Y0pyOElFbWRsVDF6TWU0QmZPQklYMldIVTFmTVhzRk1MTjdobnY4Yg==",
 							"type": "string"
 						}
 					]
 				},
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nama",
+							"value": "ibnu",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "ibnu",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "ibnu@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "beraksi123",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/klinik",
+					"raw": "http://localhost:9000/api/v1/dokter",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -406,91 +407,25 @@
 					"path": [
 						"api",
 						"v1",
-						"klinik"
+						"dokter"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "get klinik",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
+			"name": "update dokter",
 			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"url": {
-					"raw": "http://localhost:9000/klinik/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"klinik",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "add klinik",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
+				"auth": {
+					"type": "bearer",
+					"bearer": [
 						{
-							"key": "nama_klinik",
-							"value": "Klinik Sehat",
-							"type": "text"
-						},
-						{
-							"key": "nama_pic",
-							"value": "Zubaidah",
-							"type": "text"
-						},
-						{
-							"key": "nomor_hp",
-							"value": "081212371",
-							"type": "text"
-						},
-						{
-							"key": "email",
-							"value": "zubaidah@gmail.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "joss",
-							"type": "text"
+							"key": "token",
+							"value": "Y0pyOElFbWRsVDF6TWU0QmZPQklYMldIVTFmTVhzRk1MTjdobnY4Yg==",
+							"type": "string"
 						}
 					]
 				},
-				"url": {
-					"raw": "http://localhost:9000/klinik",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"klinik"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "update klinik",
-			"request": {
 				"method": "PUT",
 				"header": [
 					{
@@ -504,157 +439,46 @@
 					"mode": "urlencoded",
 					"urlencoded": [
 						{
-							"key": "nama_klinik",
-							"value": "Klinik Sehat",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://localhost:9000/klinik/5",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"klinik",
-						"5"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "delete klinik",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:9000/klinik/4",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"klinik",
-						"4"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "add user",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "username",
-							"value": "helmy",
-							"type": "text"
-						},
-						{
-							"key": "email",
-							"value": "helmysmp@gmail.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "beraksi123",
-							"type": "text"
-						},
-						{
 							"key": "nama",
-							"value": "Helmy Satria Martha Putra",
-							"type": "text"
-						},
-						{
-							"key": "no_telp",
-							"value": "08981711081",
+							"value": "ibnu jamil",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://localhost/hospital-backend/public/api/v1/user",
+					"raw": "http://localhost:9000/api/v1/dokter/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
+					"port": "9000",
 					"path": [
-						"hospital-backend",
-						"public",
 						"api",
 						"v1",
-						"user"
+						"dokter",
+						"1"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "login",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "username",
-							"value": "helmy",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "beraksi123",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://localhost/hospital-backend/public/api/v1/login",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"path": [
-						"hospital-backend",
-						"public",
-						"api",
-						"v1",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "logout",
+			"name": "delete dokter",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "c0VRTkdrWWg3eWx4Y2hhcUROaGFRS1pZQ1VyeVo3OUE2NGV4R29uVA==",
+							"value": "Y0pyOElFbWRsVDF6TWU0QmZPQklYMldIVTFmTVhzRk1MTjdobnY4Yg==",
 							"type": "string"
 						}
 					]
 				},
-				"method": "POST",
+				"method": "DELETE",
 				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/logout",
+					"raw": "http://localhost:9000/api/v1/dokter/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -663,7 +487,39 @@
 					"path": [
 						"api",
 						"v1",
-						"logout"
+						"dokter",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list kode penyakit",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Y0pyOElFbWRsVDF6TWU0QmZPQklYMldIVTFmTVhzRk1MTjdobnY4Yg==",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/api/v1/kode_penyakit",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"kode_penyakit"
 					]
 				}
 			},
@@ -797,227 +653,6 @@
 						"v1",
 						"kode_penyakit",
 						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "forgot password",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "email",
-							"value": "helmysmp@gmail.com",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://localhost:9000/api/v1/forgot",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"api",
-						"v1",
-						"forgot"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "reset password",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "cGh0WWJqVEJ1bThBak90SUc5Q1d4RXZXeW5OOHZQUHNqdzRkaUZ3cw==",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "password",
-							"value": "lalala",
-							"type": "text"
-						},
-						{
-							"key": "konfirm_password",
-							"value": "lalala",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://localhost:9000/api/v1/reset",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"api",
-						"v1",
-						"reset"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "list kode penyakit",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "Y0pyOElFbWRsVDF6TWU0QmZPQklYMldIVTFmTVhzRk1MTjdobnY4Yg==",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:9000/api/v1/kode_penyakit",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"api",
-						"v1",
-						"kode_penyakit"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "delete dokter",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "Y0pyOElFbWRsVDF6TWU0QmZPQklYMldIVTFmTVhzRk1MTjdobnY4Yg==",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:9000/api/v1/dokter/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"api",
-						"v1",
-						"dokter",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "update operator",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "Y0pyOElFbWRsVDF6TWU0QmZPQklYMldIVTFmTVhzRk1MTjdobnY4Yg==",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "nama",
-							"value": "Bli Respa",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://localhost:9000/api/v1/operator/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"api",
-						"v1",
-						"operator",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "delete role",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "SVdOcmYwdElxdlJCR01DbWRaaUdKY3B5bDRsT2JRVVhLekZWbUtLUA==",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:9000/api/v1/role/2",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"api",
-						"v1",
-						"role",
-						"2"
 					]
 				}
 			},

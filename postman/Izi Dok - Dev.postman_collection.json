@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6c82f6f8-a0f2-4f71-bee2-7dbb0947a13b",
+		"_postman_id": "fe611ede-96ae-4eb0-9c17-58126880260f",
 		"name": "Izi Dok - Dev",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -301,6 +301,83 @@
 						"api",
 						"v1",
 						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "forgot password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "helmysmp@gmail.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/v1/forgot",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"forgot"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "reset password",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "cGh0WWJqVEJ1bThBak90SUc5Q1d4RXZXeW5OOHZQUHNqdzRkaUZ3cw==",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "password",
+							"value": "lalala",
+							"type": "text"
+						},
+						{
+							"key": "konfirm_password",
+							"value": "lalala",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/v1/reset",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"reset"
 					]
 				}
 			},
