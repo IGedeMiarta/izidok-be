@@ -21,10 +21,11 @@ class KlinikController extends Controller
 
     public function index(){
         $klinik = Klinik::with('operators')->get();
+        $data['klinik'] = $klinik;
         if ($klinik === null) {
             return response()->json(['status' => false]);
         }else{
-            return response()->json(['status' => true, 'data' => $klinik]);
+            return response()->json(['status' => true, 'data' => $data]);
         }
     }
 
