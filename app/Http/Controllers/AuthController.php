@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 Use App\User;
 Use App\ApiKey;
 use App\ForgotPassword;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -60,7 +61,7 @@ class AuthController extends Controller
         $this->validate($request,[
             'username' => 'required|unique:users|string',
             'nama' => 'required|string',
-            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:10',
+            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
             'email' => 'required|unique:users|email',
             'password' => 'required|min:8'
         ]);
@@ -240,5 +241,13 @@ class AuthController extends Controller
                 'message' => 'Password has ben updated'
             ]); 
         }
+    }
+
+    public function sendEmail(){
+        #send email right here...
+        Mail::raw('Message here...', function($msg){ 
+            $msg->subject('Hi Klinik Sehat, please verify your Klinik account'); 
+            $msg->to(['rezpa.snk@gmail.com']); 
+            $msg->from(['izi-dok@gmail.com']); });
     }
 }
