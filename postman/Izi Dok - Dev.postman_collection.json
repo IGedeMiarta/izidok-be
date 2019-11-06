@@ -1,12 +1,103 @@
 {
 	"info": {
-		"_postman_id": "fe611ede-96ae-4eb0-9c17-58126880260f",
+		"_postman_id": "11771fb0-0ae5-43c1-bebc-e5693874f332",
 		"name": "Izi Dok - Dev",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "list klinik",
+			"name": "add user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "helmy",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "helmysmp@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "beraksi123",
+							"type": "text"
+						},
+						{
+							"key": "nama",
+							"value": "Helmy Satria Martha Putra",
+							"type": "text"
+						},
+						{
+							"key": "nomor_telp",
+							"value": "089817110",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://149.129.239.15/api/v1/user",
+					"protocol": "http",
+					"host": [
+						"149",
+						"129",
+						"239",
+						"15"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "helmy",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "beraksi123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://149.129.239.15/api/v1/login",
+					"protocol": "http",
+					"host": [
+						"149",
+						"129",
+						"239",
+						"15"
+					],
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -18,46 +109,25 @@
 						}
 					]
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:9000/api/v1/klinik",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"api",
-						"v1",
-						"klinik"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get klinik",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "formdata",
 					"formdata": []
 				},
 				"url": {
-					"raw": "http://localhost:9000/klinik/1",
+					"raw": "http://149.129.239.15/api/v1/logout",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
-						"klinik",
-						"1"
+						"api",
+						"v1",
+						"logout"
 					]
 				}
 			},
@@ -112,12 +182,14 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/klinik",
+					"raw": "http://149.129.239.15/api/v1/klinik",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -128,8 +200,82 @@
 			"response": []
 		},
 		{
+			"name": "list klinik",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "c0VRTkdrWWg3eWx4Y2hhcUROaGFRS1pZQ1VyeVo3OUE2NGV4R29uVA==",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://149.129.239.15/api/v1/klinik",
+					"protocol": "http",
+					"host": [
+						"149",
+						"129",
+						"239",
+						"15"
+					],
+					"path": [
+						"api",
+						"v1",
+						"klinik"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get klinik",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://149.129.239.15/api/v1/klinik/1",
+					"protocol": "http",
+					"host": [
+						"149",
+						"129",
+						"239",
+						"15"
+					],
+					"path": [
+						"api",
+						"v1",
+						"klinik",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "update klinik",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [
 					{
@@ -150,13 +296,17 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/klinik/5",
+					"raw": "http://149.129.239.15/api/v1/klinik/5",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
+						"api",
+						"v1",
 						"klinik",
 						"5"
 					]
@@ -167,140 +317,32 @@
 		{
 			"name": "delete klinik",
 			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:9000/klinik/4",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"klinik",
-						"4"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "add user",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "username",
-							"value": "helmy",
-							"type": "text"
-						},
-						{
-							"key": "email",
-							"value": "helmysmp@gmail.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "beraksi123",
-							"type": "text"
-						},
-						{
-							"key": "nama",
-							"value": "Helmy Satria Martha Putra",
-							"type": "text"
-						},
-						{
-							"key": "no_telp",
-							"value": "08981711081",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://localhost:9000/api/v1/user",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"api",
-						"v1",
-						"user"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "login",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "username",
-							"value": "helmy",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "beraksi123",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://localhost:9000/api/v1/login",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"api",
-						"v1",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "logout",
-			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "c0VRTkdrWWg3eWx4Y2hhcUROaGFRS1pZQ1VyeVo3OUE2NGV4R29uVA==",
+							"value": "",
 							"type": "string"
 						}
 					]
 				},
-				"method": "POST",
+				"method": "DELETE",
 				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/logout",
+					"raw": "http://149.129.239.15/api/v1/klinik/4",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
-						"logout"
+						"klinik",
+						"4"
 					]
 				}
 			},
@@ -322,12 +364,14 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/forgot",
+					"raw": "http://149.129.239.15/api/v1/forgot",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -345,7 +389,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "cGh0WWJqVEJ1bThBak90SUc5Q1d4RXZXeW5OOHZQUHNqdzRkaUZ3cw==",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -368,12 +412,14 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/reset",
+					"raw": "http://149.129.239.15/api/v1/reset",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",

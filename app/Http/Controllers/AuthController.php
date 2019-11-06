@@ -57,6 +57,14 @@ class AuthController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request,[
+            'username' => 'required|unique:users|string',
+            'nama' => 'required|string',
+            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:10',
+            'email' => 'required|unique:users|email',
+            'password' => 'required|min:8'
+        ]);
+
     	$username = $request->input('username');
     	$email = $request->input('email');
     	$nama = $request->input('nama');

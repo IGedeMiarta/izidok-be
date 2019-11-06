@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "827c6c32-11b0-4325-a51b-f3c994cb7593",
-		"name": "Izi Dok - Dev_hel",
+		"_postman_id": "026f9903-bb23-4dff-b089-7b35d8aeeca6",
+		"name": "Izi Dok - Master Data",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -31,12 +31,14 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/role",
+					"raw": "http://149.129.239.15/api/v1/role",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -62,12 +64,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:9000/api/v1/role",
+					"raw": "http://149.129.239.15/api/v1/role",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -110,12 +114,14 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/role/2",
+					"raw": "http://149.129.239.15/api/v1/role/2",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -142,12 +148,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:9000/api/v1/role/2",
+					"raw": "http://149.129.239.15/api/v1/role/2",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -174,12 +182,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:9000/api/v1/operator",
+					"raw": "http://149.129.239.15/api/v1/operator",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -230,12 +240,14 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/operator",
+					"raw": "http://149.129.239.15/api/v1/operator",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -261,12 +273,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:9000/api/v1/operator/1",
+					"raw": "http://149.129.239.15/api/v1/operator/1",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -310,12 +324,14 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/operator/1",
+					"raw": "http://149.129.239.15/api/v1/operator/1",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -342,12 +358,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:9000/api/v1/dokter",
+					"raw": "http://149.129.239.15/api/v1/dokter",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -398,12 +416,14 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/dokter",
+					"raw": "http://149.129.239.15/api/v1/dokter",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -446,12 +466,14 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/dokter/1",
+					"raw": "http://149.129.239.15/api/v1/dokter/1",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -478,12 +500,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:9000/api/v1/dokter/1",
+					"raw": "http://149.129.239.15/api/v1/dokter/1",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -510,12 +534,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:9000/api/v1/kode_penyakit",
+					"raw": "http://149.129.239.15/api/v1/kode_penyakit",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -556,14 +582,15 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/public/api/v1/kode_penyakit",
+					"raw": "http://149.129.239.15/api/v1/kode_penyakit",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
-						"public",
 						"api",
 						"v1",
 						"kode_penyakit"
@@ -610,12 +637,14 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:9000/api/v1/kode_penyakit/2",
+					"raw": "http://149.129.239.15/api/v1/kode_penyakit/2",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
@@ -627,7 +656,7 @@
 			"response": []
 		},
 		{
-			"name": "delete kode_penyakit",
+			"name": "delete kode penyakit",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -642,12 +671,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:9000/api/v1/kode_penyakit/1",
+					"raw": "http://149.129.239.15/api/v1/kode_penyakit/1",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"149",
+						"129",
+						"239",
+						"15"
 					],
-					"port": "9000",
 					"path": [
 						"api",
 						"v1",
