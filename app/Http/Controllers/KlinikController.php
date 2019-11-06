@@ -41,7 +41,7 @@ class KlinikController extends Controller
          $rules = [
             'tipe_klinik' => 'required|min:1:max:2',
             'nama_klinik' => 'required|string',
-            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:10',
+            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
             'email' => 'required|unique:users|email',
             'password' => 'required|confirmed|min:8'
         ];
