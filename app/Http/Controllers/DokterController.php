@@ -31,6 +31,12 @@ class DokterController extends Controller
     */
     public function store(Request $request)
     {
+      $this->validate($request,[
+            'username' => 'required|unique:users|string',
+            'nama' => 'required|string',
+            'email' => 'required|unique:users|email',
+            'password' => 'required|min:8'
+        ]);
 
       $user = new User();
       $user->nama = $request->input('nama');

@@ -30,6 +30,10 @@ class KodePenyakitController extends Controller
    	*/
   	public function store(Request $request)
   	{
+      $this->validate($request,[
+            'kode' => 'required|string',
+            'description' => 'required|string'
+        ]);
 
 	   	$kode_penyakit = new KodePenyakit();
 	   	$kode_penyakit->kode = $request->input('kode');
