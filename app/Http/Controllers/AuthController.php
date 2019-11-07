@@ -12,8 +12,9 @@ use Illuminate\Support\Facades\Mail;
 class AuthController extends Controller
 {
 
-	public function index(){
-		$user = User::with('roles')->get();
+	public function index(Request $request){
+        $user = User::with('roles')->paginate($request->limit);
+        
         if ($user === null) {
             return response()->json(['status' => false]);
         }else{

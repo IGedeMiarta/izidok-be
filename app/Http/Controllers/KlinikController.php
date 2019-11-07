@@ -19,8 +19,9 @@ class KlinikController extends Controller
         //nothing
     }
 
-    public function index(){
-        $klinik = Klinik::with('operators')->get();
+    public function index(Request $request){
+        $klinik = Klinik::with('operators')->paginate($request->limit);
+
         $data['klinik'] = $klinik;
         if ($klinik === null) {
             return response()->json(['status' => false]);
