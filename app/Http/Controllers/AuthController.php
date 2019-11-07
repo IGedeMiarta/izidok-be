@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 Use App\User;
 Use App\ApiKey;
 use App\ForgotPassword;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -192,6 +193,12 @@ class AuthController extends Controller
             $forgot_password->email = $email;
             $forgot_password->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
             $forgot_password->save();
+
+
+            Mail::raw('You can reset password by klik :'.$forgot_password->token, function($msg) use ($request){ 
+                $msg->subject('Hi reset your password'); 
+                $msg->to([$request->email]); 
+                $msg->from(['izi-dok@gmail.com']); });
 
             return response()->json([
                 'success' => true,
