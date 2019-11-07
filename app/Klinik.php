@@ -16,7 +16,7 @@ class Klinik extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'tipe_klinik', 'nama_klinik', 'nama_pic', 'nomor_telp'
+        'tipe_faskes', 'nama_klinik', 'nama_pic', 'nomor_telp', 'nomor_ijin'
     ];
 
     public function operators()

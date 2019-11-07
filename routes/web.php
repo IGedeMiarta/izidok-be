@@ -22,9 +22,12 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
     $router->post('/login','AuthController@login');
     $router->post('/klinik', 'KlinikController@store');
 
+    $router->get('/activate/{token}','AuthController@activate');
+
     #reset password
     $router->post('/forgot','AuthController@forgot');
     $router->post('/reset','AuthController@reset');
+
 
     $router->group(['middleware' => 'auth'], function() use($router){
         #user
@@ -33,7 +36,6 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->put('/user/{id}','AuthController@update');
         $router->delete('/user/{id}','AuthController@delete');
         $router->post('/logout','AuthController@logout');
-
 
 
         #klinik
