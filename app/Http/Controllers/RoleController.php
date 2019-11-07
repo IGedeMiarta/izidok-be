@@ -13,17 +13,18 @@ class RoleController extends Controller
    *
    * @return Response
    */
-	public function index()
-	{
-		$all_role = Role::all();
-	    return response()->json([
-	    			'success' => true,
-	    			'message' => 'success',
-	    			'data' => $all_role
-	    		],201);
-	}
+  	public function index()
+  	{
+  		$all_role = Role::all();
+      $data['role'] = $all_role;
+  	  return response()->json([
+  	    			'success' => true,
+  	    			'message' => 'success',
+  	    			'data' => $data
+  	    		],201);
+  	}
 
-	/**
+	  /**
    	* Store a newly created resource in storage.
    	*
    	* @return Response
