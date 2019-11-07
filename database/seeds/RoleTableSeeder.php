@@ -12,8 +12,6 @@ class RoleTableSeeder extends Seeder
      */
     public function run()
     {
-    	$constant = new Constant();
-    	
     	$data_role = array(
     		array('id'=>'1', 'role'=> 'internal_admin','created_at'=>date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')),
     		array('id'=>'2', 'role'=> 'internal_non_admin','created_at'=>date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')),

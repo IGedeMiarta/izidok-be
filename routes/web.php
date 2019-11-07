@@ -14,28 +14,28 @@ $router->get('/key', function() {
     return str_random(32);
 });
 
-$router->get('/sendEmail', 'AuthController@sendEmail');
+$router->get('/sendEmail', 'UserController@sendEmail');
 
 $router->group(['prefix'=>'api/v1'], function() use($router){
     
-    $router->post('/user','AuthController@store');
-    $router->post('/login','AuthController@login');
+    $router->post('/user','UserController@store');
+    $router->post('/login','UserController@login');
     $router->post('/klinik', 'KlinikController@store');
 
-    $router->get('/activate/{token}','AuthController@activate');
+    $router->get('/activate/{token}','UserController@activate');
 
     #reset password
-    $router->post('/forgot','AuthController@forgot');
-    $router->post('/reset','AuthController@reset');
+    $router->post('/forgot','UserController@forgot');
+    $router->post('/reset','UserController@reset');
 
 
     $router->group(['middleware' => 'auth'], function() use($router){
         #user
-        $router->get('/user','AuthController@index');
-        $router->get('/user/{id}','AuthController@show');
-        $router->put('/user/{id}','AuthController@update');
-        $router->delete('/user/{id}','AuthController@delete');
-        $router->post('/logout','AuthController@logout');
+        $router->get('/user','UserController@index');
+        $router->get('/user/{id}','UserController@show');
+        $router->put('/user/{id}','UserController@update');
+        $router->delete('/user/{id}','UserController@delete');
+        $router->post('/logout','UserController@logout');
 
 
         #klinik

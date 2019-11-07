@@ -10,7 +10,7 @@ use App\ForgotPassword;
 use Illuminate\Support\Facades\Mail;
 use App\Activation;
 
-class AuthController extends Controller
+class UserController extends Controller
 {
 
 	public function index(Request $request){
@@ -84,7 +84,7 @@ class AuthController extends Controller
         
          #activation token
          $activation = new Activation();
-         $activation->token = base64_encode(str_random(40));
+         $activation->token = base64_encode(str_random(30));
          $activation->user_id = $user->id;
          $activation->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
          $activation->save();
