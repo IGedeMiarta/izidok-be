@@ -19,12 +19,14 @@ class KlinikController extends Controller
         //nothing
     }
 
-    public function index(){
-        $klinik = Klinik::with('operators')->get();
+    public function index(Request $request){
+        $klinik = Klinik::with('operators')->paginate($request->limit);
+
+        $data['klinik'] = $klinik;
         if ($klinik === null) {
             return response()->json(['status' => false]);
         }else{
-            return response()->json(['status' => true, 'data' => $klinik]);
+            return response()->json(['status' => true, 'data' => $data]);
         }
     }
 
@@ -41,7 +43,7 @@ class KlinikController extends Controller
          $rules = [
             'tipe_klinik' => 'required|min:1:max:2',
             'nama_klinik' => 'required|string',
-            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:10',
+            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
             'email' => 'required|unique:users|email',
             'password' => 'required|confirmed|min:8'
         ];
