@@ -12,8 +12,8 @@ class CreateKlinikTable extends Migration {
 			$table->string('nama_pic')->nullable();
 			$table->string('nama_klinik');
 			$table->string('nomor_telp');
-			$table->integer('tipe_klinik');
-			$table->string('nomor_ijin');
+			$table->integer('tipe_faskes');
+			$table->string('nomor_ijin', 50)->nullable();
 			$table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();

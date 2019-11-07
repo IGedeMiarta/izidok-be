@@ -8,6 +8,7 @@ Use App\User;
 Use App\ApiKey;
 use App\ForgotPassword;
 use Illuminate\Support\Facades\Mail;
+use App\Activation;
 
 class AuthController extends Controller
 {
@@ -73,20 +74,30 @@ class AuthController extends Controller
     	$nomor_telp = $request->input('nomor_telp');
     	$password = Hash::make($request->input('password'));
 
-    	$register = User::create([
+    	$user = User::create([
     		"username" => $username,
     		"email" => $email,
     		"password" => $password,
     		"nama" => $nama,
     		"nomor_telp" => $nomor_telp
-    	]);
+        ]);
+        
+         #activation token
+         $activation = new Activation();
+         $activation->token = base64_encode(str_random(40));
+         $activation->user_id = $user->id;
+         $activation->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
+         $activation->save();
 
-    	if($register)
+         $data['user'] = $user;
+         $data['activation_url'] = url('/api/v1/activate/'.$activation->token);
+
+    	if($user)
     	{
     		return response()->json([
     			'success' => true,
     			'message' => 'Register Success!!',
-    			'data' => $register
+    			'data' => $data
     		],201);
     	}
     	else
@@ -105,6 +116,13 @@ class AuthController extends Controller
 		$password = $request->password;
 		
     	$user = User::where('username', $username)->first();
+
+        if($user->activation->status == 0){
+            return response()->json([
+    			'success' => false,
+    			'message' => 'Please check your email to activate user...'
+    		]);	
+        }
 
     	if(Hash::check($password, $user->password))
     	{
@@ -244,11 +262,40 @@ class AuthController extends Controller
         }
     }
 
-    public function sendEmail(){
-        #send email right here...
-        Mail::raw('Message here...', function($msg){ 
-            $msg->subject('Hi Klinik Sehat, please verify your Klinik account'); 
-            $msg->to(['rezpa.snk@gmail.com']); 
-            $msg->from(['izi-dok@gmail.com']); });
+    public function activate($token){
+        $activation = Activation::where('token', $token)->first();
+
+        if(strtotime(date('Y-m-d H:i:s')) > strtotime($activation->expired_at)){
+            return response()->json([
+                'success' => false,
+                'message' => 'token expired or user had been activated...'
+            ]);  
+        }
+
+        if($activation->status == 1){
+            return response()->json([
+                'success' => false,
+                'message' => 'user had already activated...'
+            ]);  
+        }
+
+        $activation->status = 1;
+        
+        if($activation->save()){
+            return response()->json([
+                'success' => true,
+                'message' => 'user has activated successfully...',
+                'data' => $activation->user
+            ]);  
+        }
+
     }
+
+    // public function sendEmail(){
+    //     #send email right here...
+    //     Mail::raw('Message here...', function($msg){ 
+    //         $msg->subject('Hi Klinik Sehat, please verify your Klinik account'); 
+    //         $msg->to(['rezpa.snk@gmail.com']); 
+    //         $msg->from(['izi-dok@gmail.com']); });
+    // }
 }

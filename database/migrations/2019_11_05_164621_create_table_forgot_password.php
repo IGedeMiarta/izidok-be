@@ -19,8 +19,8 @@ class CreateTableForgotPassword extends Migration
             $table->string('email');
             $table->string('token');
             $table->string('expired_at');
-            $table->string('deleted_at')->nullable();
             $table->timestamps();
+			$table->softDeletes();
         });
     }
 
@@ -31,6 +31,6 @@ class CreateTableForgotPassword extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_forgot_password');
+        Schema::dropIfExists('forgot_password');
     }
 }

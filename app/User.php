@@ -33,4 +33,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasOne('Operator');
     }
+
+    public function activation()
+    {
+        return $this->hasOne(Activation::class);
+    }
 }

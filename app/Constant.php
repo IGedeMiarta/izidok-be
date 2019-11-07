@@ -11,5 +11,5 @@ class Constant
 	const DOKTER = 5;
 
 	const TIPE_KLINIK = 1;
-	const TIPE_DOKTER = 2;
+	const DOKTER_PRAKTIK = 2;
 }
