@@ -213,6 +213,12 @@ class AuthController extends Controller
             $forgot_password->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
             $forgot_password->save();
 
+
+            Mail::raw('You can reset password by klik :'.$forgot_password->token, function($msg) use ($request){ 
+                $msg->subject('Hi reset your password'); 
+                $msg->to([$request->email]); 
+                $msg->from(['izi-dok@gmail.com']); });
+
             return response()->json([
                 'success' => true,
                 'message' => 'forgot password telah dibuat',
