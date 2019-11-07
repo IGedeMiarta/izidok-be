@@ -14,9 +14,9 @@ class DokterController extends Controller
     *
     * @return Response
     */
-    public function index()
+    public function index(Request $request)
     {
-      $all_dokter = Dokter::all();
+      $dokter = Dokter::paginate($request->limit);
         return response()->json([
               'success' => true,
               'message' => 'success',
@@ -35,7 +35,8 @@ class DokterController extends Controller
             'username' => 'required|unique:users|string',
             'nama' => 'required|string',
             'email' => 'required|unique:users|email',
-            'password' => 'required|min:8'
+            'password' => 'required|min:8',
+            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
         ]);
 
       $user = new User();
@@ -43,12 +44,18 @@ class DokterController extends Controller
       $user->username = $request->input('username');
       $user->password = Hash::make($request->input('password'));
       $user->email = $request->input('email');
+      $user->nomor_telp = $request->input('nomor_telp');
       $user->save();
 
       $dokter = new Dokter();
       $dokter->nama = $request->input('nama');
       $dokter->user_id = $user->id;
       $status = $dokter->save();
+
+      $user_role = new UserRole();
+      $user_role->user_id = $user->id;
+      $user_role->role_id = Constant::DOKTER;
+      $user_role->save();
 
       if($status)
       {

@@ -13,13 +13,14 @@ class KodePenyakitController extends Controller
    *
    * @return Response
    */
-	public function index()
+	public function index(Request $request)
 	{
-		$all_kode = KodePenyakit::all();
+		  $kode_penyakit = KodePenyakit::paginate($request->limit);
+      $data['kode_penyakit'] = $kode_penyakit;
 	    return response()->json([
 	    			'success' => true,
 	    			'message' => 'success',
-	    			'data' => $all_kode
+	    			'data' => $data
 	    		],201);
 	}
 
@@ -77,7 +78,7 @@ class KodePenyakitController extends Controller
 	    }else{
 	        return response()->json([
 	        	'status' => true,
-	        	'data' => $kode,
+	        	'data' => $kode_penyakit,
 	        	'message' => 'success'
 	        ]);
 	    }
@@ -126,7 +127,7 @@ class KodePenyakitController extends Controller
             return response()->json([
             	'status' => false,
             	'data' => '',
-            	'message' => 'kode not found'
+            	'message' => 'kode penyakit not found'
             ]);
         }else{
             $nama = $kode_penyakit->kode;
