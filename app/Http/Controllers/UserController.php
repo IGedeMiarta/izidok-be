@@ -16,7 +16,7 @@ class UserController extends Controller
 	public function index(Request $request){
         $user = User::with('roles')->paginate($request->limit);
         
-        if ($user === null) {
+        if (!$user) {
             return response()->json(['status' => false]);
         }else{
             return response()->json(['status' => true, 'data' => $user]);
@@ -25,7 +25,7 @@ class UserController extends Controller
 
 	public function show($id = null){
 		$user = User::with('roles')->find($id);
-        if ($user === null) {
+        if (!$user) {
             return response()->json(['status' => false]);
         }else{
             return response()->json(['status' => true, 'data' => $user]);
@@ -35,7 +35,7 @@ class UserController extends Controller
 	public function delete($id = null){
 		$user = User::find($id);
 
-        if ($user === null) {            
+        if (!$user) {            
             return response()->json(['status' => false]);
         }else{
             $username = $user->username;
@@ -46,7 +46,7 @@ class UserController extends Controller
 
 	public function update(Request $request){
 		$user = User::find($request->id);
-        if ($user === null) {            
+        if (!$user) {            
             return response()->json(['status' => false]);
         }else{
 			$user->email = $request->email;
@@ -116,6 +116,13 @@ class UserController extends Controller
 		$password = $request->password;
 		
     	$user = User::where('username', $username)->first();
+
+        if(!$user){
+            return response()->json([
+    			'success' => false,
+    			'message' => 'User not found...'
+    		]);	
+        }
 
         if($user->activation->status == 0){
             return response()->json([
@@ -271,6 +278,13 @@ class UserController extends Controller
     public function activate($token){
         $activation = Activation::where('token', $token)->first();
 
+        if(!$activation){
+            return response()->json([
+                'success' => false,
+                'message' => 'invalid URL'
+            ], 404);  
+        }
+        
         if(strtotime(date('Y-m-d H:i:s')) > strtotime($activation->expired_at)){
             return response()->json([
                 'success' => false,

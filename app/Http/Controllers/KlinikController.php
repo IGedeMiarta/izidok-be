@@ -26,20 +26,19 @@ class KlinikController extends Controller
         $klinik = Klinik::whereHas('operators', function($q) use($user_id) {
                         $q->where('operator.user_id', $user_id);
                     })->paginate($request->limit);
-
-        $data['klinik'] = $klinik;
         
-        if ($data['klinik'] == null) {
+        if (!$klinik) {
             return response()->json(['status' => false], 422);
         }else{
+            $data['klinik'] = $klinik;
             return response()->json(['status' => true, 'data' => $data]);
         }
     }
 
     public function show($id = null){
         $klinik = Klinik::with('operators')->find($id);
-        if ($klinik == null) {
-            return response()->json(['status' => false], 422);
+        if (!$klinik) {
+            return response()->json(['status' => false, 'message' => 'Klinik not found...'], 422);
         }else{
             return response()->json(['status' => true, 'data' => $klinik]);
         }
@@ -107,7 +106,7 @@ class KlinikController extends Controller
 
         #activation token
         $activation = new Activation();
-        $activation->token = base64_encode(str_random(40));
+        $activation->token = base64_encode(str_random(30));
         $activation->user_id = $user->id;
         $activation->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
         $activation->save();
@@ -131,7 +130,7 @@ class KlinikController extends Controller
 
     public function update(Request $request){
         $klinik = Klinik::find($request->id);
-        if ($klinik == null) {            
+        if (!$klinik) {            
             return response()->json(['status' => false]);
         }else{
             $klinik->nama_klinik = $request->nama_klinik;
@@ -143,7 +142,7 @@ class KlinikController extends Controller
     public function delete($id = null){
         $klinik = Klinik::find($id);
 
-        if ($klinik == null) {            
+        if (!$klinik) {            
             return response()->json(['status' => false]);
         }else{
             $nama = $klinik->nama_klinik;
