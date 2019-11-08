@@ -27,6 +27,8 @@ $app->configure('services');
 
 $app->configure('mail');
 
+$app->configure('audit');
+
 $app->withFacades();
 
 $app->withEloquent();
@@ -87,6 +89,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
+$app->register(OwenIt\Auditing\AuditingServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

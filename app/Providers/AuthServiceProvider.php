@@ -56,5 +56,6 @@ class AuthServiceProvider extends ServiceProvider
 
             return null;
         });
+        
     }
 }
