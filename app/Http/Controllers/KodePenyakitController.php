@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\KodePenyakit;
 use App\Constant;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class KodePenyakitController extends Controller
 {
@@ -59,6 +60,43 @@ class KodePenyakitController extends Controller
 	   	}
 
   	}
+
+    public function store_excel(Request $request)
+    {
+      $collection = (new FastExcel)->import($request->file);
+      foreach ($collection as $record) {
+        $line = $this->checkData($record);
+        $kode_penyakit = new KodePenyakit();
+        $kode_penyakit->kode = $line['kode'];
+        $kode_penyakit->description = $line['description'];
+        $kode_penyakit->save();
+      }
+
+      if($collection)
+      {
+        return response()->json([
+            'success' => true,
+            'message' => 'success'
+          ],201);
+      }
+      else
+      {
+        return response()->json([
+            'success' => false,
+            'message' => 'failed'
+          ],400); 
+      }
+    }
+
+    public function checkData($data){
+        $arr = array();
+        foreach($data as $key => $item){
+            $item = ($item == '') ? null : $item;   
+            $arr[$key] = $item;
+        }
+        return $arr;
+    }
+
 
   	/**
    	* Display the specified resource.
