@@ -37,7 +37,6 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->delete('/user/{id}','UserController@delete');
         $router->post('/logout','UserController@logout');
 
-
         #klinik
         $router->get('/klinik', 'KlinikController@index');
         $router->get('/klinik/{id}', 'KlinikController@show');
@@ -68,6 +67,7 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         #kode penyakit
         $router->get('/kode_penyakit', 'KodePenyakitController@index');
         $router->post('/kode_penyakit', 'KodePenyakitController@store');
+        $router->post('/kode_penyakit/excel', 'KodePenyakitController@store_excel');
         $router->get('/kode_penyakit/{id}', 'KodePenyakitController@show');
         $router->put('/kode_penyakit/{id}', 'KodePenyakitController@update');
         $router->delete('/kode_penyakit/{id}', 'KodePenyakitController@delete');
