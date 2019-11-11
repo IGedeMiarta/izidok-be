@@ -74,6 +74,11 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
 
     });
 
-
+    #transaksi klinik
+    $router->get('/transaksi','TransKlinikController@index');
+    $router->post('/transaksi', 'TransKlinikController@store');
+    $router->get('/transaksi/{id}','TransKlinikController@show');
+    $router->put('/transaksi/{id}','TransKlinikController@update');
+    $router->delete('/transaksi/{id}','TransKlinikController@delete');
     
 });

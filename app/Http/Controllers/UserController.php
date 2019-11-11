@@ -95,7 +95,7 @@ class UserController extends Controller
     	if($user)
     	{
     		return response()->json([
-    			'success' => true,
+    			'status' => true,
     			'message' => 'Register Success!!',
     			'data' => $data
     		],201);
@@ -103,7 +103,7 @@ class UserController extends Controller
     	else
     	{
     		return response()->json([
-    			'success' => false,
+    			'status' => false,
     			'message' => 'Register Fail!!',
     			'data' => ''
     		],400);	
@@ -119,14 +119,14 @@ class UserController extends Controller
 
         if(!$user){
             return response()->json([
-    			'success' => false,
+    			'status' => false,
     			'message' => 'User not found...'
     		]);	
         }
 
         if($user->activation->status == 0){
             return response()->json([
-    			'success' => false,
+    			'status' => false,
     			'message' => 'Please check your email to activate user...'
     		]);	
         }
@@ -146,7 +146,7 @@ class UserController extends Controller
 			$api_key->save();
 
     		return response()->json([
-    			'success' => true,
+    			'status' => true,
     			'message' => 'Login Berhasil',
     			'data' => [
     				'user' => $user,
@@ -157,7 +157,7 @@ class UserController extends Controller
     	else
     	{
     		return response()->json([
-    			'success' => false,
+    			'status' => false,
     			'message' => 'Login Gagal',
     			'data' => ''
     		]);	
@@ -180,7 +180,7 @@ class UserController extends Controller
 			$api_key->save();
 
             return response()->json([
-                'success' => true,
+                'status' => true,
                 'message' => 'Logout Berhasil',
                 'data' => [
                     'user' => $api_key->user,
@@ -192,7 +192,7 @@ class UserController extends Controller
         else
         {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Logout gagal, user tidak ditemukan',
                 'data' => ''
             ]); 
@@ -207,7 +207,7 @@ class UserController extends Controller
         if(empty($user))
         {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'User tidak ditemukan'
             ]);
         }
@@ -227,7 +227,7 @@ class UserController extends Controller
                 $msg->from(['izi-dok@gmail.com']); });
 
             return response()->json([
-                'success' => true,
+                'status' => true,
                 'message' => 'forgot password telah dibuat',
                 'data' => $forgot_password
             ]);
@@ -244,21 +244,21 @@ class UserController extends Controller
         if(empty($forgot_password))
         {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'user not found'
             ]);
         }
         if($password != $konfirm_password)
         {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'password dan konfirm passowrd tidak sama'
             ]);   
         }
         else if(strtotime(date('Y-m-d H:i:s')) > strtotime($forgot_password->expired_at))
         {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'expired'
             ]);      
         }
@@ -269,7 +269,7 @@ class UserController extends Controller
             $user->save();
             $forgot_password->delete();
             return response()->json([
-                'success' => true,
+                'status' => true,
                 'message' => 'Password has ben updated'
             ]); 
         }
@@ -280,21 +280,21 @@ class UserController extends Controller
 
         if(!$activation){
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'invalid URL'
             ], 404);  
         }
         
         if(strtotime(date('Y-m-d H:i:s')) > strtotime($activation->expired_at)){
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'token expired or user had been activated...'
             ]);  
         }
 
         if($activation->status == 1){
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'user had already activated...'
             ]);  
         }
@@ -303,7 +303,7 @@ class UserController extends Controller
         
         if($activation->save()){
             return response()->json([
-                'success' => true,
+                'status' => true,
                 'message' => 'user has activated successfully...',
                 'data' => $activation->user
             ]);  

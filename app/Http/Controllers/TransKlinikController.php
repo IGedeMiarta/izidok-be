@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\TransKlinik;
+use App\Anamnesa;
 
 class TransKlinikController extends Controller 
 {
-  public function index()
+  public function index(Request $request)
   {
-    $trans_klinik = TransKlinik::all()->paginate($request->limit);
+    $trans_klinik = TransKlinik::paginate($request->limit);
         
         if (!$trans_klinik) {
             return response()->json(['status' => false]);
@@ -37,6 +38,7 @@ class TransKlinikController extends Controller
       'nadi' => 'integer',
     ]);
 
+      #transaksi
       $trans_klinik = new TransKlinik;
       $trans_klinik->klinik_dokter_id = $request->trans_dokter_id;
       $trans_klinik->pasien_id = $request->pasien_id;
@@ -44,6 +46,16 @@ class TransKlinikController extends Controller
       $trans_klinik->klinik_operator_id = $request->klinik_operator_id;
       $trans_klinik->klinik_id = $requst->klinik_id;
       $trans_klinik->save();
+
+      #update pasien
+      $pasien = Pasien::find($reuqest->pasien_id)->first();
+      $pasien->tinggi_badan = $request->tinggi_badan;
+      $pasien->berat_badan = $request->berat_badan;
+      $pasien->suhu_badan = $request->suhu_badan;
+      $pasien->sistole = $request->sistole;
+      $pasien->diastole = $request->diastole;
+      $pasien->nadi = $request->nadi;
+      $pasien->save();
 
       if(!$trans_klinik){
         return response()->json(['status' => false], 422);
