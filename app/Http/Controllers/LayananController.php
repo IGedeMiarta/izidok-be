@@ -21,9 +21,9 @@ class LayananController extends Controller
   	public function store(Request $request)
   	{
   		$this->validate($request, [
-            'kode_layanan' => 'required|string'
-            'nama_layanan' => 'required|string'
-            'tarif' => 'required|integer'
+            'kode_layanan' => 'required|string',
+            'nama_layanan' => 'required|string',
+            'tarif' => 'required|integer',
             'klinik_id' => 'required|integer'
         ]);
 
@@ -88,7 +88,7 @@ class LayananController extends Controller
 	    	$layanan->kode_layanan = $layanan->kode_layanan;
 	    	$layanan->tarif = $layanan->tarif;
 	    	$layanan->klinik_id = $layanan->klinik_id;
-	    	$role->save();
+	    	$layanan->save();
 	        return response()->json([
 	        	'status' => true,
 	        	'data' => $layanan,
@@ -109,7 +109,7 @@ class LayananController extends Controller
             ]);
         }else{
             $nama = $layanan->nama_layanan;
-            $role->delete();
+            $layanan->delete();
             return response()->json([
             	'status' => true, 
             	'message' => 'Layanan \''.$nama.'\' has been deleted'
