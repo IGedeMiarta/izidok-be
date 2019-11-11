@@ -27,6 +27,13 @@ class CreatePasienTable extends Migration {
 			$table->string('nomor_polis', 50)->nullable();
 			$table->string('email', 50)->nullable();
 			$table->string('nama_penanggung_jawab',100)->nullable();
+			$table->integer('tensi')->nullable();
+			$table->integer('nadi')->nullable();
+			$table->integer('suhu')->nullable();
+			$table->integer('respirasi')->nullable();
+			$table->integer('tinggi_badan')->nullable();
+			$table->integer('berat_badan')->nullable();
+			$table->integer('nomor_pasien')->nullable();
 			$table->integer('user_id');
 			$table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();
