@@ -72,6 +72,20 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->put('/kode_penyakit/{id}', 'KodePenyakitController@update');
         $router->delete('/kode_penyakit/{id}', 'KodePenyakitController@delete');
 
+        #layanan
+        $router->get('/layanan', 'LayananController@index');
+        $router->post('/layanan', 'LayananController@store');
+        $router->get('/layanan/{id}', 'LayananController@show');
+        $router->put('/layanan/{id}', 'LayananController@update');
+        $router->delete('/layanan/{id}', 'LayananController@delete');
+
+        #pasien
+        $router->get('/pasien', 'PasienController@index');
+        $router->post('/pasien', 'PasienController@store');
+        $router->get('/pasien/{id}', 'PasienController@show');
+        $router->put('/pasien/{id}', 'PasienController@update');
+        $router->delete('/pasien/{id}', 'PasienController@delete');
+
     });
 
     #transaksi klinik
