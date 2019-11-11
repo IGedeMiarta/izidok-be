@@ -31,4 +31,9 @@ class Klinik extends Model implements Auditable
         return $this->belongsToMany(Dokter::class, 'klinik_dokter');
     }
 
+    public function layanan()
+    {
+        return $this->hasMany('App\Layanan', 'klinik_id', 'id');
+    }
+
 }
