@@ -75,6 +75,7 @@ class KlinikController extends Controller
             'tipe_faskes' => $request->tipe_faskes,
             'nama_klinik' => $request->nama_klinik,
             'nama_pic' => $nama_pic,
+            'nomor_ijin' => $request->nomor_ijin,
             'nomor_telp' => $request->nomor_telp
         ]);
    
