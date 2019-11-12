@@ -220,8 +220,7 @@ class UserController extends Controller
             $forgot_password->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
             $forgot_password->save();
 
-
-            Mail::raw('You can reset password by klik :'.$forgot_password->token, function($msg) use ($request){ 
+            Mail::raw('You can reset password by klik :'.url('/api/v1/forgot_password/'.$forgot_password->token), function($msg) use ($request){ 
                 $msg->subject('Hi reset your password'); 
                 $msg->to([$request->email]); 
                 $msg->from(['izi-dok@gmail.com']); });
@@ -234,9 +233,37 @@ class UserController extends Controller
         }
     }
 
+    public function forgot_password($token)
+    {
+        // echo $token;
+        $forgot_password = ForgotPassword::where('token',$token)->first();
+        if(empty($forgot_password))
+        {
+            return response()->json([
+                'status' => false,
+                'message' => 'forgot password not found'
+            ]);
+        }
+        else if(strtotime(date('Y-m-d H:i:s')) > strtotime($forgot_password->expired_at))
+        {
+            return response()->json([
+                'status' => false,
+                'message' => 'expired'
+            ]);      
+        }
+        else
+        {
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'token' => $token
+            ]);
+        }
+    }
+
     public function reset(Request $request)
     {
-        $token = $request->bearerToken();
+        $token = $request->token;
         $forgot_password = ForgotPassword::where('token',$token)->first();
         $password = $request->input('password');
         $konfirm_password = $request->input('konfirm_password');
