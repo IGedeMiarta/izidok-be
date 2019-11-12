@@ -12,7 +12,11 @@ class TransKlinikController extends Controller
 {
   public function index(Request $request)
   {
-    $trans_klinik = TransKlinik::paginate($request->limit);
+    $status = Constant::QUEUED;
+    if($request->status){
+      $status = $request->status;
+    }
+    $trans_klinik = TransKlinik::where('status', $status)->paginate($request->limit);
         
         if (!$trans_klinik) {
             return response()->json(['status' => false]);
@@ -52,7 +56,7 @@ class TransKlinikController extends Controller
       $trans_klinik->operator_id = $request->operator_id;
       $trans_klinik->klinik_id = $request->klinik_id;
 
-      $trans_klinik->nomor_antrian = $request->nomor_antrian;
+      $trans_klinik->nomor_antrian = $this->getNextOrderNumber();
       $trans_klinik->waktu_konsultasi = $request->waktu_konsultasi;
       $trans_klinik->status = Constant::QUEUED;
       $trans_klinik->save();
@@ -117,6 +121,18 @@ class TransKlinikController extends Controller
         $trans_klinik->delete();
         return response()->json(['status' => true, 'message' => 'Transaksi ID \''.$trans_klinik_id.'\' has been deleted']);
     }
+  }
+
+  public function getNextOrderNumber()
+  {
+    $lastOrder = TransKlinik::orderBy('created_at', 'desc')->first();
+    $number = 1;
+    if ( $lastOrder ){
+        $number = $lastOrder->nomor_antrian;
+        return ($number + 1);
+    }
+
+    return $number;
   }
   
 }
