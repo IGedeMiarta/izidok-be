@@ -7,6 +7,7 @@ use App\TransKlinik;
 use App\Anamnesa;
 use App\Constant;
 use App\Pasien;
+// use Carbon\Carbon;
 
 class TransKlinikController extends Controller 
 {
@@ -55,8 +56,7 @@ class TransKlinikController extends Controller
       $trans_klinik->pasien_id = $request->pasien_id;
       $trans_klinik->operator_id = $request->operator_id;
       $trans_klinik->klinik_id = $request->klinik_id;
-
-      $trans_klinik->nomor_antrian = $this->getNextOrderNumber();
+      $trans_klinik->nomor_antrian = $this->getNextOrderNumber($request->klinik_id);
       $trans_klinik->waktu_konsultasi = $request->waktu_konsultasi;
       $trans_klinik->status = Constant::QUEUED;
       $trans_klinik->save();
@@ -123,12 +123,19 @@ class TransKlinikController extends Controller
     }
   }
 
-  public function getNextOrderNumber()
+  public function getNextOrderNumber($klinik_id)
   {
-    $lastOrder = TransKlinik::orderBy('created_at', 'desc')->first();
+    $trans_klinik = TransKlinik::where('klinik_id', $klinik_id)
+                              ->orderBy('created_at', 'desc')->first();
+
     $number = 1;
-    if ( $lastOrder ){
-        $number = $lastOrder->nomor_antrian;
+
+    if(!$trans_klinik){
+      return $number;
+    }
+    
+    if ( $trans_klinik->created_at->isToday() ){
+        $number = $trans_klinik->nomor_antrian;
         return ($number + 1);
     }
 
