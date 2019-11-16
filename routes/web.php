@@ -14,7 +14,7 @@ $router->get('/key', function() {
     return str_random(32);
 });
 
-$router->get('/sendEmail', 'UserController@sendEmail');
+$router->get('/email/resend/{user_id}', 'UserController@sendEmail');
 
 $router->group(['prefix'=>'api/v1'], function() use($router){
     

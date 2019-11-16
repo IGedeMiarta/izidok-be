@@ -51,6 +51,7 @@ class KlinikController extends Controller
             'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
             'email' => 'required|unique:users|email',
             'nomor_ijin' => 'string',
+            'username' => 'required|string',
             'password' => 'required|confirmed|min:8'
         ];
         
@@ -81,7 +82,7 @@ class KlinikController extends Controller
    
         #data user
         $user = User::create([
-    		"username" => $request->email,
+    		"username" => $request->username,
     		"email" => $request->email,
     		"password" => app('hash')->make($request->password),
     		"nama" => $nama_pic,

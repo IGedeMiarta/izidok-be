@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Hash;
 Use App\User;
 Use App\ApiKey;
 use App\ForgotPassword;
-use Illuminate\Support\Facades\Mail;
 use App\Activation;
 
 class UserController extends Controller
@@ -90,7 +89,7 @@ class UserController extends Controller
          $activation->save();
 
          $data['user'] = $user;
-         $data['activation_url'] = url('/api/v1/activate/'.$activation->token);
+         $data['activation_url'] = url(env('APP_PREFIX', 'api/v1').'/activate/'.$activation->token);
 
     	if($user)
     	{
@@ -337,12 +336,59 @@ class UserController extends Controller
         }
 
     }
+    
+    public function sendEmail($user_id){
+        $activation = Activation::with('user')
+                                ->where('user_id', $user_id)
+                                ->orderBy('created_at')
+                                ->first();
+        
+        if($activation->status === 1){
+            return response()->json([
+                'status' => false,
+                'message' => 'User already activated...'
+            ]);    
+        }
 
-    // public function sendEmail(){
-    //     #send email right here...
-    //     Mail::raw('Message here...', function($msg){ 
-    //         $msg->subject('Hi Klinik Sehat, please verify your Klinik account'); 
-    //         $msg->to(['rezpa.snk@gmail.com']); 
-    //         $msg->from(['izi-dok@gmail.com']); });
-    // }
+        if(strtotime(date('Y-m-d H:i:s')) > strtotime($activation->expired_at)){
+            return response()->json([
+                'status' => false,
+                'message' => 'Activation token was expired...'
+            ]);    
+        }
+
+        if(!$activation){
+            return response()->json([
+                'status' => false,
+                'message' => 'Resend email request invalid...'
+            ]);      
+        }
+
+        $activation_url = url(env('APP_PREFIX', 'api/v1').'/activate/'.$activation->token);
+        $user = $activation->user;
+
+        $email_data = [
+            'subject' => 'User Activatoin',
+            'message' => 'Click link below to activate your account: \n '. $activation_url,
+            'to' => ['rezpa.snk@gmail.com', $user->email],
+            'from' => 'izidok.dev@gmail.com'
+        ];
+
+        $data['activation_url'] = $activation_url;
+        $data['user'] = $user;
+
+        if(\sendEmail($email_data)){
+            return response()->json([
+                'status' => true,
+                'message' => 'Email has been re-send successfully...',
+                'data' => $data
+            ]);  
+        }
+
+        return response()->json([
+            'status' => false,
+            'message' => 'There is something wrong...'
+        ]);  
+
+    }
 }
