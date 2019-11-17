@@ -14,15 +14,14 @@ $router->get('/key', function() {
     return str_random(32);
 });
 
-$router->get('/email/resend/{user_id}', 'UserController@sendEmail');
-
 $router->group(['prefix'=>'api/v1'], function() use($router){
-    
+   
+    #registration
     $router->post('/user','UserController@store');
-    $router->post('/login','UserController@login');
     $router->post('/klinik', 'KlinikController@store');
-
     $router->get('/activate/{token}','UserController@activate');
+    $router->get('/email/resend/{user_id}', 'UserController@sendEmail');
+    $router->post('/login','UserController@login');
 
     #reset password
     $router->post('/forgot','UserController@forgot');
@@ -88,13 +87,13 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->delete('/pasien/{id}', 'PasienController@delete');
         $router->post('/pasien/ocr', 'PasienController@getText');
 
-    });
+        #transaksi klinik
+        $router->get('/transaksi','TransKlinikController@index');
+        $router->post('/transaksi', 'TransKlinikController@store');
+        $router->get('/transaksi/{id}','TransKlinikController@show');
+        $router->put('/transaksi/{id}','TransKlinikController@update');
+        $router->delete('/transaksi/{id}','TransKlinikController@delete');
 
-    #transaksi klinik
-    $router->get('/transaksi','TransKlinikController@index');
-    $router->post('/transaksi', 'TransKlinikController@store');
-    $router->get('/transaksi/{id}','TransKlinikController@show');
-    $router->put('/transaksi/{id}','TransKlinikController@update');
-    $router->delete('/transaksi/{id}','TransKlinikController@delete');
+    });
     
 });

@@ -7,6 +7,9 @@ use App\TransKlinik;
 use App\Anamnesa;
 use App\Constant;
 use App\Pasien;
+use App\Klinik;
+use App\Dokter;
+use App\Operator;
 // use Carbon\Carbon;
 
 class TransKlinikController extends Controller 
@@ -29,16 +32,17 @@ class TransKlinikController extends Controller
   public function store(Request $request)
   {
     $this->validate($request,[
-      'pasien_id' => 'required',
-      'klinik_id' => 'required',
-      'dokter_id' => 'required',
-      'operator_id' => 'required',
-      'nomor_rekam_medis' => 'required|unique:rekam_medis|integer',
-      'no_ktp' => 'required|string',
+      'pasien_id' => 'required|integer',
+      'klinik_id' => 'required|integer',
+      'dokter_id' => 'required|integer',
+      'operator_id' => 'required|integer',
+      'nomor_rekam_medis' => 'required|string',
+
+      'nama_lengkap' => 'required|string',
+      'nik' => 'required|string',
       'jenis_kelamin' => 'required|integer|min:0|max:1',
       'nomor_telp' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
       'waktu_konsultasi' => 'required|string',
-
       'tinggi_badan' => 'integer',
       'berat_badan' => 'integer',
       'suhu' => 'integer',
@@ -46,6 +50,18 @@ class TransKlinikController extends Controller
       'diastole' => 'integer',
       'nadi' => 'integer',
     ]);
+
+      #klinik exist?
+      if(!Klinik::find($request->klinik_id))
+        return response()->json(['status' => false, 'message' => 'Klinik not found...'], 422);
+      
+      #dokter exist?
+      if(!Dokter::find($request->dokter_id))
+        return response()->json(['status' => false, 'message' => 'Dokter not found...'], 422);
+
+      #pasien exist?
+      if(!Pasien::find($request->pasien_id))
+        return response()->json(['status' => false, 'message' => 'Pasien not found...'], 422);
 
       #transaksi
       $trans_klinik = new TransKlinik;
@@ -84,7 +100,7 @@ class TransKlinikController extends Controller
   {
     $trans_klinik = TransKlinik::all()->find($id);
     if (!$trans_klinik) {
-        return response()->json(['status' => false]);
+        return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
     }else{
         return response()->json(['status' => true, 'data' => $trans_klinik]);
     }
@@ -99,7 +115,7 @@ class TransKlinikController extends Controller
 
     $trans_klinik = TransKlinik::find($request->id);
       if (!$trans_klinik) {            
-          return response()->json(['status' => false]);
+          return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
       }else{
           $trans_klinik->status = $request->status;
           $trans_klinik->save();
@@ -112,11 +128,11 @@ class TransKlinikController extends Controller
     $trans_klinik = TransKlinik::find($id);
 
     if (!$trans_klinik) {            
-        return response()->json(['status' => false]);
+        return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
     }else{
         $trans_klinik_id = $trans_klinik->id;
         $trans_klinik->delete();
-        return response()->json(['status' => true, 'message' => 'Transaksi ID \''.$trans_klinik_id.'\' has been deleted']);
+        return response()->json(['status' => true, 'message' => 'Rawat Jalan ID \''.$trans_klinik_id.'\' has been deleted']);
     }
   }
 
