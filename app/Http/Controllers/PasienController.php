@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 use Illuminate\Http\Request;
 use App\Pasien;
@@ -181,5 +182,86 @@ class PasienController extends Controller
             	'message' => 'Pasien \''.$nama.'\' has been deleted'
             ]);
         }
-  	}
+	  }
+	  
+	  public function getText(Request $request){
+
+		$this->validate($request, [
+            'file' => 'required|file|max:5000',
+        ]);
+
+		if(!$request->file){
+			return response()->json([
+				'status' => false, 
+				'message' => 'File is invalid...',
+			]);	
+		}
+
+        $credentialsFilePath = storage_path('izi-gvision-dev-053a0a7e0799.json');
+        $imageAnnotator = new ImageAnnotatorClient([
+            'credentials' => $credentialsFilePath
+        ]);
+        
+		$path = storage_path('/upload/ktp/');
+		$name_type = 'ktp';
+		
+		if($request->file){
+			$name = \upload($request->file, $name_type, $path);
+			$path = $path . $name;
+		}
+
+		$image = file_get_contents($path);
+
+		if(!$image){
+			return response()->json([
+				'status' => false, 
+				'message' => 'File image not found...',
+			]);	
+		}
+		
+        $response = $imageAnnotator->textDetection($image);
+        $texts = $response->getTextAnnotations();
+        $text = $texts[0]->getDescription();
+        $wordToReplace = ['gol. darah', 'nik', 'kewarganegaraan', 'nama', 
+                        'status perkawinan', 'berlaku hingga', 'alamat', 'agama',
+                        'tempat/tgl lahir', 'jenis kelamin', 'gol darah', 'rt/rw', 
+                        'kel', 'desa', 'kecamatan'];
+        $lines = preg_split('/\r\n|\r|\n/', $text);
+
+        $res = [];
+        foreach($lines as $line){
+            foreach($wordToReplace as $word){
+                $line = str_ireplace($word, '', $line);   
+                $line = str_ireplace(':', '', $line);
+            }
+            if($line != ''){
+                array_push($res, $line);
+            }
+        }
+
+        $result = [
+            "province" => $res[0],
+            "city" => $res[1],
+            "nik" => $res[2],
+            "name" => $res[3],
+            "birthdate" => $res[4],
+            "gender" => $res[5],
+            // "alamat" => $res[7],
+            // "rt/rw" => $res[8],
+            // "desa" => $res[9],
+            // "kecamatan" => $res[10],
+		];
+		
+		$imageAnnotator->close();
+		
+		$data['detected_text'] = $res;
+		$data['result'] = $result;
+
+		return response()->json([
+			'status' => true, 
+			'message' => 'Text detection has done successfully...',
+			'data' => $data
+		]);	
+
+    }
 }

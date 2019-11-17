@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "izi-gvision-dev",
+  "private_key_id": "053a0a7e07995269cf674688519dc5821eaf3ff5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCkpJr+RqLCGtf/\ngYyX2zhbH0QDmUuh3hayQz5QBDqGC/7SKtXWQLTpMI49BLX3oMHSa5K/fcG8xcV7\nwNX4VmXtz0tlhXAsQ5dyJ4b+7FcmnsUKO+kUDpa9r2uZ5W6Do19Owo86RCfUAp6r\nijrMYFiTehBtR/UgIMii3UqmGZKm3cuUIAlmDUV2KUj36wwvEPnjfqR2qK7buKa5\nXmYKNZtYqjk6Bx0Kttzvl4WbqjECOft0JNdHeyydiLSC006Iq4jjBl0PYDb744Me\noAOVc/UAUJJwjE9b+Jro8fa476buAqSNzgBvrQwtX1BEJHDcoNHYsOyXXC1FIDF0\nyuklmJRjAgMBAAECggEAT7GXjo5NWQxaUkR4c8b6m+zh5KYOnH7eWJJA9sVdOKZU\nxZFTaX5vs1I7/2Ao3oCzYPGOGl+6Z/AJG9JnH+peM0K8WZtCBUMAaxKj/wASXVDL\nypzeQMWhBJcFS/xoxpJNX1fAsXDtIGvWNu1VcbkPFu+mROdoSRFlXKQl7omBWYBJ\n4xgyVEm56PXVILABNjj1usmMxcEFDcpJyNK1gmkzDexc23ittddz/yBanPTyBITR\nPRgDl4QFaTLv4lUhtp69YwKcr1OglM4V96uku+djlepH+vs8ctvziHvqHM8Dk75M\nJX9HYfLSU/xhrtimd70IYaCdtH2g2abGjUhddrCfkQKBgQDhFo7hzyT+Z5/q6RQ0\nzOpPvd8NNnCnuylfdn/VOuVDx6kwMzW6BxdSK32JNWmDKtTeQ6cqTlfARrl9KpeF\nzhSnkSr2lW+0R/tmLIW3CW3YKWar2afYU5u+2Tj1rF7PQv6vS01C8d7H9aQ1WrCg\nBCLDl7OgImVeKmGdhnBFaAun0QKBgQC7QPkOaEASxh5f+Gt0dKh8oFEwwndMTPIj\nmmR20tGNAkZk/UyQxVJWfPAFJRAYDPsiBihlB3EGVS8/kNglz161gHP/f/QBby5u\nxOwK6t6Pz2Gk23gql9DHF5M/du1YdXXFF3p3fZYQnJmUwCv4Yqy5MekkJX8NP8fW\nJhoniO758wKBgB982GAeaj5soKJsGLeKMv0Uwq9Gflv4gsEoApoBszDYLYLgpxNv\nCoQkMVuQbUI8K6ssK6Zvbzcmrawk2S2OtrT6SdhU71t49mJEuC/y0br7j7FasXBB\nwffgy2cSxfCYnqhHEHfc/h1a763HEg5Qhcx23Fn6ddPGegFfXTVYaMkBAoGAJ78v\n3n4Ec7e4BNj/PhXxGZsSAM6Wcgy3LRV9k7dGIa9E7/TQRr6Lrq4QaJcoZmKDAALc\nmi1NMXHteImvR79PtCkS9j3btl46Ner4y4x1N4Nmj47CYBAfkdMQP11oHem42OAV\n770pmFcVRnzQGIYhcaIFgdWvtUk/itZFoPSw/T8CgYEA2Fu3utSOAqxGOBh9QQs4\nUUeh4JMFkEB5yw9JB7vHhM3RpIdSxDoPXxj18tO5k+w6EkcjcV1cGkTz8/uu2UFT\nO3ySi2/vNRXvIyPw+qyGp8rM0SAMl8Kyr69qgBVUre19ZWH0hV4KpF0LLUJ+bKeL\nyLPfyaoXgWLIZGxWrGUxxCo=\n-----END PRIVATE KEY-----\n",
+  "client_email": "izi-gvision-dev@izi-gvision-dev.iam.gserviceaccount.com",
+  "client_id": "112508251980051885122",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/izi-gvision-dev%40izi-gvision-dev.iam.gserviceaccount.com"
+}

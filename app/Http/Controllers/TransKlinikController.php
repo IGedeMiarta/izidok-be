@@ -47,9 +47,6 @@ class TransKlinikController extends Controller
       'nadi' => 'integer',
     ]);
 
-      #get operator from user
-      
-
       #transaksi
       $trans_klinik = new TransKlinik;
       $trans_klinik->dokter_id = $request->dokter_id;

@@ -15,5 +15,6 @@ class HelperServiceProvider extends ServiceProvider
     public function register()
     {
         require base_path().'/app/Helpers/EmailHelper.php';
+        require base_path().'/app/Helpers/UploadFileHelper.php';
     }
 }
