@@ -8,7 +8,8 @@ Use App\User;
 Use App\ApiKey;
 use App\ForgotPassword;
 use App\Activation;
-use App\Config;
+use App\Reference;
+use App\Constant;
 
 class UserController extends Controller
 {
@@ -253,8 +254,12 @@ class UserController extends Controller
 
         if(empty($forgot_password))
         {
-            $param = 'forgot_url_invalid';
-            $config = Config::where('param',$param)->first();
+
+            $key = Constant::FORGOT_INVALID;
+            $category = Constant::REDIRECTION;
+
+            $config = Reference::where('key',$key)
+                        ->where('category',$category)->first();
             $data['url'] = $config->value;
 
             return response()->json([
@@ -265,8 +270,10 @@ class UserController extends Controller
         }
         else if(strtotime(date('Y-m-d H:i:s')) > strtotime($forgot_password->expired_at))
         {
-            $param = 'forgot_url_invalid';
-            $config = Config::where('param',$param)->first();
+            $key = Constant::FORGOT_INVALID;
+            $category = Constant::REDIRECTION;
+            $config = Reference::where('key',$key)
+                        ->where('category',$category)->first();
             $data['url'] = $config->value;
 
             return response()->json([
@@ -277,8 +284,10 @@ class UserController extends Controller
         }
         else
         {
-            $param = 'forgot_url_valid';
-            $config = Config::where('param',$param)->first();
+            $key = Constant::FORGOT_VALID;
+            $category = Constant::REDIRECTION;
+            $config = Reference::where('key',$key)
+                        ->where('category',$category)->first();
             $data['url'] = $config->value;
             $data['token'] = $token;
 
