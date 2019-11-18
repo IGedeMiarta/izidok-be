@@ -8,6 +8,7 @@ Use App\User;
 Use App\ApiKey;
 use App\ForgotPassword;
 use App\Activation;
+use App\Config;
 
 class UserController extends Controller
 {
@@ -219,16 +220,29 @@ class UserController extends Controller
             $forgot_password->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
             $forgot_password->save();
 
-            Mail::raw('You can reset password by klik :'.url('/api/v1/forgot_password/'.$forgot_password->token), function($msg) use ($request){ 
-                $msg->subject('Hi reset your password'); 
-                $msg->to([$request->email]); 
-                $msg->from(['izi-dok@gmail.com']); });
+            $forgot_url = url(env('APP_PREFIX', 'api/v1').'/forgot_password/'.$forgot_password->token);
 
-            return response()->json([
-                'status' => true,
-                'message' => 'forgot password telah dibuat',
-                'data' => $forgot_password
-            ]);
+            $email_data = [
+                'subject' => 'Forgot Password',
+                'message' => 'Click link below to reset your password: \n '. $forgot_url,
+                'to' => ['helmysmp@gmail.com', $forgot_password->email],
+                'from' => 'izidok.dev@gmail.com'
+            ];
+
+            if(\sendEmail($email_data)){
+                return response()->json([
+                    'status' => true,
+                    'message' => 'forgot password telah dibuat',
+                    'data' => $forgot_password
+                ]);
+            }
+
+            // Mail::raw('You can reset password by klik :'.url('/api/v1/forgot_password/'.$forgot_password->token), function($msg) use ($request){ 
+            //     $msg->subject('Hi reset your password'); 
+            //     $msg->to([$request->email]); 
+            //     $msg->from(['izi-dok@gmail.com']); });
+
+            
         }
     }
 
@@ -236,26 +250,42 @@ class UserController extends Controller
     {
         // echo $token;
         $forgot_password = ForgotPassword::where('token',$token)->first();
+
         if(empty($forgot_password))
         {
+            $param = 'forgot_url_invalid';
+            $config = Config::where('param',$param)->first();
+            $data['url'] = $config->value;
+
             return response()->json([
                 'status' => false,
-                'message' => 'forgot password not found'
+                'message' => 'forgot password not found',
+                'data' => $data
             ]);
         }
         else if(strtotime(date('Y-m-d H:i:s')) > strtotime($forgot_password->expired_at))
         {
+            $param = 'forgot_url_invalid';
+            $config = Config::where('param',$param)->first();
+            $data['url'] = $config->value;
+
             return response()->json([
                 'status' => false,
-                'message' => 'expired'
+                'message' => 'expired',
+                'data' => $data
             ]);      
         }
         else
         {
+            $param = 'forgot_url_valid';
+            $config = Config::where('param',$param)->first();
+            $data['url'] = $config->value;
+            $data['token'] = $token;
+
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'token' => $token
+                'data' => $data
             ]);
         }
     }
