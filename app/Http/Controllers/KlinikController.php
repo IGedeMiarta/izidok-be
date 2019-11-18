@@ -52,7 +52,7 @@ class KlinikController extends Controller
             'email' => 'required|unique:users|email',
             'nomor_ijin' => 'string',
             'username' => 'required|string',
-            'password' => 'required|confirmed|min:8'
+            'password' => 'required|confirmed|min:6'
         ];
         
         $isKlinik = false;

@@ -29,6 +29,8 @@ $app->configure('mail');
 
 $app->configure('audit');
 
+$app->configure('cors');
+
 $app->withFacades();
 
 $app->withEloquent();
@@ -65,9 +67,10 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->middleware([
+    // App\Http\Middleware\ExampleMiddleware::class
+    'Nord\Lumen\Cors\CorsMiddleware',
+]);
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
@@ -91,6 +94,7 @@ $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(OwenIt\Auditing\AuditingServiceProvider::class);
 $app->register(App\Providers\HelperServiceProvider::class);
+$app->register('Nord\Lumen\Cors\CorsServiceProvider');
 
 /*
 |--------------------------------------------------------------------------

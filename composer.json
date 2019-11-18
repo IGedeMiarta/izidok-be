@@ -14,6 +14,7 @@
         "laravel/helpers": "^1.1",
         "laravel/lumen-framework": "5.8.*",
         "laravelista/lumen-vendor-publish": "5.8",
+        "nordsoftware/lumen-cors": "^3.1",
         "owen-it/laravel-auditing": "^9.3",
         "rap2hpoutre/fast-excel": "^1.3"
     },

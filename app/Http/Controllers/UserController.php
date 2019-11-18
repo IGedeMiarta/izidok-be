@@ -64,7 +64,7 @@ class UserController extends Controller
             'nama' => 'required|string',
             'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
             'email' => 'required|unique:users|email',
-            'password' => 'required|min:8'
+            'password' => 'required|min:6'
         ]);
 
     	$username = $request->input('username');
