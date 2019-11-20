@@ -94,6 +94,16 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->put('/transaksi/{id}','TransKlinikController@update');
         $router->delete('/transaksi/{id}','TransKlinikController@delete');
 
+        #transaksi klinik
+        $router->get('/transaksi','TransKlinikController@index');
+        $router->post('/transaksi', 'TransKlinikController@store');
+        $router->get('/transaksi/{id}','TransKlinikController@show');
+        $router->put('/transaksi/{id}','TransKlinikController@update');
+        $router->delete('/transaksi/{id}','TransKlinikController@delete');
+
+        #rekam medis
+        $router->get('/rekam_medis/{pasien_id}','RekamMedisController@index');
+
     });
     
     $router->post('/test', 'OperatorController@test');
