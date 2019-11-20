@@ -132,11 +132,17 @@ class UserController extends Controller
 
     	if(Hash::check($password, $user->password))
     	{
+            $first_login = false;
+            if($user->is_first_login == 1){
+                $user->update([
+                    'is_first_login' => 0
+                ]);
+
+                $first_login = true;
+            }
+
     		$token = base64_encode(str_random(40));
-    		// $user->update([
-    		// 	'api_token' => $api_key
-			// ]);
-			
+    		
 			#save into tb ApiKey
 			$api_key = new Apikey;
 			$api_key->user_id = $user->id;
@@ -149,7 +155,8 @@ class UserController extends Controller
     			'message' => 'Login Berhasil',
     			'data' => [
     				'user' => $user,
-    				'token' => $token
+                    'token' => $token,
+                    'first_login' => $first_login
     			]
     		],201);
     	}

@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('nama');
             $table->string('nomor_telp')->nullable();
+            $table->integer('is_first_login')->default(1);
             $table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
