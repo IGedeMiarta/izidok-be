@@ -20,23 +20,22 @@ class LayananController extends Controller
 
   	public function store(Request $request)
   	{
-  		$this->validate($request, [
-            'kode_layanan' => 'required|string',
-            'nama_layanan' => 'required|string',
-            'tarif' => 'required|integer',
-            'klinik_id' => 'required|integer'
-        ]);
+        $arr_layanan = $request->arr;
+        $result = array();
 
-	   	$layanan = new Layanan();
-	   	$layanan->kode_layanan = $request->input('kode_layanan');
-	   	$layanan->nama_layanan = $request->input('nama_layanan');
-	   	$layanan->tarif = $request->input('tarif');
-	   	$layanan->klinik_id = $request->input('klinik_id');
-	   	$status = $layanan->save();
+        foreach ($arr_layanan as $layanan_obj) {
+        	$layanan = new Layanan();
+		   	$layanan->kode_layanan = $layanan_obj['kode_layanan'];
+		   	$layanan->nama_layanan = $layanan_obj['nama_layanan'];
+		   	$layanan->tarif = $layanan_obj['tarif'];
+		   	$layanan->klinik_id = $layanan_obj['klinik_id'];
+		   	$layanan->save();
+		   	array_push($result,$layanan);
+        }
 
-	   	$data['layanan'] = $layanan;
+	   	$data['layanan'] = $result;
 
-	   	if($status)
+	   	if(count($data['layanan']) > 0)
 	   	{
 	   		return response()->json([
 	    			'success' => true,
