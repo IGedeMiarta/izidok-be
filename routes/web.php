@@ -28,6 +28,10 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
     $router->get('/forgot_password/{token}','UserController@forgot_password');
     $router->post('/reset','UserController@reset');
 
+    #operator
+    $router->get('/operator/check/{token}','OperatorController@check_activation');
+    $router->post('/operator/activate','OperatorController@activation');
+
 
     $router->group(['middleware' => 'auth'], function() use($router){
         #user
@@ -53,6 +57,7 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         #operator
         $router->get('/operator', 'OperatorController@index');
         $router->post('/operator', 'OperatorController@store');
+
         $router->get('/operator/{id}', 'OperatorController@show');
         $router->put('/operator/{id}', 'OperatorController@update');
         $router->delete('/operator/{id}', 'OperatorController@delete');

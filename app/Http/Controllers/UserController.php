@@ -261,7 +261,6 @@ class UserController extends Controller
 
         if(empty($forgot_password))
         {
-
             $key = Constant::FORGOT_INVALID;
             $category = Constant::REDIRECTION;
 
