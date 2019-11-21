@@ -4,33 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\RekamMedis;
+use App\TransKlinik;
+use App\Pasien;
 
 class RekamMedisController extends Controller
 {
     public function index(Request $request)
   	{
-
-  		$rekam_medis = RekamMedis::join('trans_klinik', function($join)){
-  			$join->on('trans_klinik_id','=','trans_klinik.id')
-  				->where('pasien_id','=',$request->pasien_id);
-  		})->get();
-		
+  		 $all_klinik = TransKlinik::where('pasien_id',$request->pasien_id)->with('rekan_medis')->get();
+       print_r($all_klinik);
   	}
 
-	  /**
-   	* Store a newly created resource in storage.
-   	*
-   	* @return Response
-   	*/
   	public function store(Request $request)
   	{
-  		$this->validate($request, [
-            'role' => 'required|string'
-        ]);
-
-	   	$role = new Role();
-	   	$role->role = $request->input('role');
-	   	$status = $role->save();
+  		
 
 	   	if($status)
 	   	{
