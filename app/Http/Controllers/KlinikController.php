@@ -48,10 +48,10 @@ class KlinikController extends Controller
          $rules = [
             'tipe_faskes' => 'required|min:1:max:2',
             'nama_klinik' => 'required|string',
-            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
+            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
             'email' => 'required|unique:users|email',
             'nomor_ijin' => 'string',
-            'username' => 'required|string',
+            'username' => 'required|unique:users|string',
             'password' => 'required|confirmed|min:6'
         ];
         
@@ -121,6 +121,7 @@ class KlinikController extends Controller
         
 
         $data['klinik_id'] = $klinik->id;
+        $data['user_id'] = $user->id;
         $data['activation_url'] = url('/api/v1/activate/'.$activation->token);
 
         if(!$data['klinik_id']){
