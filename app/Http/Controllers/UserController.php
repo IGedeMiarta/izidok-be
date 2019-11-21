@@ -58,9 +58,7 @@ class UserController extends Controller
         }
 	}
 
-
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $this->validate($request,[
             'username' => 'required|unique:users|string',
             'nama' => 'required|string',
@@ -111,8 +109,7 @@ class UserController extends Controller
     	}
     }
 
-    public function login(Request $request)
-    {
+    public function login(Request $request){
     	$username = $request->username;
 		$password = $request->password;
 		
@@ -172,8 +169,7 @@ class UserController extends Controller
     	}
     }
 
-    public function logout(Request $request)
-    {
+    public function logout(Request $request){
         $api_key = $request->bearerToken();
 		$api_key = ApiKey::whereApiKey($api_key)->first();
 		
@@ -207,8 +203,7 @@ class UserController extends Controller
         }
     }
 
-    public function forgot(Request $request)
-    {
+    public function forgot(Request $request){
         $email = $request->input('email');
         $user = User::where('email','=',$email)->first();
 
@@ -254,8 +249,7 @@ class UserController extends Controller
         }
     }
 
-    public function forgot_password($token)
-    {
+    public function forgot_password($token){
         // echo $token;
         $forgot_password = ForgotPassword::where('token',$token)->first();
 
@@ -306,8 +300,7 @@ class UserController extends Controller
         }
     }
 
-    public function reset(Request $request)
-    {
+    public function reset(Request $request){
         $token = $request->token;
         $forgot_password = ForgotPassword::where('token',$token)->first();
         $password = $request->input('password');
@@ -436,5 +429,27 @@ class UserController extends Controller
             'message' => 'There is something wrong...'
         ]);  
 
+    }
+
+    public function verifyEmail(Request $request){
+        $this->validate($request,[
+            'email' => 'unique:users|email',
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Email is available...'
+        ],201);
+    }
+
+    public function verifyUsername(Request $request){
+        $this->validate($request,[
+            'username' => 'unique:users|string',
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Username is available...'
+        ],201);
     }
 }
