@@ -15,6 +15,9 @@ $router->get('/key', function() {
 });
 
 $router->group(['prefix'=>'api/v1'], function() use($router){
+
+    $router->get('/email/verify','UserController@verifyEmail');
+    $router->get('/username/verify','UserController@verifyUsername');
    
     #registration
     $router->post('/user','UserController@store');
