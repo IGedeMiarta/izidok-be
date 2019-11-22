@@ -145,6 +145,9 @@ class OperatorController extends Controller
         $password = $request->input('password');
         $konfirm_password = $request->input('konfirm_password');
         $telepon = $request->input('telepon');
+        $tempat_lahir = $request->input('tempat_lahir');
+        $tanggal_lahir = $request->input('tanggal_lahir');
+        $jenis_kelamin = $request->input('jenis_kelamin');
 
         if(empty($activation))
         {
@@ -174,6 +177,13 @@ class OperatorController extends Controller
             $user->username = $username;
             $user->nomor_telp = $telepon;
             $user->save();
+
+            $operator = Operator::where('user_id',$user->id)->first();
+            $operator->tempat_lahir = $tempat_lahir;
+            $operator->tanggal_lahir = $tanggal_lahir;
+            $operator->jenis_kelamin = $jenis_kelamin;
+            $operator->save();
+
             $activation->status = 1;
             $activation->save();
             // $activation->delete();
@@ -227,6 +237,9 @@ class OperatorController extends Controller
         $user->nomor_telp = $request->nomor_telp;
         $user->save();
         $operator->nama = $request->nama;
+        $operator->tempat_lahir = $request->tempat_lahir;
+        $operator->tanggal_lahir = $request->tanggal_lahir;
+        $operator->jenis_kelamin = $request->jenis_kelamin;
         $operator->save();
           return response()->json([
             'status' => true,
