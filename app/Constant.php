@@ -25,4 +25,7 @@ class Constant
 	const REDIRECTION = 'url_redirection';
 	const FORGOT_VALID = 'forgot_valid';
 	const FORGOT_INVALID = 'forgot_invalid';
+
+	const ACT_OPT_VALID = 'act_opt_valid';
+	const ACT_OPT_INVALID = 'act_opt_invalid';
 }
