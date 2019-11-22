@@ -50,7 +50,6 @@ class KlinikController extends Controller
             'nama_klinik' => 'required|string',
             'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
             'email' => 'required|unique:users|email',
-            'nomor_ijin' => 'string',
             'username' => 'required|unique:users|string',
             'password' => 'required|confirmed|min:6'
         ];
@@ -116,7 +115,7 @@ class KlinikController extends Controller
         $data['klinik_id'] = $klinik->id;
         $data['user_id'] = $user->id;
         $data['activation_url'] = url('/api/v1/activate/'.$activation->token);
-        
+
         $email_data = [
             'subject' => 'User Activatoin',
             'message' => 'Click link below to activate your account: \n '. $data['activation_url'],
