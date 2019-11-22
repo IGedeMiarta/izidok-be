@@ -93,22 +93,28 @@ class UserController extends Controller
          $data['user'] = $user;
          $data['activation_url'] = url(env('APP_PREFIX', 'api/v1').'/activate/'.$activation->token);
 
-    	if($user)
-    	{
-    		return response()->json([
-    			'status' => true,
-    			'message' => 'Register Success!!',
-    			'data' => $data
-    		],201);
-    	}
-    	else
-    	{
-    		return response()->json([
-    			'status' => false,
-    			'message' => 'Register Fail!!',
-    			'data' => ''
-    		],400);	
-    	}
+         $email_data = [
+            'subject' => 'User Activatoin',
+            'message' => 'Click link below to activate your account: \n '. $data['activation_url'],
+            'to' => [$user->email],
+            'from' => 'izidok.dev@gmail.com'
+        ];
+
+         if($user){
+            if(\sendEmail($email_data)){
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Register Success!!',
+                    'data' => $data
+                ],201);
+            }
+         }
+
+         return response()->json([
+            'status' => false,
+            'message' => 'Register Fail!!',
+            'data' => ''
+        ],400);	
     }
 
     public function login(Request $request)
