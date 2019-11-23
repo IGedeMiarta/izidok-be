@@ -28,4 +28,8 @@ class Constant
 
 	const ACT_OPT_VALID = 'act_opt_valid';
 	const ACT_OPT_INVALID = 'act_opt_invalid';
+
+	const ACTIVATION_SUCCESS = 'activation_success';
+	const ACTIVATION_FAILED = 'activation_failed';
+	const VERIFY_EMAIL = 'verify_email';
 }

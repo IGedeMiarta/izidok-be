@@ -72,7 +72,9 @@ class UserController extends Controller
     	$email = $request->input('email');
     	$nama = $request->input('nama');
     	$nomor_telp = $request->input('nomor_telp');
-    	$password = Hash::make($request->input('password'));
+        $password = Hash::make($request->input('password'));
+        
+        $activation_url = Reference::where('key', Constant::VERIFY_EMAIL)->first();
 
     	$user = User::create([
     		"username" => $username,
@@ -88,15 +90,17 @@ class UserController extends Controller
          $activation->user_id = $user->id;
          $activation->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
          $activation->save();
-
-         $data['user'] = $user;
-         $data['activation_url'] = url(env('APP_PREFIX', 'api/v1').'/activate/'.$activation->token);
+         
+        //  $data['activation_url'] = url(env('APP_PREFIX', 'api/v1').'/activate/'.$activation->token);
+        $data['user'] = $user;
+        $data['activation_url'] = $activation_url->value . $activation->token;
 
          $email_data = [
             'subject' => 'User Activatoin',
-            'message' => 'Click link below to activate your account: \n '. $data['activation_url'],
+            'activation_url' => $data['activation_url'],
             'to' => [$user->email],
-            'from' => 'izidok.dev@gmail.com'
+            'from' => 'izidok.dev@gmail.com',
+            'username' => $user->username
         ];
 
          if($user){
@@ -389,6 +393,8 @@ class UserController extends Controller
                                 ->orderBy('created_at')
                                 ->first();
         
+        $activation_url = Reference::where('key', Constant::VERIFY_EMAIL)->first();
+        
         if($activation->status === 1){
             return response()->json([
                 'status' => false,
@@ -410,19 +416,19 @@ class UserController extends Controller
             ]);      
         }
 
-        $activation_url = url(env('APP_PREFIX', 'api/v1').'/activate/'.$activation->token);
+        
         $user = $activation->user;
 
-        $email_data = [
+        $data['user'] = $user;
+        $data['activation_url'] = $activation_url->value . $activation->token;
+
+         $email_data = [
             'subject' => 'User Activatoin',
-            'message' => 'Click link below to activate your account: \n '. $activation_url,
+            'activation_url' => $data['activation_url'],
             'to' => $user->email,
             'from' => 'izidok.dev@gmail.com',
             'username' => $user->username
         ];
-
-        $data['activation_url'] = $activation_url;
-        $data['user'] = $user;
 
         if(\sendEmail($email_data)){
             return response()->json([

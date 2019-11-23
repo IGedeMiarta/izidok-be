@@ -237,7 +237,7 @@
 <div style="color:#132F40;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;line-height:1.2;padding-top:15px;padding-right:10px;padding-bottom:15px;padding-left:10px;">
 <div style="line-height: 1.2; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 12px; color: #132F40; mso-line-height-alt: 14px;">
 <p style="line-height: 1.2; font-size: 16px; mso-line-height-alt: 19px; margin: 0;"><span style="font-size: 16px;">Jika anda mengalami kesulitan mengklik tombol <strong>Konfirmasi Email</strong>, copy dan paste URL berikut pada browser anda:</span></p>
-<p style="line-height: 1.2; font-size: 16px; mso-line-height-alt: 19px; margin: 0;"><span style="font-size: 16px; color: #0000ff;">http://frontend.izidok.co.id/verify/{token}</span></p>
+<p style="line-height: 1.2; font-size: 16px; mso-line-height-alt: 19px; margin: 0;"><span style="font-size: 16px; color: #0000ff;">{{@$activation_url}}</span></p>
 </div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
