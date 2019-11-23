@@ -19,7 +19,7 @@ class KodePenyakitController extends Controller
 		  $kode_penyakit = KodePenyakit::paginate($request->limit);
       $data['kode_penyakit'] = $kode_penyakit;
 	    return response()->json([
-	    			'success' => true,
+	    			'status' => true,
 	    			'message' => 'success',
 	    			'data' => $data
 	    		],201);
@@ -33,15 +33,15 @@ class KodePenyakitController extends Controller
       if(count($kode_penyakit) == 0)
       {
         return response()->json([
-            'success' => false,
+            'status' => false,
             'message' => 'not found',
-          ],400);
+          ],200);
       }
       else
       {
         $data['kode_penyakit'] = $kode_penyakit;
         return response()->json([
-            'success' => true,
+            'status' => true,
             'message' => 'success',
             'data' => $data
           ],201);
@@ -68,7 +68,7 @@ class KodePenyakitController extends Controller
 	   	if($status)
 	   	{
 	   		return response()->json([
-	    			'success' => true,
+	    			'status' => true,
 	    			'message' => 'success',
 	    			'data' => $kode_penyakit
 	    		],201);
@@ -76,7 +76,7 @@ class KodePenyakitController extends Controller
 	   	else
 	   	{
 	   		return response()->json([
-	    			'success' => false,
+	    			'status' => false,
 	    			'message' => 'failed',
 	    			'data' => ''
 	    		],400);	
@@ -98,14 +98,14 @@ class KodePenyakitController extends Controller
       if($collection)
       {
         return response()->json([
-            'success' => true,
+            'status' => true,
             'message' => 'success'
           ],201);
       }
       else
       {
         return response()->json([
-            'success' => false,
+            'status' => false,
             'message' => 'failed'
           ],400); 
       }
