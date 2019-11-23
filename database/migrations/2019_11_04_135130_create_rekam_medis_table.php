@@ -9,7 +9,7 @@ class CreateRekamMedisTable extends Migration {
 	{
 		Schema::create('rekam_medis', function(Blueprint $table) {
 			$table->increments('id');
-			$table->integer('nomor_rekam_medis')->index();
+			$table->string('nomor_rekam_medis')->index();
 			$table->integer('anamnesa_id');
 			$table->integer('pemeriksaan_fisik_id');
 			$table->integer('diagnosa_id');

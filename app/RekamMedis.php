@@ -18,4 +18,9 @@ class RekamMedis extends Model implements Auditable
     protected $dates = ['deleted_at'];
     protected $fillable = array('nomor_rekam_medis');
 
+    public function transKlinik()
+    {
+        return $this->belongsTo('App\TransKlinik', 'transklinik_id', 'id');
+    }
+
 }
