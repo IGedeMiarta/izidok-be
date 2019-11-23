@@ -25,6 +25,29 @@ class KodePenyakitController extends Controller
 	    		],201);
 	}
 
+  public function get_by_name(Request $request)
+  {
+      $kode_penyakit = KodePenyakit::where('description','like','%'.$request->name.'%')->get();
+      //echo $request->name;
+
+      if(count($kode_penyakit) == 0)
+      {
+        return response()->json([
+            'success' => false,
+            'message' => 'not found',
+          ],400);
+      }
+      else
+      {
+        $data['kode_penyakit'] = $kode_penyakit;
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $data
+          ],201);
+      }
+  }
+
 	/**
    	* Store a newly created resource in storage.
    	*

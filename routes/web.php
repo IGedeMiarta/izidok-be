@@ -79,6 +79,7 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->get('/kode_penyakit/{id}', 'KodePenyakitController@show');
         $router->put('/kode_penyakit/{id}', 'KodePenyakitController@update');
         $router->delete('/kode_penyakit/{id}', 'KodePenyakitController@delete');
+        $router->get('/kode_penyakit/name/{name}', 'KodePenyakitController@get_by_name'); // get by name
 
         #layanan
         $router->get('/layanan', 'LayananController@index');
