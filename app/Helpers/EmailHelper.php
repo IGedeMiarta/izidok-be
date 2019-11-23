@@ -3,7 +3,13 @@
 use Illuminate\Support\Facades\Mail;
 
 function sendEmail($data){  
-    Mail::raw($data['message'], function($msg) use ($data){ 
+    // Mail::raw($data['message'], function($msg) use ($data){ 
+    //     $msg->subject($data['subject']); 
+    //     $msg->from([$data['from']]); 
+    //     $msg->to($data['to']); 
+    // });
+
+    Mail::send('email-activation', $data, function ($msg) use ($data){
         $msg->subject($data['subject']); 
         $msg->from([$data['from']]); 
         $msg->to($data['to']); 
