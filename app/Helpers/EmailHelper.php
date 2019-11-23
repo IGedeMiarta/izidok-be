@@ -9,6 +9,8 @@ function sendEmail($data){
     //     $msg->to($data['to']); 
     // });
 
+    // dd($data);
+
     Mail::send('email-activation', $data, function ($msg) use ($data){
         $msg->subject($data['subject']); 
         $msg->from([$data['from']]); 
