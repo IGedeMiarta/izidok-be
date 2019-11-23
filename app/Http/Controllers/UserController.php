@@ -10,6 +10,7 @@ use App\ForgotPassword;
 use App\Activation;
 use App\Reference;
 use App\Constant;
+use App\Rereference;
 
 class UserController extends Controller
 {
@@ -83,7 +84,7 @@ class UserController extends Controller
         
          #activation token
          $activation = new Activation();
-         $activation->token = base64_encode(str_random(30));
+         $activation->token = base64_encode(str_random(10));
          $activation->user_id = $user->id;
          $activation->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
          $activation->save();
@@ -342,6 +343,7 @@ class UserController extends Controller
 
     public function activate($token){
         $activation = Activation::where('token', $token)->first();
+        // $reference = Reference::where('key', 'activation_failed')->first();
 
         if(!$activation){
             return response()->json([
@@ -409,8 +411,9 @@ class UserController extends Controller
         $email_data = [
             'subject' => 'User Activatoin',
             'message' => 'Click link below to activate your account: \n '. $activation_url,
-            'to' => ['rezpa.snk@gmail.com', $user->email],
-            'from' => 'izidok.dev@gmail.com'
+            'to' => $user->email,
+            'from' => 'izidok.dev@gmail.com',
+            'username' => $user->username
         ];
 
         $data['activation_url'] = $activation_url;
