@@ -25,8 +25,8 @@ class PasienController extends Controller
             'nama' => 'required|string',
             'nik' => 'required|string',
             'tempat_lahir' => 'required|string',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|string',
+            'tanggal_lahir' => 'required|date_format:Y-m-d',
+            'jenis_kelamin' => 'required|integer',
             'golongan_darah' => 'required|string',
             'alamat_rumah' => 'required|string',
             'rt' => 'required|string',
@@ -46,7 +46,7 @@ class PasienController extends Controller
             'respirasi' => 'required|integer',
             'tinggi_badan' => 'required|integer',
             'berat_badan' => 'required|integer',
-            'nomor_pasien' => 'required|integer',
+            'nomor_rekam_medis' => 'required|integer',
             'user_id' => 'required|integer',
             'klinik_id' => 'required|integer',
         ]);
@@ -76,7 +76,7 @@ class PasienController extends Controller
 	   	$pasien->respirasi = $request->input('respirasi');
 	   	$pasien->tinggi_badan = $request->input('tinggi_badan');
 	   	$pasien->berat_badan = $request->input('berat_badan');
-	   	$pasien->nomor_pasien = $request->input('nomor_pasien');
+	   	$pasien->nomor_rekam_medis = $request->input('nomor_rekam_medis');
 	   	$pasien->user_id = $request->input('user_id');
 	   	$pasien->klinik_id = $request->input('klinik_id');
 	   	$status = $pasien->save();

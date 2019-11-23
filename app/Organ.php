@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Organ extends Model
 {
-	protected $table = 'pasien';
+	protected $table = 'organ';
 	public $timestamps = true;
 
 	use SoftDeletes;

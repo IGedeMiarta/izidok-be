@@ -114,7 +114,7 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->post('rekam_medis','RekamMedisController@store');
 
         #organ
-        $router->post('/organ/','OrganController@index');
+        $router->get('/organ','OrganController@index');
         $router->post('/organ', 'OrganController@store');
         $router->get('/organ/{id}', 'OrganController@show');
         $router->put('/organ/{id}', 'OrganController@update');
