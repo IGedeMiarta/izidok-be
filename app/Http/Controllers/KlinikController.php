@@ -50,7 +50,6 @@ class KlinikController extends Controller
             'nama_klinik' => 'required|string',
             'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
             'email' => 'required|unique:users|email',
-            'nomor_ijin' => 'string',
             'username' => 'required|unique:users|string',
             'password' => 'required|confirmed|min:6'
         ];
@@ -113,16 +112,18 @@ class KlinikController extends Controller
         $activation->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
         $activation->save();
 
-        #send activation via email here...
-        // Mail::raw('Message here...', function($msg) use ($request){ 
-        //     $msg->subject('Hi '.$request->nama_klinik.', please verify your Klinik account'); 
-        //     $msg->to([$request->email]); 
-        //     $msg->from(['izi-dok@gmail.com']); });
-        
-
         $data['klinik_id'] = $klinik->id;
         $data['user_id'] = $user->id;
         $data['activation_url'] = url('/api/v1/activate/'.$activation->token);
+
+        $email_data = [
+            'subject' => 'User Activatoin',
+            'message' => 'Click link below to activate your account: \n '. $data['activation_url'],
+            'to' => [$user->email],
+            'from' => 'izidok.dev@gmail.com'
+        ];
+
+        \sendEmail($email_data);
 
         if(!$data['klinik_id']){
             return response()->json(['status' => false], 422);

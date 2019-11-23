@@ -7,6 +7,8 @@ use App\Operator;
 use App\User;
 use App\UserRole;
 use App\Constant;
+use App\Reference;
+use App\Activation;
 use Illuminate\Support\Facades\Hash;
 
 class OperatorController extends Controller 
@@ -35,19 +37,13 @@ class OperatorController extends Controller
     public function store(Request $request)
     {
       $this->validate($request,[
-            'username' => 'required|unique:users|string',
             'nama' => 'required|string',
-            'email' => 'required|unique:users|email',
-            'password' => 'required|min:8',
-            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
+            'email' => 'required|unique:users|email'
         ]);
       
       $user = new User();
       $user->nama = $request->input('nama');
-      $user->username = $request->input('username');
-      $user->password = Hash::make($request->input('password'));
       $user->email = $request->input('email');
-      $user->nomor_telp = $request->input('nomor_telp');
       $user->save();
 
       $operator = new Operator();
@@ -60,31 +56,144 @@ class OperatorController extends Controller
       $user_role->role_id = Constant::KLINIK_OPERATOR;
       $user_role->save();
 
-      if($status)
-      {
-        return response()->json([
-            'success' => true,
-            'message' => 'success',
-            'data' => $user
-          ],201);
-      }
-      else
-      {
-        return response()->json([
-            'success' => false,
-            'message' => 'failed',
-            'data' => ''
-          ],400); 
-      }
+      $activation = new Activation();
+      $activation->token = base64_encode(str_random(30));
+      $activation->user_id = $user->id;
+      $activation->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
+      $activation->save();
 
+      $data['user'] = $user;
+      $data['operator'] = $operator;
+      $data['user_role'] = $user_role;
+      $data['activation'] = $activation;
+
+      $act_url = url(env('APP_PREFIX', 'api/v1').'/operator/check/'.$activation->token);
+
+      $email_data = [
+          'subject' => 'Operator Activation',
+          'message' => 'Click link below to activate operator: \n '. $act_url,
+          'to' => ['helmysmp@gmail.com', $user->email],
+          'from' => 'izidok.dev@gmail.com'
+      ];
+
+      if(\sendEmail($email_data)){
+          return response()->json([
+              'status' => true,
+              'message' => 'aktivasi telah dibuat',
+              'data' => $data
+          ]);
+      }
     }
 
-    /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+    public function check_activation($token)
+    {
+        // echo $token;
+        $activation = Activation::where('token',$token)->first();
+
+        if(empty($activation))
+        {
+            $key = Constant::ACT_OPT_INVALID;
+            $category = Constant::REDIRECTION;
+
+            $config = Reference::where('key',$key)
+                        ->where('category',$category)->first();
+            $data['url'] = $config->value;
+
+            return response()->json([
+                'status' => false,
+                'message' => 'activation not found',
+                'data' => $data
+            ]);
+        }
+        else if(strtotime(date('Y-m-d H:i:s')) > strtotime($activation->expired_at))
+        {
+            $key = Constant::ACT_OPT_INVALID;
+            $category = Constant::REDIRECTION;
+            $config = Reference::where('key',$key)
+                        ->where('category',$category)->first();
+            $data['url'] = $config->value;
+
+            return response()->json([
+                'status' => false,
+                'message' => 'expired',
+                'data' => $data
+            ]);      
+        }
+        else
+        {
+            $key = Constant::ACT_OPT_VALID;
+            $category = Constant::REDIRECTION;
+            $config = Reference::where('key',$key)
+                        ->where('category',$category)->first();
+            $data['url'] = $config->value;
+            $data['token'] = $token;
+
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'data' => $data
+            ]);
+        }
+    }
+
+    public function activation(Request $request)
+    {
+        $token = $request->token;
+        $activation = Activation::where('token',$token)->first();
+
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $konfirm_password = $request->input('konfirm_password');
+        $telepon = $request->input('telepon');
+        $tempat_lahir = $request->input('tempat_lahir');
+        $tanggal_lahir = $request->input('tanggal_lahir');
+        $jenis_kelamin = $request->input('jenis_kelamin');
+
+        if(empty($activation))
+        {
+            return response()->json([
+                'status' => false,
+                'message' => 'activation not found'
+            ]);
+        }
+        if($password != $konfirm_password)
+        {
+            return response()->json([
+                'status' => false,
+                'message' => 'password dan konfirm passowrd tidak sama'
+            ]);   
+        }
+        else if(strtotime(date('Y-m-d H:i:s')) > strtotime($activation->expired_at))
+        {
+            return response()->json([
+                'status' => false,
+                'message' => 'expired'
+            ]);      
+        }
+        else
+        {
+            $user = User::find($activation->user_id);
+            $user->password = Hash::make($password);
+            $user->username = $username;
+            $user->nomor_telp = $telepon;
+            $user->save();
+
+            $operator = Operator::where('user_id',$user->id)->first();
+            $operator->tempat_lahir = $tempat_lahir;
+            $operator->tanggal_lahir = $tanggal_lahir;
+            $operator->jenis_kelamin = $jenis_kelamin;
+            $operator->save();
+
+            $activation->status = 1;
+            $activation->save();
+            // $activation->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Account has been active'
+            ]); 
+        }
+    }
+
     public function show(Request $request)
     {
       $operator = Operator::find($request->id);
@@ -128,6 +237,9 @@ class OperatorController extends Controller
         $user->nomor_telp = $request->nomor_telp;
         $user->save();
         $operator->nama = $request->nama;
+        $operator->tempat_lahir = $request->tempat_lahir;
+        $operator->tanggal_lahir = $request->tanggal_lahir;
+        $operator->jenis_kelamin = $request->jenis_kelamin;
         $operator->save();
           return response()->json([
             'status' => true,
