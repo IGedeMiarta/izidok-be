@@ -239,11 +239,12 @@ class UserController extends Controller
             $email_data = [
                 'subject' => 'Forgot Password',
                 'message' => 'Click link below to reset your password: \n '. $forgot_url,
+                'activation_url' => $forgot_url,
                 'to' => ['helmysmp@gmail.com', $forgot_password->email],
                 'from' => 'izidok.dev@gmail.com'
             ];
 
-            if(\sendEmail($email_data)){
+            if(\sendForgotEmail($email_data)){
                 return response()->json([
                     'status' => true,
                     'message' => 'forgot password telah dibuat',
@@ -260,7 +261,7 @@ class UserController extends Controller
         }
     }
 
-    public function forgot_password($token){
+    public function check_forgot($token){
         // echo $token;
         $forgot_password = ForgotPassword::where('token',$token)->first();
 
@@ -287,11 +288,7 @@ class UserController extends Controller
                         ->where('category',$category)->first();
             $data['url'] = $config->value;
 
-            return response()->json([
-                'status' => false,
-                'message' => 'expired',
-                'data' => $data
-            ]);      
+            return redirect($config->value);
         }
         else
         {
@@ -302,11 +299,7 @@ class UserController extends Controller
             $data['url'] = $config->value;
             $data['token'] = $token;
 
-            return response()->json([
-                'status' => true,
-                'message' => 'success',
-                'data' => $data
-            ]);
+            return redirect($config->value);
         }
     }
 
