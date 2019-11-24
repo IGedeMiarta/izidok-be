@@ -72,11 +72,12 @@ class OperatorController extends Controller
       $email_data = [
           'subject' => 'Operator Activation',
           'message' => 'Click link below to activate operator: \n '. $act_url,
+          'activation_url' => $act_url,
           'to' => ['helmysmp@gmail.com', $user->email],
           'from' => 'izidok.dev@gmail.com'
       ];
 
-      if(\sendEmail($email_data)){
+      if(\sendOperatorEmail($email_data)){
           return response()->json([
               'status' => true,
               'message' => 'aktivasi telah dibuat',
@@ -113,11 +114,7 @@ class OperatorController extends Controller
                         ->where('category',$category)->first();
             $data['url'] = $config->value;
 
-            return response()->json([
-                'status' => false,
-                'message' => 'expired',
-                'data' => $data
-            ]);      
+            return redirect($config->value);
         }
         else
         {
@@ -128,16 +125,22 @@ class OperatorController extends Controller
             $data['url'] = $config->value;
             $data['token'] = $token;
 
-            return response()->json([
-                'status' => true,
-                'message' => 'success',
-                'data' => $data
-            ]);
+            return redirect($config->value."?".$token);
         }
     }
 
     public function activation(Request $request)
     {
+        $this->validate($request,[
+            'username' => 'required|unique:users|string',
+            'password' => 'required|string',
+            'konfirm_password' => 'required|string',
+            'telepon' => 'required|string',
+            'tanggal_lahir' => 'required|date',
+            'jenis_kelamin' => 'required|string',
+            'token' => 'required|string'
+        ]);
+
         $token = $request->token;
         $activation = Activation::where('token',$token)->first();
 
@@ -145,7 +148,6 @@ class OperatorController extends Controller
         $password = $request->input('password');
         $konfirm_password = $request->input('konfirm_password');
         $telepon = $request->input('telepon');
-        $tempat_lahir = $request->input('tempat_lahir');
         $tanggal_lahir = $request->input('tanggal_lahir');
         $jenis_kelamin = $request->input('jenis_kelamin');
 
@@ -179,7 +181,6 @@ class OperatorController extends Controller
             $user->save();
 
             $operator = Operator::where('user_id',$user->id)->first();
-            $operator->tempat_lahir = $tempat_lahir;
             $operator->tanggal_lahir = $tanggal_lahir;
             $operator->jenis_kelamin = $jenis_kelamin;
             $operator->save();

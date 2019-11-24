@@ -20,6 +20,24 @@ function sendEmail($data){
     return true;
 }
 
+function sendOperatorEmail($data){  
+    // Mail::raw($data['message'], function($msg) use ($data){ 
+    //     $msg->subject($data['subject']); 
+    //     $msg->from([$data['from']]); 
+    //     $msg->to($data['to']); 
+    // });
+
+    // dd($data);
+
+    Mail::send('operator-activation', $data, function ($msg) use ($data){
+        $msg->subject($data['subject']); 
+        $msg->from([$data['from']]); 
+        $msg->to($data['to']); 
+    });
+
+    return true;
+}
+
 /*
     1. send email with HTML view use this -> Mail::send('emails.welcome', $data, function ($message) {});
     2. to add cc on recipient use this -> $message->cc($address, $name = null);
