@@ -28,7 +28,7 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
 
     #reset password
     $router->post('/forgot','UserController@forgot');
-    $router->get('/forgot_password/{token}','UserController@forgot_password');
+    $router->get('/check_forgot/{token}','UserController@forgot_password');
     $router->post('/reset','UserController@reset');
 
     #operator
