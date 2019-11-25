@@ -244,21 +244,13 @@ class UserController extends Controller
 
             $email_data = [
                 'subject' => 'Forgot Password',
-<<<<<<< HEAD
-                'message' => 'Click link below to reset your password: \n ' . $forgot_url,
-=======
                 'message' => 'Click link below to reset your password: \n '. $forgot_url,
                 'activation_url' => $forgot_url,
->>>>>>> c825c0f788dcbd27c76354b995541ca23f8e8229
                 'to' => ['helmysmp@gmail.com', $forgot_password->email],
                 'from' => 'izidok.dev@gmail.com'
             ];
 
-<<<<<<< HEAD
-            if (\sendEmail($email_data)) {
-=======
             if(\sendForgotEmail($email_data)){
->>>>>>> c825c0f788dcbd27c76354b995541ca23f8e8229
                 return response()->json([
                     'status' => true,
                     'message' => 'forgot password telah dibuat',
@@ -275,12 +267,7 @@ class UserController extends Controller
         }
     }
 
-<<<<<<< HEAD
-    public function forgot_password($token)
-    {
-=======
     public function check_forgot($token){
->>>>>>> c825c0f788dcbd27c76354b995541ca23f8e8229
         // echo $token;
         $forgot_password = ForgotPassword::where('token', $token)->first();
 
@@ -304,19 +291,10 @@ class UserController extends Controller
                 ->where('category', $category)->first();
             $data['url'] = $config->value;
 
-<<<<<<< HEAD
-            return response()->json([
-                'status' => false,
-                'message' => 'expired',
-                'data' => $data
-            ]);
-        } else {
-=======
             return redirect($config->value);
         }
         else
         {
->>>>>>> c825c0f788dcbd27c76354b995541ca23f8e8229
             $key = Constant::FORGOT_VALID;
             $category = Constant::REDIRECTION;
             $config = Reference::where('key', $key)
