@@ -11,6 +11,8 @@ class CreateDiagnosaTable extends Migration {
 			$table->increments('id');
 			$table->integer('kode_penyakit_id');
 			$table->text('notes');
+			$table->integer('is_draw')->nullable();
+			$table->string('draw_path')->nullable();
 			$table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();

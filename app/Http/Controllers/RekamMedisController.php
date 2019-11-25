@@ -56,11 +56,15 @@ class RekamMedisController extends Controller
       $diagnosa = new Diagnosa();
       $diagnosa->kode_penyakit_id = $request->kode_penyakit_id;
       $diagnosa->notes = $request->diagnosa_notes;
+      $diagnosa->is_draw = $request->diagnosa_is_draw;
+      $diagnosa->draw_path = $request->diagnosa_draw_path;
       $diagnosa->save();
 
       $pemeriksaan_fisik = new PemeriksaanFisik();
       $pemeriksaan_fisik->organ_id = $request->organ_id;
       $pemeriksaan_fisik->notes = $request->pemeriksaan_fisik_notes;
+      $pemeriksaan_fisik->is_draw = $request->pemeriksaan_is_draw;
+      $pemeriksaan_fisik->draw_path = $request->pemeriksaan_draw_path;
       $pemeriksaan_fisik->save();
 
       $rekam_medis = new RekamMedis();
