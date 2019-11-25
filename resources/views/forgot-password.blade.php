@@ -205,7 +205,7 @@
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 5px; padding-bottom: 30px; font-family: Arial, sans-serif"><![endif]-->
 <div style="color:#555555;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;line-height:1.5;padding-top:5px;padding-right:10px;padding-bottom:30px;padding-left:10px;">
 <div style="font-size: 12px; line-height: 1.5; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #555555; mso-line-height-alt: 18px;">
-<p style="font-size: 14px; line-height: 1.5; mso-line-height-alt: 21px; margin: 0;">Kami telah menerima pendaftaran akun Izidok anda. Mohon konfirmasi email ini untuk mengaktifkan akun Izidok anda.</p>
+<p style="font-size: 14px; line-height: 1.5; mso-line-height-alt: 21px; margin: 0;">Silakan klik link berikut untuk reset password anda</p>
 </div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
@@ -236,7 +236,7 @@
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 15px; padding-bottom: 15px; font-family: Arial, sans-serif"><![endif]-->
 <div style="color:#132F40;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;line-height:1.2;padding-top:15px;padding-right:10px;padding-bottom:15px;padding-left:10px;">
 <div style="line-height: 1.2; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 12px; color: #132F40; mso-line-height-alt: 14px;">
-<p style="line-height: 1.2; font-size: 16px; mso-line-height-alt: 19px; margin: 0;"><span style="font-size: 16px;">Jika anda mengalami kesulitan mengklik tombol <strong>Konfirmasi Email</strong>, copy dan paste URL berikut pada browser anda:</span></p>
+<!-- <p style="line-height: 1.2; font-size: 16px; mso-line-height-alt: 19px; margin: 0;"><span style="font-size: 16px;">Jika anda mengalami kesulitan mengklik tombol <strong>Konfirmasi Email</strong>, copy dan paste URL berikut pada browser anda:</span></p> -->
 <p style="line-height: 1.2; font-size: 16px; mso-line-height-alt: 19px; margin: 0;"><span style="font-size: 16px; color: #0000ff;"></span></p>
 </div>
 </div>
@@ -244,7 +244,7 @@
 <div align="left" class="button-container" style="padding-top:5px;padding-right:10px;padding-bottom:35px;padding-left:10px;">
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 5px; padding-right: 10px; padding-bottom: 35px; padding-left: 10px" align="left"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:31.5pt; width:153pt; v-text-anchor:middle;" arcsize="120%" stroke="false" fillcolor="#058FE0"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#FFFFFF; font-family:Arial, sans-serif; font-size:15px"><![endif]-->
 <div style="text-decoration:none;display:inline-block;color:#FFFFFF;background-color:#058FE0;border-radius:50px;-webkit-border-radius:50px;-moz-border-radius:50px;width:auto; width:auto;;border-top:1px solid #058FE0;border-right:1px solid #058FE0;border-bottom:1px solid #058FE0;border-left:1px solid #058FE0;padding-top:5px;padding-bottom:5px;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:20px;padding-right:20px;font-size:15px;display:inline-block;">
-<a href="{{@$activation_url}}"><span style="font-size: 16px; line-height: 2; mso-line-height-alt: 32px;"><span style="font-size: 15px; line-height: 30px;"><strong><span style="line-height: 30px; font-size: 15px;">KONFIRMASI EMAIL &gt;</span></strong></span></span></a>
+<a href="{{@$activation_url}}"><span style="font-size: 16px; line-height: 2; mso-line-height-alt: 32px;"><span style="font-size: 15px; line-height: 30px;"><strong><span style="line-height: 30px; font-size: 15px;">RESET PASSWORD &gt;</span></strong></span></span></a>
 </span></div>
 <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
 </div>
