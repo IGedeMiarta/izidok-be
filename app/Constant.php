@@ -31,5 +31,6 @@ class Constant
 
 	const ACTIVATION_SUCCESS = 'activation_success';
 	const ACTIVATION_FAILED = 'activation_failed';
+	const ALREADY_ACTIVATED = 'already_activated';
 	const VERIFY_EMAIL = 'verify_email';
 }
