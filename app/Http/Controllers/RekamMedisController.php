@@ -21,26 +21,16 @@ class RekamMedisController extends Controller
   	public function store(Request $request)
   	{
       $this->validate($request, [
-            'pasien_id' => 'required|integer',
-            'dokter_id' => 'required|integer',
-            'operator_id' => 'required|integer',
-            'klinik_id' => 'required|integer',
-            'nomor_antrian' => 'required|integer',
             'anamnesa_notes' => 'required|string',
             'kode_penyakit_id' => 'required|integer',
             'nomor_rekam_medis' => 'required|string',
             'durasi_konsultasi' => 'required|integer',
             'organ_id' => 'required|integer',
+            'klinik_id' => 'required|integer',
         ]);
 
-  		$trans_klinik = new TransKlinik();
-      $trans_klinik->pasien_id = $request->pasien_id;
-      $trans_klinik->operator_id = $request->operator_id;
-      $trans_klinik->dokter_id = $request->dokter_id;
-      $trans_klinik->klinik_id = $request->klinik_id;
-      $trans_klinik->nomor_antrian = $request->nomor_antrian;
+  	  $trans_klinik = TransKlinik::find($request->klinik_id);
       $trans_klinik->durasi_konsultasi = $request->durasi_konsultasi;
-      $trans_klinik->status = $request->status;
       $trans_klinik->save();
 
       $anamnesa = new Anamnesa();
