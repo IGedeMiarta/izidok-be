@@ -12,6 +12,7 @@ use App\UserRole;
 use App\Constant;
 use App\Dokter;
 use App\Activation;
+use App\Reference;
 
 
 class KlinikController extends Controller
@@ -54,6 +55,7 @@ class KlinikController extends Controller
             'password' => 'required|confirmed|min:6'
         ];
         
+        $activation_url = Reference::where('key', Constant::VERIFY_EMAIL)->first();
         $isKlinik = false;
         if($request->tipe_faskes == Constant::TIPE_KLINIK){
             $rules['nama_pic'] = 'required|string';
@@ -107,20 +109,21 @@ class KlinikController extends Controller
 
         #activation token
         $activation = new Activation();
-        $activation->token = base64_encode(str_random(30));
+        $activation->token = base64_encode(str_random(10));
         $activation->user_id = $user->id;
         $activation->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
         $activation->save();
 
         $data['klinik_id'] = $klinik->id;
         $data['user_id'] = $user->id;
-        $data['activation_url'] = url('/api/v1/activate/'.$activation->token);
+        $data['activation_url'] =  url(env('APP_PREFIX', 'api/v1').$activation_url->value.'/'. $activation->token);       
 
         $email_data = [
-            'subject' => 'User Activatoin',
-            'message' => 'Click link below to activate your account: \n '. $data['activation_url'],
+            'subject' => 'User Activation',
+            'activation_url' => $data['activation_url'],
             'to' => [$user->email],
-            'from' => 'izidok.dev@gmail.com'
+            'from' => 'izidok.dev@gmail.com',
+            'username' => $user->username
         ];
 
         \sendEmail($email_data);

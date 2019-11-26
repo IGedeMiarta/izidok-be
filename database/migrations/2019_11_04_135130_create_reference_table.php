@@ -9,9 +9,9 @@ class CreateReferenceTable extends Migration {
 	{
 		Schema::create('reference', function(Blueprint $table) {
 			$table->increments('id');
-			$table->string('key', 50)->index();
-			$table->string('value', 50);
-			$table->string('category', 50);
+			$table->string('key', 255)->index();
+			$table->string('value', 255);
+			$table->string('category', 255);
 			$table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
