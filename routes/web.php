@@ -121,7 +121,12 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->put('/organ/{id}', 'OrganController@update');
         $router->delete('/organ/{id}', 'OrganController@delete');
 
+    });
 
+    $router->get('/image/{image}', function($image){
+        $storagePath = storage_path('/organs/'.$image);
+        $file = file_get_contents($storagePath);
+        return response($file, 200)->header('Content-Type', 'image/jpeg'); 
     });
     
 });
