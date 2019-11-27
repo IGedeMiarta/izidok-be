@@ -10,7 +10,6 @@ class CreateOperatorTable extends Migration {
 		Schema::create('operator', function(Blueprint $table) {
 			$table->increments('id');
 			$table->string('nama', 50);
-			$table->string('tempat_lahir', 50)->nullable();
 			$table->date('tanggal_lahir')->nullable();
 			$table->integer('jenis_kelamin')->nullable();
 			$table->integer('user_id');
