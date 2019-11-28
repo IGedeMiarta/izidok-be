@@ -302,7 +302,7 @@ class UserController extends Controller
             $data['url'] = $config->value;
             $data['token'] = $token;
 
-            return redirect($config->value);
+            return redirect($config->value."/".$token);
         }
     }
 
