@@ -11,7 +11,7 @@ class CreatePemeriksaanFisikTable extends Migration {
 			$table->increments('id');
 			$table->integer('organ_id');
 			$table->text('notes')->nullable();
-			$table->integer('is_draw')->nullable();
+			$table->boolean('is_draw')->nullable();
 			$table->string('draw_path')->nullable();
 			$table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();

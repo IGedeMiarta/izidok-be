@@ -94,7 +94,7 @@ class UserController extends Controller
         $activation = new Activation();
         $activation->token = base64_encode(str_random(10));
         $activation->user_id = $user->id;
-        $activation->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
+        $activation->expired_at = date('Y-m-d H:i:s', strtotime('+10 minutes'));
         $activation->save();
 
         $data['user'] = $user;
@@ -406,7 +406,7 @@ class UserController extends Controller
         $data['activation_url'] =  url(env('APP_PREFIX', 'api/v1').$activation_url->value.'/'. $activation->token);
 
         $email_data = [
-            'subject' => 'User Activatoin',
+            'subject' => 'User Activation',
             'activation_url' => $data['activation_url'],
             'to' => $user->email,
             'from' => 'izidok.dev@gmail.com',
