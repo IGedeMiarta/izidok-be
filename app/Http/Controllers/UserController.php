@@ -240,7 +240,7 @@ class UserController extends Controller
             $forgot_password->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
             $forgot_password->save();
 
-            $forgot_url = url(env('APP_PREFIX', 'api/v1') . '/forgot_password/' . $forgot_password->token);
+            $forgot_url = url(env('APP_PREFIX', 'api/v1') . '/check_forgot/' . $forgot_password->token);
 
             $email_data = [
                 'subject' => 'Forgot Password',
