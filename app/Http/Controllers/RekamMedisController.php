@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\RekamMedis;
 use App\TransKlinik;
 use App\Pasien;
 use App\Anamnesa;
+use App\Constant;
 use App\Diagnosa;
 use App\PemeriksaanFisik;
+
 
 class RekamMedisController extends Controller
 {
@@ -66,14 +69,19 @@ class RekamMedisController extends Controller
 
         #make array penyakit, inserti diagnosa
         $arr_penyakit = [];
-        foreach($request->kode_penyakit as $item){
+        foreach ($request->kode_penyakit as $item) {
             array_push($arr_penyakit, $item['id']);
         }
         $diagnosa = new Diagnosa();
         $diagnosa->kode_penyakit_id = json_encode($arr_penyakit);
         $diagnosa->notes = $request->diagnosa_text;
         $diagnosa->is_draw = $request->diagnosa_is_draw;
-        // $diagnosa->draw_path = $request->diagnosa_draw;
+        $path_diagnosa =    Storage::disk('minio')->putFile(
+            Constant::FOLDER_DIAGNOSA,
+            base64_decode($request->diagnosa_draw),
+            'public'
+        );
+        $diagnosa->draw_path = $path_diagnosa;
         $diagnosa->save();
 
 
@@ -82,7 +90,12 @@ class RekamMedisController extends Controller
         $pemeriksaan_fisik->organ_id = $request->organ_id;
         $pemeriksaan_fisik->notes = $request->pemeriksaan_text;
         $pemeriksaan_fisik->is_draw = $request->pemeriksaan_is_draw;
-        // $pemeriksaan_fisik->draw_path = $request->pemeriksaan_draw;
+        $path_pemeriksaan = Storage::disk('minio')->putFile(
+            Constant::FOLDER_PEMERIKSAAN,
+            base64_decode($request->pemeriksaan_draw),
+            'public'
+        );
+        $pemeriksaan_fisik->draw_path = $path_pemeriksaan;
         $pemeriksaan_fisik->save();
 
         #insert rekam_medis

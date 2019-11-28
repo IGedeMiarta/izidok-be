@@ -31,6 +31,8 @@ $app->configure('audit');
 
 $app->configure('cors');
 
+$app->configure('filesystems');
+
 $app->withFacades();
 
 $app->withEloquent();
@@ -95,6 +97,7 @@ $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(OwenIt\Auditing\AuditingServiceProvider::class);
 $app->register(App\Providers\HelperServiceProvider::class);
 $app->register('Nord\Lumen\Cors\CorsServiceProvider');
+$app->register(App\Providers\MinIOStorageServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

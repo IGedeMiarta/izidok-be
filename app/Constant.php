@@ -33,4 +33,8 @@ class Constant
 	const ACTIVATION_FAILED = 'activation_failed';
 	const ALREADY_ACTIVATED = 'already_activated';
 	const VERIFY_EMAIL = 'verify_email';
+
+	#path folder draw image
+	const FOLDER_PEMERIKSAAN = 'pemeriksaan';
+	const FOLDER_DIAGNOSA = 'diagnosa';
 }

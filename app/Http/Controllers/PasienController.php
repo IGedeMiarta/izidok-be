@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Pasien;
 
@@ -202,16 +202,17 @@ class PasienController extends Controller
             'credentials' => $credentialsFilePath
         ]);
         
-		$path = storage_path('/upload/ktp/');
-		$name_type = 'ktp';
+		// $path = storage_path('/upload/ktp/');
+		$folder = 'ktp';
 		
 		if($request->file){
-			$name = \upload($request->file, $name_type, $path);
-			$path = $path . $name;
+			// $name = \upload($request->file, $name_type, $path);
+			$path = \uploadToMinio($request->file, $folder);
 		}
 
-		$image = file_get_contents($path);
-
+		$image = Storage::disk('minio')->get($path);
+		// $image = file_get_contents($path);
+	
 		if(!$image){
 			return response()->json([
 				'status' => false, 

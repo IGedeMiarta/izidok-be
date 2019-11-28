@@ -10,6 +10,9 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+
+use Illuminate\Http\Request;
+
 $router->get('/key', function() {
     return str_random(32);
 });
@@ -129,5 +132,14 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         return response($file, 200)->header('Content-Type', 'image/jpeg'); 
     });
     
+    // $router->post('/file', function(Request $request){
+    //     $path = \uploadToMinio($request->file, $request->folder);
+    //     return $path;
+    //  });
+
+    // $router->get('/file', function(Request $request){
+    //     $file = Storage::disk('minio')->get($request->path);
+    //     return response($file, 200)->header('Content-Type', 'image/jpeg');
+    // });
 });
 

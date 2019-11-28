@@ -8,4 +8,8 @@
         
         return $name;
     }
-?>
+
+    function uploadToMinio($file, $folder){
+        $path = Storage::disk('minio')->putFile($folder, $file, 'public');
+        return $path;
+    }
