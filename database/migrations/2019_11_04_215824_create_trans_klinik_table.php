@@ -15,7 +15,7 @@ class CreateTransKlinikTable extends Migration {
 			$table->integer('klinik_id');
 			$table->integer('nomor_antrian')->nullable();
 			$table->timestamp('waktu_konsultasi');
-			$table->integer('durasi_konsultasi');
+			$table->integer('durasi_konsultasi')->nullable();
 			$table->string('status');
 			$table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();

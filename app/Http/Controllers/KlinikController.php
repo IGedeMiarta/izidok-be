@@ -91,6 +91,13 @@ class KlinikController extends Controller
         ]);
         $user->roles()->attach(Constant::KLINIK_OPERATOR);
 
+        #data operator
+        $operator = new Operator([
+            'nama' => $nama_pic,
+            'user_id' => $user->id
+        ]);
+        $klinik->operators()->save($operator);
+
         if(!$isKlinik){
             #data dokter
             $dokter = new Dokter([
@@ -98,20 +105,14 @@ class KlinikController extends Controller
                 'user_id' => $user->id
             ]);
             $klinik->dokters()->save($dokter);
-        }else{
-            #data operator
-            $operator = new Operator([
-                'nama' => $nama_pic,
-                'user_id' => $user->id
-            ]);
-            $klinik->operators()->save($operator);
+            $user->roles()->attach(Constant::DOKTER);
         }
 
         #activation token
         $activation = new Activation();
         $activation->token = base64_encode(str_random(10));
         $activation->user_id = $user->id;
-        $activation->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
+        $activation->expired_at = date('Y-m-d H:i:s', strtotime('+10 minutes'));
         $activation->save();
 
         $data['klinik_id'] = $klinik->id;
