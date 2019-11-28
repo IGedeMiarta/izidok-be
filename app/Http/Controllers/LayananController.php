@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Layanan;
+use Illuminate\Support\Facades\Validator;
 
 class LayananController extends Controller
 {
@@ -20,6 +21,18 @@ class LayananController extends Controller
 
   	public function store(Request $request)
   	{
+  		$this->validate($request,[
+            'arr.*.klinik_id' => 'required|integer',
+            'arr.*.kode_layanan' => 'required|string',
+            'arr.*.nama_layanan' => 'required|string',
+            'arr.*.tarif' => 'required|integer'
+        ]);
+
+  //       $validator = Validator::make($request->all(), [
+		//     'arr.klinik_id' => 'required|integer',
+		//     'arr.kode_layanan' => 'required|string',
+		// ]);
+
         $arr_layanan = $request->arr;
         $result = array();
 
