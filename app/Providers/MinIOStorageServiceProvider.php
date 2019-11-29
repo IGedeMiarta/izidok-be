@@ -9,7 +9,7 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\Filesystem;
 use Storage;
 
-class MinioStorageServiceProvider extends ServiceProvider
+class MinIOStorageServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
