@@ -9,7 +9,10 @@
         return $name;
     }
 
-    function uploadToMinio($file, $folder){
-        $path = Storage::disk('minio')->putFile($folder, $file, 'public');
-        return $path;
+    function uploadToMinio($prefix, $file){
+        $file = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file));
+        $filename = $prefix . '-' . date('Ymdhms') . '.png';
+        
+        Storage::disk('minio')->put($filename, $file);
+        return $filename;
     }

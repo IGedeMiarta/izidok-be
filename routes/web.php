@@ -126,20 +126,10 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
 
     });
 
-    $router->get('/image/{image}', function($image){
-        $storagePath = storage_path('/organs/'.$image);
-        $file = file_get_contents($storagePath);
-        return response($file, 200)->header('Content-Type', 'image/jpeg'); 
+    $router->get('/image', function(Request $request){
+        $file = Storage::disk('minio')->get($request->path);
+        return response($file, 200)->header('Content-Type', 'image/jpeg');
     });
-    
-    // $router->post('/file', function(Request $request){
-    //     $path = \uploadToMinio($request->file, $request->folder);
-    //     return $path;
-    //  });
 
-    // $router->get('/file', function(Request $request){
-    //     $file = Storage::disk('minio')->get($request->path);
-    //     return response($file, 200)->header('Content-Type', 'image/jpeg');
-    // });
 });
 

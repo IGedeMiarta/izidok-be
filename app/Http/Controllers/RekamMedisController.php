@@ -76,12 +76,7 @@ class RekamMedisController extends Controller
         $diagnosa->kode_penyakit_id = json_encode($arr_penyakit);
         $diagnosa->notes = $request->diagnosa_text;
         $diagnosa->is_draw = $request->diagnosa_is_draw;
-        $path_diagnosa =    Storage::disk('minio')->putFile(
-            Constant::FOLDER_DIAGNOSA,
-            base64_decode($request->diagnosa_draw),
-            'public'
-        );
-        $diagnosa->draw_path = $path_diagnosa;
+        $diagnosa->draw_path = \uploadToMinio('diagnosa',$request->diagnosa_draw);
         $diagnosa->save();
 
 
@@ -90,12 +85,7 @@ class RekamMedisController extends Controller
         $pemeriksaan_fisik->organ_id = $request->organ_id;
         $pemeriksaan_fisik->notes = $request->pemeriksaan_text;
         $pemeriksaan_fisik->is_draw = $request->pemeriksaan_is_draw;
-        $path_pemeriksaan = Storage::disk('minio')->putFile(
-            Constant::FOLDER_PEMERIKSAAN,
-            base64_decode($request->pemeriksaan_draw),
-            'public'
-        );
-        $pemeriksaan_fisik->draw_path = $path_pemeriksaan;
+        $pemeriksaan_fisik->draw_path = \uploadToMinio('pemeriksaan',$request->pemeriksaan_draw);
         $pemeriksaan_fisik->save();
 
         #insert rekam_medis

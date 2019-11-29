@@ -29,6 +29,9 @@ class MinioStorageServiceProvider extends ServiceProvider
                 'bucket_endpoint' => false,
                 'use_path_style_endpoint' => true,
                 'endpoint'    => $config["endpoint"],
+                'http'    => [
+                    'verify' => false
+                ]
             ]);
             return new Filesystem(new AwsS3Adapter($client, $config["bucket"]));
         });
