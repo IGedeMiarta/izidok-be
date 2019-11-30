@@ -21,7 +21,7 @@ class ReferenceTableSeeder extends Seeder
             array('id'=>'5', 'key'=> 'verify_email','value'=> '/activate','category'=>'url_redirection','created_at'=>date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')),
             array('id'=>'6', 'key'=> 'already_activated','value'=> 'http://149.129.239.15:8000/verification/already-activated','category'=>'url_redirection','created_at'=>date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')),
     	
-            array('id'=>'7', 'key'=> 'act_opt_valid','value'=> 'localhost/activation_operator/valid','category'=> 'url_redirection','created_at'=>date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')),
+            array('id'=>'7', 'key'=> 'act_opt_valid','value'=> 'http://149.129.239.15:8000/verification/operator/','category'=> 'url_redirection','created_at'=>date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')),
             array('id'=>'8', 'key'=> 'act_opt_invalid','value'=> 'localhost/activation_operator/invalid','category'=>'url_redirection','created_at'=>date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')),
     	);
 

@@ -125,7 +125,7 @@ class OperatorController extends Controller
             $data['url'] = $config->value;
             $data['token'] = $token;
 
-            return redirect($config->value."?".$token);
+            return redirect($config->value.$token);
         }
     }
 
