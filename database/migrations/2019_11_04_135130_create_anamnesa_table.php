@@ -17,6 +17,8 @@ class CreateAnamnesaTable extends Migration {
 			$table->integer('tinggi_badan')->nullable();
 			$table->integer('berat_badan')->nullable();
 			$table->text('notes')->nullable();
+			$table->boolean('is_draw')->nullable();
+			$table->string('draw_path')->nullable();
 			$table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
