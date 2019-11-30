@@ -101,7 +101,7 @@ class UserController extends Controller
         $data['activation_url'] =  url(env('APP_PREFIX', 'api/v1').$activation_url->value.'/'. $activation->token);
 
         $email_data = [
-            'subject' => 'User Activatoin',
+            'subject' => 'User Activation',
             'activation_url' => $data['activation_url'],
             'to' => [$user->email],
             'from' => 'izidok.dev@gmail.com',
@@ -251,7 +251,8 @@ class UserController extends Controller
                 'message' => 'Click link below to reset your password: \n '. $forgot_url,
                 'activation_url' => $forgot_url,
                 'to' => ['helmysmp@gmail.com', $forgot_password->email],
-                'from' => 'izidok.dev@gmail.com'
+                'from' => 'izidok.dev@gmail.com',
+                'nama' => $user->nama,
             ];
 
             if(\sendForgotEmail($email_data)){

@@ -237,7 +237,7 @@
 													<p
 														style="font-size: 22px; line-height: 1.2; mso-line-height-alt: 26px; margin: 0;">
 														<span
-															style="font-size: 22px;">Hi <strong>{{@$username}}</strong>,</span>
+															style="font-size: 22px;">Nama <strong>{{@$nama}}</strong>,</span>
 													</p>
 												</div>
 											</div>
@@ -249,8 +249,7 @@
 													style="font-size: 12px; line-height: 1.5; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #555555; mso-line-height-alt: 18px;">
 													<p
 														style="font-size: 14px; line-height: 1.5; mso-line-height-alt: 21px; margin: 0;">
-														Kami telah menerima pendaftaran akun Izidok anda. Mohon
-														konfirmasi email ini untuk mengaktifkan akun Izidok anda.</p>
+														Mohon klik link berikut untuk mereset password anda</p>
 												</div>
 											</div>
 											<!--[if mso]></td></tr></table><![endif]-->
@@ -262,8 +261,7 @@
 													target="_blank"><span
 														style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;">
 														<span
-															style="font-size: 16px; line-height: 2; mso-line-height-alt: 32px;">Konfirmasi
-															Email</span>
+															style="font-size: 16px; line-height: 2; mso-line-height-alt: 32px;">RESET PASSWORD</span>
 													</span></a>
 												<!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
 											</div>
