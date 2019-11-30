@@ -77,7 +77,7 @@ class OperatorController extends Controller
           'from' => 'izidok.dev@gmail.com'
       ];
 
-      if(\sendOperatorEmail($email_data)){
+      if(\sendEmail($email_data, Constant::OPERATOR_EMAIL_TEMPLATE)){
           return response()->json([
               'status' => true,
               'message' => 'aktivasi telah dibuat',

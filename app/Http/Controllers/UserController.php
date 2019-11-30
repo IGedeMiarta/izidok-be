@@ -109,7 +109,7 @@ class UserController extends Controller
         ];
 
         if ($user) {
-            if (\sendEmail($email_data)) {
+            if (\sendEmail($email_data, Constant::ACTIVATION_EMAIL_TEMPLATE)) {
                 return response()->json([
                     'status' => true,
                     'message' => 'Register Success!!',
@@ -254,7 +254,7 @@ class UserController extends Controller
                 'from' => 'izidok.dev@gmail.com'
             ];
 
-            if(\sendForgotEmail($email_data)){
+            if(\sendEmail($email_data, Constant::FORGOT_EMAIL_TEMPLATE)){
                 return response()->json([
                     'status' => true,
                     'message' => 'forgot password telah dibuat',
@@ -417,7 +417,7 @@ class UserController extends Controller
             'username' => $user->username
         ];
 
-        if (\sendEmail($email_data)) {
+        if (\sendEmail($email_data, Constant::ACTIVATION_EMAIL_TEMPLATE)) {
             return response()->json([
                 'status' => true,
                 'message' => 'Email has been re-send successfully...',
