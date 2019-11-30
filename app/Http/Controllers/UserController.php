@@ -306,7 +306,7 @@ class UserController extends Controller
             $data['url'] = $config->value;
             $data['token'] = $token;
 
-            return redirect($config->value."/".$token);
+            return redirect($config->value.$token);
         }
     }
 
@@ -326,7 +326,7 @@ class UserController extends Controller
         if ($password != $konfirm_password) {
             return response()->json([
                 'status' => false,
-                'message' => 'password dan konfirm passowrd tidak sama'
+                'message' => 'password dan konfirm password tidak sama'
             ]);
         } else if (strtotime(date('Y-m-d H:i:s')) > strtotime($forgot_password->expired_at)) {
             return response()->json([

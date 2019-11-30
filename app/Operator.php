@@ -21,15 +21,16 @@ class Operator extends Model implements Auditable
 
     protected $dates = ['deleted_at'];
 
-    public function kliniks()
-    {
-        return $this->belongsToMany(Klinik::class, 'klinik_operator');
-    }
-
-
     public function user()
     {
         return $this->belongsTo('App\User', 'user_id', 'id');
     }
+
+    public function klinik()
+    {
+        return $this->belongsTo('App\Klinik','klinik_id','id');
+    }
+
+
 
 }

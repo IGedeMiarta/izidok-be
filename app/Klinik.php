@@ -21,10 +21,10 @@ class Klinik extends Model implements Auditable
         'tipe_faskes', 'nama_klinik', 'nama_pic', 'nomor_telp', 'nomor_ijin'
     ];
 
-    public function operators()
-    {
-        return $this->belongsToMany(Operator::class, 'klinik_operator');
-    }
+    // public function operators()
+    // {
+    //     return $this->belongsToMany(Operator::class, 'klinik_operator');
+    // }
 
     public function dokters()
     {
@@ -34,6 +34,11 @@ class Klinik extends Model implements Auditable
     public function layanan()
     {
         return $this->hasMany('App\Layanan', 'klinik_id', 'id');
+    }
+
+    public function operator()
+    {
+        return $this->hasMany('App\Operator','klinik_id','id');
     }
 
 }
