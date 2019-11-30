@@ -19,7 +19,7 @@ class LayananController extends Controller
 		if($user_role->role_id == Constant::INTERNAL_ADMIN)
 		{
 			$layanan = Layanan::paginate($request->limit);
-	  	$data['layanan'] = $layanan;
+	  		$data['layanan'] = $layanan;
 		  	return response()->json([
 		    			'success' => true,
 		    			'message' => 'success',
@@ -57,11 +57,6 @@ class LayananController extends Controller
             'arr.*.nama_layanan' => 'required|string',
             'arr.*.tarif' => 'required|integer'
         ]);
-
-  //       $validator = Validator::make($request->all(), [
-		//     'arr.klinik_id' => 'required|integer',
-		//     'arr.kode_layanan' => 'required|string',
-		// ]);
 
         $arr_layanan = $request->arr;
         $result = array();

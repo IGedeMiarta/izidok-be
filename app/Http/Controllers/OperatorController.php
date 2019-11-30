@@ -23,6 +23,14 @@ class OperatorController extends Controller
         $user_id = $request->user_id;
         $user_role = UserRole::where('user_id',$user_id)->first();
 
+        if(!$user_role)
+        {
+          return response()->json([
+                  'success' => false,
+                  'message' => 'failed',
+                ],201);
+        }
+
         if($user_role->role_id == Constant::INTERNAL_ADMIN)
         {
             $operator = Operator::paginate($request->limit);
@@ -30,7 +38,7 @@ class OperatorController extends Controller
               return response()->json([
                     'success' => true,
                     'message' => 'success',
-                    'data' => $operator
+                    'data' => $data
                   ],201);
         }
         else if($user_role->role_id == Constant::KLINIK_OPERATOR || $user_role->role_id == Constant::KLINIK_ADMIN)
@@ -41,7 +49,7 @@ class OperatorController extends Controller
               return response()->json([
                     'success' => true,
                     'message' => 'success',
-                    'data' => $operator
+                    'data' => $data
                   ],201);
         }
         else
@@ -49,7 +57,6 @@ class OperatorController extends Controller
             return response()->json([
                   'success' => false,
                   'message' => 'failed, you dont have role to see this',
-                  'data' => $data
                 ],201);
         }
     }

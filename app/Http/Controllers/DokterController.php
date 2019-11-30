@@ -8,6 +8,7 @@ use App\User;
 use App\UserRole;
 use App\Operator;
 use App\Constant;
+use App\KlinikDokter;
 use Illuminate\Support\Facades\Hash;
 
 class DokterController extends Controller 
@@ -24,16 +25,23 @@ class DokterController extends Controller
       if($user_role->role_id == Constant::INTERNAL_ADMIN)
       {
           $dokter = Dokter::paginate($request->limit);
+          $data['dokter'] = $dokter;
           return response()->json([
               'success' => true,
               'message' => 'success',
-              'data' => $all_dokter
+              'data' => $data
             ],201);
       }
       else if($user_role->role_id == Constant::KLINIK_OPERATOR ||  $user_role->role_id == Constant::KLINIK_ADMIN)
       {
           $operator = Operator::where('user_id',$user_id)->first();
-          $klinik_dokter = KlinikDokter::where('klinik_id', $operator->klinik_id)->with('dokter')->get();
+          $dokter = KlinikDokter::where('klinik_id', $operator->klinik_id)->with('dokter')->paginate();
+          $data['dokter'] = $dokter;
+          return response()->json([
+              'success' => true,
+              'message' => 'success',
+              'data' => $data
+            ],201);
       }
       else
       {

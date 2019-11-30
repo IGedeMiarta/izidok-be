@@ -36,7 +36,7 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
 
     #operator
     $router->get('/operator/check/{token}','OperatorController@check_activation');
-    $router->post('/operator/activate','OperatorController@activation');
+    $router->post('/operator/activation','OperatorController@activation');
 
 
     $router->group(['middleware' => 'auth'], function() use($router){
