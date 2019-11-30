@@ -58,13 +58,16 @@ class RekamMedisController extends Controller
         #get data pasien, insert anamnesa
         $pasien = $trans_klinik->pasien;
         $anamnesa = new Anamnesa();
-        $anamnesa->tensi = ($request->tensi) ? $request->tensi : $pasien->tensi;
+        $anamnesa->tensi_sistole = ($request->tensi_sistole) ? $request->tensi_sistole : $pasien->tensi_sistole;
+        $anamnesa->tensi_diastole = ($request->tensi_diastole) ? $request->tensi_diastole : $pasien->tensi_diastole;
         $anamnesa->nadi = ($request->nadi) ? $request->nadi : $pasien->nadi;
         $anamnesa->suhu = ($request->suhu) ? $request->suhu : $pasien->suhu;
         $anamnesa->respirasi = ($request->respirasi) ? $request->respirasi : $pasien->respirasi;
         $anamnesa->tinggi_badan = ($request->tinggi_badan) ? $request->tinggi_badan : $pasien->tinggi_badan;
         $anamnesa->berat_badan = ($request->berat_badan) ? $request->berat_badan : $pasien->berat_badan;
-        $anamnesa->notes = $request->anamnesa_notes;
+        $anamnesa->notes = $request->anamnesa_text;
+        $anamnesa->is_draw = $request->anamnesa_is_draw;
+        $anamnesa->draw_path = \uploadToMinio('anamnesa',$request->anamnesa_draw);
         $anamnesa->save();
 
         #make array penyakit, inserti diagnosa

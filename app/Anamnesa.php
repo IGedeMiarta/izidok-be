@@ -16,6 +16,6 @@ class Anamnesa extends Model implements Auditable
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
-    protected $fillable = array('tensi', 'nadi', 'suhu', 'respirasi', 'tinggi_badan', 'berat_badan', 'notes');
+    protected $fillable = array('tensi_sistole', 'tensi_diastole', 'nadi', 'suhu', 'respirasi', 'tinggi_badan', 'berat_badan', 'notes');
 
 }

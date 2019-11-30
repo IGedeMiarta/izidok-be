@@ -9,13 +9,16 @@ class CreateAnamnesaTable extends Migration {
 	{
 		Schema::create('anamnesa', function(Blueprint $table) {
 			$table->increments('id');
-			$table->integer('tensi')->nullable();
+			$table->integer('tensi_sistole')->nullable();
+			$table->integer('tensi_diastole')->nullable();
 			$table->integer('nadi')->nullable();
 			$table->integer('suhu')->nullable();
 			$table->integer('respirasi')->nullable();
 			$table->integer('tinggi_badan')->nullable();
 			$table->integer('berat_badan')->nullable();
 			$table->text('notes')->nullable();
+			$table->boolean('is_draw')->nullable();
+			$table->string('draw_path')->nullable();
 			$table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
