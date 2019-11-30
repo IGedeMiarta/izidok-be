@@ -4,19 +4,49 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Layanan;
+use App\Constant;
+use App\UserRole;
+use App\Operator;
 use Illuminate\Support\Facades\Validator;
 
 class LayananController extends Controller
 {
     public function index(Request $request)
   	{
-  		$layanan = Layanan::paginate($request->limit);
-      	$data['layanan'] = $layanan;
-  	  	return response()->json([
-  	    			'success' => true,
-  	    			'message' => 'success',
-  	    			'data' => $data
-  	    		],201);
+		$user_id = $request->user_id;
+		$user_role = UserRole::where('user_id',$user_id)->first();
+
+		if($user_role->role_id == Constant::INTERNAL_ADMIN)
+		{
+			$layanan = Layanan::paginate($request->limit);
+	  	$data['layanan'] = $layanan;
+		  	return response()->json([
+		    			'success' => true,
+		    			'message' => 'success',
+		    			'data' => $data
+		    		],201);
+		}
+		else if($user_role->role_id == Constant::KLINIK_OPERATOR ||  $user_role->role_id == Constant::KLINIK_ADMIN)
+		{
+			$operator = Operator::where('user_id',$user_id)->first();
+			$layanan = Layanan::where('klinik_id',$operator->klinik_id)->paginate($request->limit);
+			$data['layanan'] = $layanan;
+		  	if($layanan)
+		  	{
+		  		return response()->json([
+		    			'success' => true,
+		    			'message' => 'success',
+		    			'data' => $data
+		    		],201);
+		  	}
+		else
+		{
+			return response()->json([
+		    			'success' => false,
+		    			'message' => 'failed, you dont have role to see this',
+		    			'data' => $data
+		    		],400);
+		}
   	}
 
   	public function store(Request $request)

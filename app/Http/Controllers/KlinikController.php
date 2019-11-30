@@ -13,6 +13,7 @@ use App\Constant;
 use App\Dokter;
 use App\Activation;
 use App\Reference;
+use App\Operator;
 
 
 class KlinikController extends Controller
@@ -24,9 +25,19 @@ class KlinikController extends Controller
 
     public function index(Request $request){
         $user_id = Auth::user()->id;
-        $klinik = Klinik::whereHas('operators', function($q) use($user_id) {
+        $user_role = UserRole::where('user_id',$user_id)->first();
+
+        if($user_role->role_id == Constant::INTERNAL_ADMIN)
+        {
+            $klinik = Klinik::whereHas('operators', function($q) use($user_id) {
                         $q->where('operator.user_id', $user_id);
-                    })->paginate($request->limit);
+                    })->paginate($request->limit);    
+        }
+        else if($user_role->role_id == Constant::KLINIK_OPERATOR ||  $user_role->role_id == Constant::KLINIK_ADMIN)
+        {
+            $operator = Operator::where('user_id',$user_id)->first();
+            $klinik = Klinik::find($operator->klinik_id);
+        }
         
         if (!$klinik) {
             return response()->json(['status' => false], 422);

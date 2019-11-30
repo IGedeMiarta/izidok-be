@@ -5,20 +5,43 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Pasien;
+use App\UserRole;
 
 class PasienController extends Controller
 {
     public function index(Request $request)
   	{
   		$user_id = $request->user_id;
-  		$pasien = Pasien::where('user_id', $user_id)
-			->paginate($request->limit);
-      	$data['pasien'] = $pasien;
-  	  	return response()->json([
-  	    			'success' => true,
-  	    			'message' => 'success',
-  	    			'data' => $data
-  	    		],201);
+  		$user_role = UserRole::where('user_id',$user_id)->first();
+
+  		if($user_role->role_id == Constant::INTERNAL_ADMIN)
+        {
+            $pasien = Pasien::paginate($request->limit);
+	      	$data['pasien'] = $pasien;
+	  	  	return response()->json([
+	  	    			'success' => true,
+	  	    			'message' => 'success',
+	  	    			'data' => $data
+	  	    		],201);
+        }
+        else if($user_role->role_id == Constant::KLINIK_OPERATOR || $user_role->role_id == Constant::KLINIK_ADMIN)
+        {
+            $pasien = Pasien::where('user_id', $user_id)->paginate($request->limit);
+	      	$data['pasien'] = $pasien;
+	  	  	return response()->json([
+	  	    			'success' => true,
+	  	    			'message' => 'success',
+	  	    			'data' => $data
+	  	    		],201);
+        }
+        else
+        {
+            return response()->json([
+                  'success' => false,
+                  'message' => 'failed, you dont have role to see this',
+                  'data' => $data
+                ],201);
+        }
   	}
 
   	public function store(Request $request)

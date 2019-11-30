@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Dokter;
 use App\User;
+use App\UserRole;
+use App\Operator;
+use App\Constant;
 use Illuminate\Support\Facades\Hash;
 
 class DokterController extends Controller 
@@ -16,12 +19,30 @@ class DokterController extends Controller
     */
     public function index(Request $request)
     {
-      $dokter = Dokter::paginate($request->limit);
-        return response()->json([
+      $user_id = $request->user_id;
+      $user_role = UserRole::where('user_id',$user_id)->first();
+      if($user_role->role_id == Constant::INTERNAL_ADMIN)
+      {
+          $dokter = Dokter::paginate($request->limit);
+          return response()->json([
               'success' => true,
               'message' => 'success',
               'data' => $all_dokter
             ],201);
+      }
+      else if($user_role->role_id == Constant::KLINIK_OPERATOR ||  $user_role->role_id == Constant::KLINIK_ADMIN)
+      {
+          $operator = Operator::where('user_id',$user_id)->first();
+          $klinik_dokter = KlinikDokter::where('klinik_id', $operator->klinik_id)->with('dokter')->get();
+      }
+      else
+      {
+          return response()->json([
+                'success' => false,
+                'message' => 'failed, you dont have role to see this',
+                'data' => $data
+              ],201);
+      }
     }
 
     /**

@@ -20,13 +20,38 @@ class OperatorController extends Controller
     */
     public function index(Request $request)
     {
-      $operator = Operator::paginate($request->limit);
-      $data['operator'] = $operator;
-        return response()->json([
-              'success' => true,
-              'message' => 'success',
-              'data' => $operator
-            ],201);
+        $user_id = $request->user_id;
+        $user_role = UserRole::where('user_id',$user_id)->first();
+
+        if($user_role->role_id == Constant::INTERNAL_ADMIN)
+        {
+            $operator = Operator::paginate($request->limit);
+            $data['operator'] = $operator;
+              return response()->json([
+                    'success' => true,
+                    'message' => 'success',
+                    'data' => $operator
+                  ],201);
+        }
+        else if($user_role->role_id == Constant::KLINIK_OPERATOR || $user_role->role_id == Constant::KLINIK_ADMIN)
+        {
+            $operator = Operator::where('user_id',$user_id)->first();
+            $list_operator = Operator::where('klinik_id',$operator->klinik_id)->get();
+            $data['operator'] = $list_operator;
+              return response()->json([
+                    'success' => true,
+                    'message' => 'success',
+                    'data' => $operator
+                  ],201);
+        }
+        else
+        {
+            return response()->json([
+                  'success' => false,
+                  'message' => 'failed, you dont have role to see this',
+                  'data' => $data
+                ],201);
+        }
     }
 
     /**
