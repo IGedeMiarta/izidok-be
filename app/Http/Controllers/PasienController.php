@@ -10,7 +10,9 @@ class PasienController extends Controller
 {
     public function index(Request $request)
   	{
-  		$pasien = Pasien::paginate($request->limit);
+  		$user_id = $request->user_id;
+  		$pasien = Pasien::where('user_id', $user_id)
+			->paginate($request->limit);
       	$data['pasien'] = $pasien;
   	  	return response()->json([
   	    			'success' => true,
