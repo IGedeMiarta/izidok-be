@@ -12,6 +12,7 @@ class CreateOperatorTable extends Migration {
 			$table->string('nama', 50);
 			$table->date('tanggal_lahir')->nullable();
 			$table->integer('jenis_kelamin')->nullable();
+			$table->integer('klinik_id')->nullable();
 			$table->integer('user_id');
 			$table->string('created_by', 50)->nullable();
 			$table->string('updated_by', 50)->nullable();
