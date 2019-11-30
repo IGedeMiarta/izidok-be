@@ -99,7 +99,8 @@ class OperatorController extends Controller
           'message' => 'Click link below to activate operator: \n '. $act_url,
           'activation_url' => $act_url,
           'to' => ['helmysmp@gmail.com', $user->email],
-          'from' => 'izidok.dev@gmail.com'
+          'from' => 'izidok.dev@gmail.com',
+          'nama' => $user->nama,
       ];
 
       if(\sendOperatorEmail($email_data)){
