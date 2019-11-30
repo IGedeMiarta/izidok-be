@@ -41,7 +41,7 @@ class DashboardController extends Controller
 		}
 
 		if ($type === Constant::TAHUNAN) {
-			$result = $this->pasienYearly($user_id);
+			$result = $this->pasienAnnual($user_id);
 			return response()->json(['status' => true, 'data' => $result]);
 		}
 
@@ -77,7 +77,7 @@ class DashboardController extends Controller
 		return $pasien_baru;
 	}
 
-	private function pasienYearly($user_id)
+	private function pasienAnnual($user_id)
 	{
 		$pasien_baru = Pasien::where('user_id', $user_id)
 			->groupBy(function ($date) {
