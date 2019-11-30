@@ -37,4 +37,10 @@ class Constant
 	#path folder draw image
 	const FOLDER_PEMERIKSAAN = 'pemeriksaan';
 	const FOLDER_DIAGNOSA = 'diagnosa';
+
+	#dashboard
+	const MIGGUAN = 'mingguan';
+	const BULANAN = 'bulanan';
+	const TAHUNAN = 'tahunan';
+	const DATE_RANGE = 'date_range';
 }

@@ -124,6 +124,11 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->put('/organ/{id}', 'OrganController@update');
         $router->delete('/organ/{id}', 'OrganController@delete');
 
+        #dashboard
+        $router->get('/pasien','DashboardController@getPasien');
+        $router->get('/rawat-jalan','DashboardController@getPasienRawatJalan');
+        $router->get('/antrian','DashboardController@getLastAntrian');
+
     });
 
     $router->get('/image', function(Request $request){
