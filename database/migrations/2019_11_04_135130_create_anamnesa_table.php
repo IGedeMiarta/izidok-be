@@ -9,7 +9,8 @@ class CreateAnamnesaTable extends Migration {
 	{
 		Schema::create('anamnesa', function(Blueprint $table) {
 			$table->increments('id');
-			$table->integer('tensi')->nullable();
+			$table->integer('tensi_sistole')->nullable();
+			$table->integer('tensi_diastole')->nullable();
 			$table->integer('nadi')->nullable();
 			$table->integer('suhu')->nullable();
 			$table->integer('respirasi')->nullable();

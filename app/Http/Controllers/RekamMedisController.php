@@ -58,7 +58,8 @@ class RekamMedisController extends Controller
         #get data pasien, insert anamnesa
         $pasien = $trans_klinik->pasien;
         $anamnesa = new Anamnesa();
-        $anamnesa->tensi = ($request->tensi) ? $request->tensi : $pasien->tensi;
+        $anamnesa->tensi_sistole = ($request->tensi_sistole) ? $request->tensi_sistole : $pasien->tensi_sistole;
+        $anamnesa->tensi_diastole = ($request->tensi_diastole) ? $request->tensi_diastole : $pasien->tensi_diastole;
         $anamnesa->nadi = ($request->nadi) ? $request->nadi : $pasien->nadi;
         $anamnesa->suhu = ($request->suhu) ? $request->suhu : $pasien->suhu;
         $anamnesa->respirasi = ($request->respirasi) ? $request->respirasi : $pasien->respirasi;

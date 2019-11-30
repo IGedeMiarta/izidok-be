@@ -80,8 +80,9 @@ class TransKlinikController extends Controller
         $pasien->tinggi_badan = $request->tinggi_badan;
         $pasien->berat_badan = $request->berat_badan;
         $pasien->suhu = $request->suhu;
-        $pasien->tensi = $request->sistole;
-        $pasien->nadi = $request->diastole;
+        $pasien->tensi_sistole = $request->tensi_sistole;
+        $pasien->tensi_diastole = $request->tensi_diastole;
+        $pasien->nadi = $request->nadi;
         $pasien->respirasi = $request->respirasi;
         $pasien->save();
       }

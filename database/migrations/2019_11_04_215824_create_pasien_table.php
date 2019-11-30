@@ -27,7 +27,8 @@ class CreatePasienTable extends Migration {
 			$table->string('nomor_polis', 50)->nullable();
 			$table->string('email', 50)->nullable();
 			$table->string('nama_penanggung_jawab',100)->nullable();
-			$table->integer('tensi')->nullable();
+			$table->integer('tensi_sistole')->nullable();
+			$table->integer('tensi_diastole')->nullable();
 			$table->integer('nadi')->nullable();
 			$table->integer('suhu')->nullable();
 			$table->integer('respirasi')->nullable();
