@@ -242,6 +242,13 @@ class OperatorController extends Controller
    */
   public function update(Request $request)
   {
+    $this->validate($request, [
+      'nama' => 'required|string',
+      'nomor_telp' => 'required|string',
+      'tanggal_lahir' => 'required|date',
+      'jenis_kelamin' => 'required|string',
+    ]);
+
     $operator = Operator::find($request->id);
 
     if (empty($operator)) {
@@ -282,7 +289,7 @@ class OperatorController extends Controller
       return response()->json([
         'status' => false,
         'data' => '',
-        'message' => 'role not found'
+        'message' => 'operator not found'
       ]);
     } else {
       $nama = $operator->nama;
