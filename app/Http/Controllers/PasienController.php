@@ -202,7 +202,7 @@ class PasienController extends Controller
 		$pasien->respirasi = $request->input('respirasi');
 		$pasien->tinggi_badan = $request->input('tinggi_badan');
 		$pasien->berat_badan = $request->input('berat_badan');
-		$pasien->nomor_pasien = $request->input('nomor_pasien');
+		$pasien->nomor_rekam_medis = $request->input('nomor_rekam_medis');
 		$status = $pasien->save();
 
 		if(!$status){
