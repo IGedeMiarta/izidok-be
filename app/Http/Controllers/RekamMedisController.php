@@ -24,7 +24,7 @@ class RekamMedisController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'kode_penyakit' => 'required',
+            'kode_penyakit' => 'required|array',
             'next_konsultasi' => 'required|integer',
             'organ_id' => 'required|integer',
             'transklinik_id' => 'required|integer',
@@ -70,7 +70,7 @@ class RekamMedisController extends Controller
         $anamnesa->draw_path = \uploadToMinio('anamnesa',$request->anamnesa_draw);
         $anamnesa->save();
 
-        #make array penyakit, inserti diagnosa
+        #make array penyakit, insert diagnosa
         $arr_penyakit = [];
         foreach ($request->kode_penyakit as $item) {
             array_push($arr_penyakit, $item['id']);

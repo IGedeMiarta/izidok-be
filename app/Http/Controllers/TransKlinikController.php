@@ -49,6 +49,7 @@ class TransKlinikController extends Controller
       'tensi_sistole' => 'integer',
       'tensi_diastole' => 'integer',
       'nadi' => 'integer',
+      'respirasi' => 'integer',
     ]);
 
       #klinik exist?

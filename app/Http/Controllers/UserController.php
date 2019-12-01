@@ -455,4 +455,15 @@ class UserController extends Controller
             'message' => 'Username is available...'
         ], 201);
     }
+
+    public function test(){
+        $role_admin = Constant::INTERNAL_ADMIN;
+        $user = User::where('id', 5)
+                    ->whereHas('roles', function($item) use ($role_admin){
+                        $item->where('role.id', $role_admin);
+                    })
+                    ->get();
+
+        dd($user);
+    }
 }
