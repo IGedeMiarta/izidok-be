@@ -65,14 +65,14 @@ class PasienController extends Controller
             'nomor_polis' => 'required|string',
             'email' => 'required|string',
             'nama_penanggung_jawab' => 'required|string',
-            'tensi' => 'required|integer',
+			'tensi_sistole' => 'required|integer',
+			'tensi_diastole' => 'required|integer',
             'nadi' => 'required|integer',
             'suhu' => 'required|integer',
             'respirasi' => 'required|integer',
             'tinggi_badan' => 'required|integer',
             'berat_badan' => 'required|integer',
             'nomor_rekam_medis' => 'required|integer',
-            'user_id' => 'required|integer',
             'klinik_id' => 'required|integer',
         ]);
 
@@ -95,14 +95,15 @@ class PasienController extends Controller
 	   	$pasien->nomor_polis = $request->input('nomor_polis');
 	   	$pasien->email = $request->input('email');
 	   	$pasien->nama_penanggung_jawab = $request->input('nama_penanggung_jawab');
-	   	$pasien->tensi = $request->input('tensi');
+		$pasien->tensi_sistole = $request->input('tensi_sistole');
+		$pasien->tensi_diastole = $request->input('tensi_diastole');
 	   	$pasien->nadi = $request->input('nadi');
 	   	$pasien->suhu = $request->input('suhu');
 	   	$pasien->respirasi = $request->input('respirasi');
 	   	$pasien->tinggi_badan = $request->input('tinggi_badan');
 	   	$pasien->berat_badan = $request->input('berat_badan');
 	   	$pasien->nomor_rekam_medis = $request->input('nomor_rekam_medis');
-	   	$pasien->user_id = $request->input('user_id');
+	   	$pasien->user_id = $request->user_id;
 	   	$pasien->klinik_id = $request->input('klinik_id');
 	   	$status = $pasien->save();
 
