@@ -168,7 +168,7 @@ class OperatorController extends Controller
             'username' => 'required|unique:users|string',
             'password' => 'required|string',
             'konfirm_password' => 'required|string',
-            'telepon' => 'required|string',
+            'nomor_telp' => 'required|string',
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'required|string',
             'token' => 'required|string'
@@ -180,7 +180,7 @@ class OperatorController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
         $konfirm_password = $request->input('konfirm_password');
-        $telepon = $request->input('telepon');
+        $telepon = $request->input('nomor_telp');
         $tanggal_lahir = $request->input('tanggal_lahir');
         $jenis_kelamin = $request->input('jenis_kelamin');
 
@@ -257,6 +257,13 @@ class OperatorController extends Controller
     */
     public function update(Request $request)
     {
+      $this->validate($request,[
+            'nama' => 'required|string',
+            'nomor_telp' => 'required|string',
+            'tanggal_lahir' => 'required|date',
+            'jenis_kelamin' => 'required|string',
+        ]);
+
       $operator = Operator::find($request->id);
       
       if (empty($operator)) {            
@@ -271,7 +278,6 @@ class OperatorController extends Controller
         $user->nomor_telp = $request->nomor_telp;
         $user->save();
         $operator->nama = $request->nama;
-        $operator->tempat_lahir = $request->tempat_lahir;
         $operator->tanggal_lahir = $request->tanggal_lahir;
         $operator->jenis_kelamin = $request->jenis_kelamin;
         $operator->save();
@@ -298,7 +304,7 @@ class OperatorController extends Controller
             return response()->json([
               'status' => false,
               'data' => '',
-              'message' => 'role not found'
+              'message' => 'operator not found'
             ]);
         }else{
             $nama = $operator->nama;

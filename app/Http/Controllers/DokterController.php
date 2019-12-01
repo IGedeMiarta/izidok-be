@@ -117,7 +117,7 @@ class DokterController extends Controller
       if (empty($dokter)) {            
           return response()->json([
             'status' => false,
-            'message' => "operator not found",
+            'message' => "Dokter not found",
             'data' => ''
           ]);
       }else{
@@ -143,7 +143,7 @@ class DokterController extends Controller
       if (empty($dokter)) {            
           return response()->json([
             'status' => false,
-            'message' => "role not found",
+            'message' => "dokter not found",
             'data' => ''
           ]);
       }else{

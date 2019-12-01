@@ -111,7 +111,12 @@ class LayananController extends Controller
 
 	public function update(Request $request)
 	{
-		//echo $request->id;
+		$this->validate($request, [
+			'kode_layanan' => 'required|string',
+			'nama_layanan' => 'required|string',
+			'tarif' => 'required|integer'
+		]);
+
 		$layanan = Layanan::find($request->id);
 
 		if (empty($layanan)) {
@@ -124,7 +129,6 @@ class LayananController extends Controller
 			$layanan->nama_layanan = $layanan->nama_layanan;
 			$layanan->kode_layanan = $layanan->kode_layanan;
 			$layanan->tarif = $layanan->tarif;
-			$layanan->klinik_id = $layanan->klinik_id;
 			$layanan->save();
 			return response()->json([
 				'status' => true,
