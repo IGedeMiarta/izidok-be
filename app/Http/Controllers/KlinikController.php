@@ -147,7 +147,7 @@ class KlinikController extends Controller
     public function update(Request $request){
         $klinik = Klinik::find($request->id);
         if (!$klinik) {            
-            return response()->json(['status' => false]);
+            return response()->json(['status' => false, 'message' => 'klinik not found...']);
         }else{
             $klinik->nama_klinik = $request->nama_klinik;
             $klinik->save();
