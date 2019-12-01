@@ -5,17 +5,19 @@ namespace App\Http\Controllers;
 use App\Constant;
 use App\Operator;
 use Illuminate\Http\Request;
-use App\Organ;
 use App\Pasien;
 use App\TransKlinik;
-use App\User;
+use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
 {
 	public function getPasien(Request $request)
 	{
-
-		#...validate here
+		$this->validate($request, [
+            'type' => 'required|string',
+            'from' => 'date_format:Y-m-d',
+            'to' => 'date_format:Y-m-d',
+        ]);
 
 		$user_id = $request->user_id;
 		$type = $request->type;
@@ -32,6 +34,7 @@ class DashboardController extends Controller
 
 		if ($type === Constant::MIGGUAN) {
 			$result =  $this->pasienWeekly($user_id);
+			
 			return response()->json(['status' => true, 'data' => $result]);
 		}
 
@@ -63,39 +66,48 @@ class DashboardController extends Controller
 
 		$pasien_baru = Pasien::where('user_id', $user_id)
 			->whereBetween('created_at', [$start_week, $end_week])
-			->get();
+			->get()
+			->groupBy(function ($date) {
+				return Carbon::parse($date->created_at)->format('d');
+			});
 		return $pasien_baru;
 	}
 
 	private function pasienMonthly($user_id)
 	{
 		$pasien_baru = Pasien::where('user_id', $user_id)
+			->get()
 			->groupBy(function ($date) {
 				return Carbon::parse($date->created_at)->format('m');
-			})
-			->get();
+			});
+			
 		return $pasien_baru;
 	}
 
 	private function pasienAnnual($user_id)
 	{
 		$pasien_baru = Pasien::where('user_id', $user_id)
+			->get()
 			->groupBy(function ($date) {
 				return Carbon::parse($date->created_at)->format('Y');
-			})
-			->get();
+			});
 		return $pasien_baru;
 	}
 
 	public function getPasienRawatJalan(Request $request)
 	{
-		$operator = Operator::where('user_id', $request->user_id);
-		$klinik = $operator->kliniks[0]; #one operator only has one klinik
+		$this->validate($request, [
+            'from' => 'required|date_format:Y-m-d',
+            'to' => 'required|date_format:Y-m-d',
+		]);
+		
+		$operator = Operator::where('user_id', $request->user_id)->first();
+		$klinik = $operator->klinik;
 		$from = $request->from;
 		$to = $request->to;
 
 		$trans_klinik = TransKlinik::where('klinik_id', $klinik->id)
-			->whereBetweem('created_at', [$from, $to])
+			->whereBetween('created_at', [$from, $to])
 			->get();
 
 		if ($trans_klinik) {
@@ -107,10 +119,11 @@ class DashboardController extends Controller
 
 	public function getLastAntrian(Request $request)
 	{
-		$operator = Operator::where('user_id', $request->user_id);
-		$klinik = $operator->kliniks[0]; #one operator only has one klinik
+		$operator = Operator::where('user_id', $request->user_id)->first();
+		$klinik = $operator->klinik;
 
 		$trans_klinik = TransKlinik::select('nomor_antrian')
+			->where('klinik_id', $klinik->id)
 			->where('created_at', date('Y-m-d'))
 			->orderBy('nomor_antrian', 'desc')
 			->first();

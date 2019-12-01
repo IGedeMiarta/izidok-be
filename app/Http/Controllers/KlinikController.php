@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use App\Klinik;
 use App\Operator;
-use App\KlinikOperator;
 use App\User;
 use App\UserRole;
 use App\Constant;
 use App\Dokter;
 use App\Activation;
 use App\Reference;
-use App\Operator;
 
 
 class KlinikController extends Controller
@@ -29,7 +26,7 @@ class KlinikController extends Controller
 
         if($user_role->role_id == Constant::INTERNAL_ADMIN)
         {
-            $klinik = Klinik::whereHas('operators', function($q) use($user_id) {
+            $klinik = Klinik::whereHas('operator', function($q) use($user_id) {
                         $q->where('operator.user_id', $user_id);
                     })->paginate($request->limit);    
         }
@@ -48,7 +45,7 @@ class KlinikController extends Controller
     }
 
     public function show($id = null){
-        $klinik = Klinik::with('operators')->find($id);
+        $klinik = Klinik::with('operator')->find($id);
         if (!$klinik) {
             return response()->json(['status' => false, 'message' => 'Klinik not found...'], 422);
         }else{
@@ -107,7 +104,7 @@ class KlinikController extends Controller
             'nama' => $nama_pic,
             'user_id' => $user->id
         ]);
-        $klinik->operators()->save($operator);
+        $klinik->operator()->save($operator);
 
         if(!$isKlinik){
             #data dokter
@@ -138,7 +135,7 @@ class KlinikController extends Controller
             'username' => $user->username
         ];
 
-        \sendEmail($email_data);
+        \sendEmail($email_data, Constant::ACTIVATION_EMAIL_TEMPLATE);
 
         if(!$data['klinik_id']){
             return response()->json(['status' => false], 422);

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Mail;
 function sendEmail($data, $template){  
     Mail::send($template, $data, function ($msg) use ($data){
         $msg->subject($data['subject']); 
-        $msg->from([$data['from']]); 
+        $msg->from([$data['from']], 'Izidok.com'); 
         $msg->to($data['to']); 
     });
 

@@ -125,9 +125,9 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->delete('/organ/{id}', 'OrganController@delete');
 
         #dashboard
-        $router->get('/pasien','DashboardController@getPasien');
-        $router->get('/rawat-jalan','DashboardController@getPasienRawatJalan');
-        $router->get('/antrian','DashboardController@getLastAntrian');
+        $router->get('/dash-pasien','DashboardController@getPasien');
+        $router->get('/dash-rawat-jalan','DashboardController@getPasienRawatJalan');
+        $router->get('/dash-antrian','DashboardController@getLastAntrian');
 
     });
 
