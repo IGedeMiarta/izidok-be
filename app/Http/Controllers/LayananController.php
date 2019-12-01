@@ -55,10 +55,11 @@ class LayananController extends Controller
 	public function store(Request $request)
 	{
 		$this->validate($request, [
-			'arr.*.klinik_id' => 'required|integer',
-			'arr.*.kode_layanan' => 'required|string',
-			'arr.*.nama_layanan' => 'required|string',
-			'arr.*.tarif' => 'required|integer'
+			'arr' => 'required|array',
+			'arr[*].klinik_id' => 'required|integer',
+			'arr[*].kode_layanan' => 'required|string',
+			'arr[*].nama_layanan' => 'required|string',
+			'arr[*].tarif' => 'required|integer'
 		]);
 
 		$arr_layanan = $request->arr;
@@ -118,7 +119,7 @@ class LayananController extends Controller
 		]);
 
 		$layanan = Layanan::find($request->id);
-
+		
 		if (empty($layanan)) {
 			return response()->json([
 				'status' => false,
@@ -126,9 +127,9 @@ class LayananController extends Controller
 				'data' => ''
 			]);
 		} else {
-			$layanan->nama_layanan = $layanan->nama_layanan;
-			$layanan->kode_layanan = $layanan->kode_layanan;
-			$layanan->tarif = $layanan->tarif;
+			$layanan->nama_layanan = $request->nama_layanan;
+			$layanan->kode_layanan = $request->kode_layanan;
+			$layanan->tarif = $request->tarif;
 			$layanan->save();
 			return response()->json([
 				'status' => true,
