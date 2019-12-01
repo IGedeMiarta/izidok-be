@@ -114,7 +114,7 @@ class LayananController extends Controller
 	{
 		//echo $request->id;
 		$layanan = Layanan::find($request->id);
-
+		
 		if (empty($layanan)) {
 			return response()->json([
 				'status' => false,
@@ -122,10 +122,9 @@ class LayananController extends Controller
 				'data' => ''
 			]);
 		} else {
-			$layanan->nama_layanan = $layanan->nama_layanan;
-			$layanan->kode_layanan = $layanan->kode_layanan;
-			$layanan->tarif = $layanan->tarif;
-			$layanan->klinik_id = $layanan->klinik_id;
+			$layanan->nama_layanan = $request->nama_layanan;
+			$layanan->kode_layanan = $request->kode_layanan;
+			$layanan->tarif = $request->tarif;
 			$layanan->save();
 			return response()->json([
 				'status' => true,
