@@ -11,7 +11,7 @@
 
     function uploadToMinio($prefix, $file){
         $file = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file));
-        $filename = $prefix . '-' . date('Ymdhms') . '.png';
+        $filename = $prefix .'/'.$prefix. '-' . date('Ymdhms') . '.png';
         
         Storage::disk('minio')->put($filename, $file);
         return $filename;

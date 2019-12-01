@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Pasien;
 use App\UserRole;
+use App\Constant;
 
 class PasienController extends Controller
 {
@@ -258,16 +259,12 @@ class PasienController extends Controller
 			'credentials' => $credentialsFilePath
 		]);
 
-		// $path = storage_path('/upload/ktp/');
-		$folder = 'ktp';
-
 		if ($request->file) {
-			// $name = \upload($request->file, $name_type, $path);
-			$path = \uploadToMinio($request->file, $folder);
+			$filename = 'ktp/ktp-' . date('Ymdhms') . '.png';
+			$path =  Storage::disk('minio')->put($filename, $request->file);
 		}
 
 		$image = Storage::disk('minio')->get($path);
-		// $image = file_get_contents($path);
 
 		if (!$image) {
 			return response()->json([
@@ -275,7 +272,7 @@ class PasienController extends Controller
 				'message' => 'File image not found...',
 			]);
 		}
-
+		
 		$response = $imageAnnotator->textDetection($image);
 		$texts = $response->getTextAnnotations();
 		$text = $texts[0]->getDescription();
