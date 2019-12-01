@@ -271,7 +271,6 @@ class OperatorController extends Controller
         $user->nomor_telp = $request->nomor_telp;
         $user->save();
         $operator->nama = $request->nama;
-        $operator->tempat_lahir = $request->tempat_lahir;
         $operator->tanggal_lahir = $request->tanggal_lahir;
         $operator->jenis_kelamin = $request->jenis_kelamin;
         $operator->save();
