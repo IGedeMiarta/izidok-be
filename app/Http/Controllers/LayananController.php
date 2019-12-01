@@ -39,6 +39,7 @@ class LayananController extends Controller
 		    			'data' => $data
 		    		],201);
 		  	}
+		}
 		else
 		{
 			return response()->json([
