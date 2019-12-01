@@ -24,7 +24,8 @@ class LayananController extends Controller
 				'message' => 'success',
 				'data' => $data
 			], 201);
-		} else if ($user_role->role_id == Constant::KLINIK_OPERATOR ||  $user_role->role_id == Constant::KLINIK_ADMIN) {
+		} else if ($user_role->role_id == Constant::KLINIK_OPERATOR ||  
+		$user_role->role_id == Constant::KLINIK_ADMIN) {
 			$operator = Operator::where('user_id', $user_id)->first();
 			$layanan = Layanan::where('klinik_id', $operator->klinik_id)->paginate($request->limit);
 			$data['layanan'] = $layanan;
@@ -34,7 +35,8 @@ class LayananController extends Controller
 					'message' => 'success',
 					'data' => $data
 				], 201);
-			} else {
+			} 
+			else {
 				return response()->json([
 					'success' => false,
 					'message' => 'failed, you dont have role to see this',
@@ -47,10 +49,11 @@ class LayananController extends Controller
 	public function store(Request $request)
 	{
 		$this->validate($request, [
-			'arr.*.klinik_id' => 'required|integer',
-			'arr.*.kode_layanan' => 'required|string',
-			'arr.*.nama_layanan' => 'required|string',
-			'arr.*.tarif' => 'required|integer'
+			'arr' => 'required|array',
+			'arr[*].klinik_id' => 'required|integer',
+			'arr[*].kode_layanan' => 'required|string',
+			'arr[*].nama_layanan' => 'required|string',
+			'arr[*].tarif' => 'required|integer'
 		]);
 
 		$arr_layanan = $request->arr;
