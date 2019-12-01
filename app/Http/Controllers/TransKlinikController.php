@@ -46,8 +46,8 @@ class TransKlinikController extends Controller
       'tinggi_badan' => 'integer',
       'berat_badan' => 'integer',
       'suhu' => 'integer',
-      'sistole' => 'integer',
-      'diastole' => 'integer',
+      'tensi_sistole' => 'integer',
+      'tensi_diastole' => 'integer',
       'nadi' => 'integer',
     ]);
 
