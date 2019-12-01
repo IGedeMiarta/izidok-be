@@ -43,4 +43,9 @@ class Constant
 	const BULANAN = 'bulanan';
 	const TAHUNAN = 'tahunan';
 	const DATE_RANGE = 'date_range';
+
+	#template email
+	const ACTIVATION_EMAIL_TEMPLATE = 'email-activation';
+	const OPERATOR_EMAIL_TEMPLATE = 'operator-activation';
+	const FORGOT_EMAIL_TEMPLATE = 'forgot-password';
 }

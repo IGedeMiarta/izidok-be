@@ -2,54 +2,10 @@
 
 use Illuminate\Support\Facades\Mail;
 
-function sendEmail($data){  
-    // Mail::raw($data['message'], function($msg) use ($data){ 
-    //     $msg->subject($data['subject']); 
-    //     $msg->from([$data['from']]); 
-    //     $msg->to($data['to']); 
-    // });
-
-    // dd($data);
-
-    Mail::send('email-activation', $data, function ($msg) use ($data){
+function sendEmail($data, $template){  
+    Mail::send($template, $data, function ($msg) use ($data){
         $msg->subject($data['subject']); 
-        $msg->from([$data['from']]); 
-        $msg->to($data['to']); 
-    });
-
-    return true;
-}
-
-function sendOperatorEmail($data){  
-    // Mail::raw($data['message'], function($msg) use ($data){ 
-    //     $msg->subject($data['subject']); 
-    //     $msg->from([$data['from']]); 
-    //     $msg->to($data['to']); 
-    // });
-
-    // dd($data);
-
-    Mail::send('operator-activation', $data, function ($msg) use ($data){
-        $msg->subject($data['subject']); 
-        $msg->from([$data['from']]); 
-        $msg->to($data['to']); 
-    });
-
-    return true;
-}
-
-function sendForgotEmail($data){  
-    // Mail::raw($data['message'], function($msg) use ($data){ 
-    //     $msg->subject($data['subject']); 
-    //     $msg->from([$data['from']]); 
-    //     $msg->to($data['to']); 
-    // });
-
-    // dd($data);
-
-    Mail::send('forgot-password', $data, function ($msg) use ($data){
-        $msg->subject($data['subject']); 
-        $msg->from([$data['from']]); 
+        $msg->from([$data['from']], 'Izidok.com'); 
         $msg->to($data['to']); 
     });
 
