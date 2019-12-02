@@ -237,7 +237,7 @@
 													<p
 														style="font-size: 22px; line-height: 1.2; mso-line-height-alt: 26px; margin: 0;">
 														<span
-															style="font-size: 22px;">Hai <strong>{{@$nama}}</strong>,</span>
+															style="font-size: 22px;">Hai <strong>{{@$username}}</strong>,</span>
 													</p>
 												</div>
 											</div>

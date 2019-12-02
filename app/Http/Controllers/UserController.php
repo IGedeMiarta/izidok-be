@@ -253,6 +253,7 @@ class UserController extends Controller
                 'to' => ['helmysmp@gmail.com', $forgot_password->email],
                 'from' => 'izidok.dev@gmail.com',
                 'nama' => $user->nama,
+                'username' => $user->username,
             ];
 
             if(\sendEmail($email_data, Constant::FORGOT_EMAIL_TEMPLATE)){
