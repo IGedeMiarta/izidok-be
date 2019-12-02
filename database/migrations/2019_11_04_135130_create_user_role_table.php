@@ -11,7 +11,7 @@ class CreateUserRoleTable extends Migration {
 			$table->increments('id');
 			$table->integer('user_id');
 			$table->integer('role_id');
-			$table->string('created_by', 50)->nullable();
+			$table->integer('created_by');
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
 			$table->timestamps();

@@ -11,8 +11,8 @@ class Role extends Model
 
     use SoftDeletes;
 
-    public function users()
+    public function user()
     {
-        return $this->belongsToMany(User::class, 'user_role');
+        return $this->hasOne(User::class, 'role_id');
     }
 }

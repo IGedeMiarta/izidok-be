@@ -20,39 +20,36 @@ class OperatorController extends Controller
    */
   public function index(Request $request)
   {
-    $user_id = $request->user_id;
-    $user_role = UserRole::where('user_id', $user_id)->first();
+    $user = User::find($request->user_id);
 
-    if (!$user_role) {
-      return response()->json([
-        'success' => false,
-        'message' => 'failed',
-      ], 201);
-    }
-
-    if ($user_role->role_id == Constant::INTERNAL_ADMIN) {
-      $operator = Operator::paginate($request->limit);
+    if ($user->role_id == Constant::INTERNAL_ADMIN) {
+      $operator = Operator::all()->paginate($request->limit);
       $data['operator'] = $operator;
       return response()->json([
         'success' => true,
         'message' => 'success',
         'data' => $data
       ], 201);
-    } else if ($user_role->role_id == Constant::KLINIK_OPERATOR || $user_role->role_id == Constant::KLINIK_ADMIN) {
-      $operator = Operator::where('user_id', $user_id)->first();
-      $list_operator = Operator::where('klinik_id', $operator->klinik_id)->get();
-      $data['operator'] = $list_operator;
-      return response()->json([
-        'success' => true,
-        'message' => 'success',
-        'data' => $data
-      ], 201);
-    } else {
+    }
+
+    $operator = Operator::wherehas('user', function ($data) use ($user) {
+      $data->where('users.klinik_id', $user->klinik_id);
+    })->get();
+
+    $data['operator'] = $operator;
+
+    if (!$operator) {
       return response()->json([
         'success' => false,
-        'message' => 'failed, you dont have role to see this',
+        'message' => 'operator not found...',
       ], 201);
     }
+
+    return response()->json([
+      'success' => true,
+      'message' => 'success',
+      'data' => $data
+    ], 201);
   }
 
   /**
@@ -67,20 +64,20 @@ class OperatorController extends Controller
       'email' => 'required|unique:users|email'
     ]);
 
+    $logged_user = User::find($request->user_id);
+
     $user = new User();
     $user->nama = $request->input('nama');
     $user->email = $request->input('email');
+    $user->role_id = Constant::KLINIK_OPERATOR;
+    $user->klinik_id = $logged_user->klinik_id;
     $user->save();
 
     $operator = new Operator();
     $operator->nama = $request->input('nama');
     $operator->user_id = $user->id;
-    $status = $operator->save();
-
-    $user_role = new UserRole();
-    $user_role->user_id = $user->id;
-    $user_role->role_id = Constant::KLINIK_OPERATOR;
-    $user_role->save();
+    $operator->created_by = $request->user_id;
+    $operator->save();
 
     $activation = new Activation();
     $activation->token = base64_encode(str_random(30));
@@ -90,7 +87,6 @@ class OperatorController extends Controller
 
     $data['user'] = $user;
     $data['operator'] = $operator;
-    $data['user_role'] = $user_role;
     $data['activation'] = $activation;
 
     $act_url = url(env('APP_PREFIX', 'api/v1') . '/operator/check/' . $activation->token);

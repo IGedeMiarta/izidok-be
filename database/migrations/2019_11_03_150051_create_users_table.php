@@ -21,7 +21,9 @@ class CreateUsersTable extends Migration
             $table->string('nama');
             $table->string('nomor_telp')->nullable();
             $table->integer('is_first_login')->default(1);
-            $table->string('created_by', 50)->nullable();
+            $table->integer('role_id');
+            $table->integer('klinik_id');
+            $table->integer('created_by')->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
             $table->timestamps();

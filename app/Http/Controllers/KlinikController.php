@@ -21,36 +21,31 @@ class KlinikController extends Controller
     }
 
     public function index(Request $request){
-        $user_id = Auth::user()->id;
-        $user_role = UserRole::where('user_id',$user_id)->first();
+        $user = User::find($request->user_id);
 
-        if($user_role->role_id == Constant::INTERNAL_ADMIN)
+        if($user->role_id == Constant::INTERNAL_ADMIN)
         {
-            $klinik = Klinik::whereHas('operator', function($q) use($user_id) {
-                        $q->where('operator.user_id', $user_id);
-                    })->paginate($request->limit);    
-        }
-        else if($user_role->role_id == Constant::KLINIK_OPERATOR ||  $user_role->role_id == Constant::KLINIK_ADMIN)
-        {
-            $operator = Operator::where('user_id',$user_id)->first();
-            $klinik = Klinik::find($operator->klinik_id);
-        }
-        
-        if (!$klinik) {
-            return response()->json(['status' => false], 422);
-        }else{
+            $klinik = Klinik::all()->paginate($request->limit); 
             $data['klinik'] = $klinik;
             return response()->json(['status' => true, 'data' => $data]);
         }
+
+        $data['klinik'] = $user->klinik;
+        return response()->json(['status' => true, 'data' => $data]);
     }
 
-    public function show($id = null){
-        $klinik = Klinik::with('operator')->find($id);
+    public function show($id = null, Request $request){
+        $klinik = Klinik::find($id);
+        
         if (!$klinik) {
             return response()->json(['status' => false, 'message' => 'Klinik not found...'], 422);
-        }else{
-            return response()->json(['status' => true, 'data' => $klinik]);
         }
+        
+        if($klinik->user->id !== $request->user_id){
+            return response()->json(['status' => false, 'message' => 'you have no access to this klinik...'], 422);
+        }
+        
+        return response()->json(['status' => true, 'data' => $klinik]);
     }
 
     public function store(Request $request){
@@ -74,12 +69,14 @@ class KlinikController extends Controller
 
         if($isKlinik){
             $nama_pic = $request->nama_pic;
+            #fitur registrasi klinik belum tersedia
+            return response()->json(['status' => false, 'message' => 'register klinik unavailable...'], 422);
         }
         else{
             $nama_pic = $request->nama_klinik;
             $nama_dokter = $request->nama_klinik;
         }
-
+        
         #data klinik
         $klinik = Klinik::create([
             'tipe_faskes' => $request->tipe_faskes,
@@ -88,32 +85,24 @@ class KlinikController extends Controller
             'nomor_ijin' => $request->nomor_ijin,
             'nomor_telp' => $request->nomor_telp
         ]);
-   
+            
         #data user
         $user = User::create([
     		"username" => $request->username,
     		"email" => $request->email,
     		"password" => app('hash')->make($request->password),
     		"nama" => $nama_pic,
-    		"no_telp" => $request->nomor_telp
+            "no_telp" => $request->nomor_telp,
+            "klinik_id" => $klinik->id,
+            "role_id" => Constant::KLINIK_OWNER
         ]);
-        $user->roles()->attach(Constant::KLINIK_OPERATOR);
-
-        #data operator
-        $operator = new Operator([
-            'nama' => $nama_pic,
-            'user_id' => $user->id
-        ]);
-        $klinik->operator()->save($operator);
-
+        
         if(!$isKlinik){
             #data dokter
             $dokter = new Dokter([
                 'nama' => $nama_dokter,
                 'user_id' => $user->id
             ]);
-            $klinik->dokters()->save($dokter);
-            $user->roles()->attach(Constant::DOKTER);
         }
 
         #activation token

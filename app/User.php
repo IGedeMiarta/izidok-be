@@ -19,25 +19,43 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $table = 'users';
 
     protected $fillable = [
-        'email', 'password','username','api_token','nama','nomor_telp', 'is_first_login'
+        'email', 
+        'password', 
+        'username', 
+        'api_token', 
+        'nama', 
+        'nomor_telp', 
+        'is_first_login',
+        'klinik_id',
+        'role_id'
     ];
 
     protected $hidden = [
         'password', 'api_token'
     ];
 
-    public function roles()
+    public function role()
     {
-        return $this->belongsToMany(Role::class, 'user_role');
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function klinik()
+    {
+        return $this->belongsTo(Klinik::class, 'klinik_id');
     }
 
     public function operator()
     {
-        return $this->hasOne('Operator');
+        return $this->hasMany(Operator::class, 'user_id');
     }
 
     public function activation()
     {
         return $this->hasOne(Activation::class);
+    }
+
+    public function layanan()
+    {
+        return $this->hasMany(Layanan::class, 'created_by');
     }
 }

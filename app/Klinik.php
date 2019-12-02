@@ -21,10 +21,10 @@ class Klinik extends Model implements Auditable
         'tipe_faskes', 'nama_klinik', 'nama_pic', 'nomor_telp', 'nomor_ijin'
     ];
 
-    // public function operators()
-    // {
-    //     return $this->belongsToMany(Operator::class, 'klinik_operator');
-    // }
+    public function user()
+    {
+        return $this->hasOne(User::class, 'klinik_id');
+    }
 
     public function dokters()
     {

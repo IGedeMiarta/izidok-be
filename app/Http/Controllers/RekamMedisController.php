@@ -68,6 +68,7 @@ class RekamMedisController extends Controller
         $anamnesa->notes = $request->anamnesa_text;
         $anamnesa->is_draw = $request->anamnesa_is_draw;
         $anamnesa->draw_path = \uploadToMinio('anamnesa',$request->anamnesa_draw);
+        $anamnesa->created_by = $request->user_id;
         $anamnesa->save();
 
         #make array penyakit, insert diagnosa
@@ -80,6 +81,7 @@ class RekamMedisController extends Controller
         $diagnosa->notes = $request->diagnosa_text;
         $diagnosa->is_draw = $request->diagnosa_is_draw;
         $diagnosa->draw_path = \uploadToMinio('diagnosa',$request->diagnosa_draw);
+        $diagnosa->created_by = $request->user_id;
         $diagnosa->save();
 
 
@@ -89,6 +91,7 @@ class RekamMedisController extends Controller
         $pemeriksaan_fisik->notes = $request->pemeriksaan_text;
         $pemeriksaan_fisik->is_draw = $request->pemeriksaan_is_draw;
         $pemeriksaan_fisik->draw_path = \uploadToMinio('pemeriksaan',$request->pemeriksaan_draw);
+        $pemeriksaan_fisik->created_by = $request->user_id;
         $pemeriksaan_fisik->save();
 
         #insert rekam_medis
@@ -98,6 +101,7 @@ class RekamMedisController extends Controller
         $rekam_medis->pemeriksaan_fisik_id = $pemeriksaan_fisik->id;
         $rekam_medis->diagnosa_id = $diagnosa->id;
         $rekam_medis->transklinik_id = $trans_klinik->id;
+        $rekam_medis->created_by = $request->user_id;
         $status = $rekam_medis->save();
 
         $data['rekam_medis'] = $rekam_medis;

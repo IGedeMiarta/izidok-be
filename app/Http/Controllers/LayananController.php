@@ -7,49 +7,43 @@ use App\Layanan;
 use App\Constant;
 use App\UserRole;
 use App\Operator;
+use App\User;
 use Illuminate\Support\Facades\Validator;
 
 class LayananController extends Controller
 {
 	public function index(Request $request)
 	{
-		$user_id = $request->user_id;
-		$user_role = UserRole::where('user_id', $user_id)->first();
+		$user = User::find($request->user_id);
 
-		if ($user_role->role_id == Constant::INTERNAL_ADMIN) {
+		if ($user->role_id == Constant::INTERNAL_ADMIN) {
 			$layanan = Layanan::paginate($request->limit);
 			$data['layanan'] = $layanan;
-		  	if($layanan)
-		  	{
-		  		return response()->json([
-		    			'success' => true,
-		    			'message' => 'success',
-		    			'data' => $data
-		    		],201);
-		  	}
-		} 
-		else if ($user_role->role_id == Constant::KLINIK_OPERATOR ||  $user_role->role_id == Constant::KLINIK_ADMIN) 
-		{
-			$operator = Operator::where('user_id', $user_id)->first();
-			$layanan = Layanan::where('klinik_id', $operator->klinik_id)->paginate($request->limit);
-			$data['layanan'] = $layanan;
-			if ($layanan) 
-			{
+			if ($layanan) {
 				return response()->json([
 					'success' => true,
 					'message' => 'success',
 					'data' => $data
 				], 201);
-			} 
-		}
-		else 
-			{
-				return response()->json([
-					'success' => false,
-					'message' => 'failed, you dont have role to see this',
-					'data' => $data
-				], 400);
 			}
+		} 
+		
+		$layanan = Layanan::where('klinik_id', $user->klinik_id)->paginate($request->limit);
+		$data['layanan'] = $layanan;
+		
+		if (!$layanan) {
+			return response()->json([
+				'success' => false,
+				'message' => 'failed, you dont have role to see this',
+				'data' => $data
+			], 400);	
+		}
+
+		return response()->json([
+			'success' => true,
+			'message' => 'success',
+			'data' => $data
+		], 201);
 	}
 
 	public function store(Request $request)
@@ -71,6 +65,7 @@ class LayananController extends Controller
 			$layanan->nama_layanan = $layanan_obj['nama_layanan'];
 			$layanan->tarif = $layanan_obj['tarif'];
 			$layanan->klinik_id = $layanan_obj['klinik_id'];
+			$layanan->created_by = $request->user_id;
 			$layanan->save();
 			array_push($result, $layanan);
 		}
@@ -95,19 +90,23 @@ class LayananController extends Controller
 	public function show(Request $request)
 	{
 		$layanan = Layanan::find($request->id);
-		if (empty($layanan)) {
+
+		if (!$layanan) {
 			return response()->json([
 				'status' => false,
 				'message' => "layanan not found",
-				'data' => ''
-			]);
-		} else {
-			return response()->json([
-				'status' => true,
-				'data' => $layanan,
-				'message' => 'success'
 			]);
 		}
+
+		if($layanan->created_by !== $request->user_id){
+            return response()->json(['status' => false, 'message' => 'you have no access to this layanan...'], 422);
+        }
+
+		return response()->json([
+			'status' => true,
+			'data' => $layanan,
+			'message' => 'success'
+		]);
 	}
 
 	public function update(Request $request)
@@ -119,7 +118,7 @@ class LayananController extends Controller
 		]);
 
 		$layanan = Layanan::find($request->id);
-		
+
 		if (empty($layanan)) {
 			return response()->json([
 				'status' => false,

@@ -10,6 +10,8 @@ use App\Pasien;
 use App\Klinik;
 use App\Dokter;
 use App\Operator;
+use App\User;
+
 // use Carbon\Carbon;
 
 class TransKlinikController extends Controller 
@@ -34,8 +36,7 @@ class TransKlinikController extends Controller
     $this->validate($request,[
       'pasien_id' => 'required|integer',
       'klinik_id' => 'required|integer',
-      'dokter_id' => 'required|integer',
-      'operator_id' => 'required|integer',
+      'examination_by' => 'required|integer',
       'nomor_rekam_medis' => 'required|string',
 
       'nama_lengkap' => 'required|string',
@@ -57,7 +58,7 @@ class TransKlinikController extends Controller
         return response()->json(['status' => false, 'message' => 'Klinik not found...'], 422);
       
       #dokter exist?
-      if(!Dokter::find($request->dokter_id))
+      if(!User::find($request->examination_by))
         return response()->json(['status' => false, 'message' => 'Dokter not found...'], 422);
 
       #pasien exist?
@@ -66,10 +67,10 @@ class TransKlinikController extends Controller
 
       #transaksi
       $trans_klinik = new TransKlinik;
-      $trans_klinik->dokter_id = $request->dokter_id;
+      $trans_klinik->examination_by = $request->examination_by;
       $trans_klinik->pasien_id = $request->pasien_id;
-      $trans_klinik->operator_id = $request->operator_id;
       $trans_klinik->klinik_id = $request->klinik_id;
+      $trans_klinik->created_by = $request->user_id;
       $trans_klinik->nomor_antrian = $this->getNextOrderNumber($request->klinik_id);
       $trans_klinik->waktu_konsultasi = $request->waktu_konsultasi;
       $trans_klinik->status = Constant::QUEUED;
@@ -120,6 +121,7 @@ class TransKlinikController extends Controller
           return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
       }else{
           $trans_klinik->status = $request->status;
+          $trans_klinik->examination_at = date('Y-m-d H:m:s');
           $trans_klinik->save();
           return response()->json(['status' => true, 'data' => $trans_klinik]);
       }

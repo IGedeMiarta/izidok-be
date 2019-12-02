@@ -8,15 +8,15 @@ use Illuminate\Http\Request;
 use App\Pasien;
 use App\UserRole;
 use App\Constant;
+use App\User;
 
 class PasienController extends Controller
 {
 	public function index(Request $request)
 	{
-		$user_id = $request->user_id;
-		$user_role = UserRole::where('user_id', $user_id)->first();
+		$user = User::find($request->user_id);
 
-		if ($user_role->role_id == Constant::INTERNAL_ADMIN) {
+		if ($user->role_id == Constant::INTERNAL_ADMIN) {
 			$pasien = Pasien::paginate($request->limit);
 			$data['pasien'] = $pasien;
 			return response()->json([
@@ -24,21 +24,26 @@ class PasienController extends Controller
 				'message' => 'success',
 				'data' => $data
 			], 201);
-		} else if ($user_role->role_id == Constant::KLINIK_OPERATOR || $user_role->role_id == Constant::KLINIK_ADMIN) {
-			$pasien = Pasien::where('user_id', $user_id)->paginate($request->limit);
-			$data['pasien'] = $pasien;
-			return response()->json([
-				'success' => true,
-				'message' => 'success',
-				'data' => $data
-			], 201);
-		} else {
+		} 
+		
+		$pasien = Pasien::where('user_id', $user->id)->paginate($request->limit);
+		$data['pasien'] = $pasien;
+
+		if(!$pasien){
 			return response()->json([
 				'success' => false,
 				'message' => 'failed, you dont have role to see this',
 				'data' => $data
 			], 201);
 		}
+
+
+		return response()->json([
+			'success' => true,
+			'message' => 'success',
+			'data' => $data
+		], 201);
+
 	}
 
 	public function store(Request $request)
@@ -102,6 +107,7 @@ class PasienController extends Controller
 		$pasien->nomor_rekam_medis = $request->input('nomor_rekam_medis');
 		$pasien->user_id = $request->user_id;
 		$pasien->klinik_id = $request->input('klinik_id');
+		$pasien->created_by = $request->user_id;
 		$status = $pasien->save();
 
 		if ($status) {

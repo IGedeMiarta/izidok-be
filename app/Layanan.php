@@ -16,4 +16,9 @@ class Layanan extends Model
     {
         return $this->belongsTo('App\Klinik', 'klinik_id', 'id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }

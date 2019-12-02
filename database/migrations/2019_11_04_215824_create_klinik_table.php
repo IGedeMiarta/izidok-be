@@ -14,7 +14,7 @@ class CreateKlinikTable extends Migration {
 			$table->string('nomor_telp');
 			$table->integer('tipe_faskes');
 			$table->string('nomor_ijin', 50)->nullable();
-			$table->string('created_by', 50)->nullable();
+			$table->integer('created_by')->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
 			$table->timestamps();

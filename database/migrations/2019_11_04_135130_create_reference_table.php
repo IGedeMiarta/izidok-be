@@ -12,7 +12,7 @@ class CreateReferenceTable extends Migration {
 			$table->string('key', 255)->index();
 			$table->string('value', 255);
 			$table->string('category', 255);
-			$table->string('created_by', 50)->nullable();
+			$table->integer('created_by')->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
 			$table->timestamps();

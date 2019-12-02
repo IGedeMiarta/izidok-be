@@ -9,15 +9,15 @@ class CreateTransKlinikTable extends Migration {
 	{
 		Schema::create('trans_klinik', function(Blueprint $table) {
 			$table->increments('id');
-			$table->integer('dokter_id');
+			$table->integer('examination_by');
+			$table->timestamp('examination_at')->nullable();
 			$table->integer('pasien_id');
-			$table->integer('operator_id');
 			$table->integer('klinik_id');
 			$table->integer('nomor_antrian')->nullable();
 			$table->timestamp('waktu_konsultasi');
 			$table->integer('durasi_konsultasi')->nullable();
 			$table->string('status');
-			$table->string('created_by', 50)->nullable();
+			$table->integer('created_by');
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
 			$table->timestamps();

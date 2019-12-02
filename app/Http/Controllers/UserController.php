@@ -131,9 +131,9 @@ class UserController extends Controller
         $username = $request->username;
         $password = $request->password;
 
-        $user = User::where('username', $username)->with('roles')->first();
+        $user = User::where('username', $username)->with('role')->first();
         if(!$user){
-            $user = User::where('email', $username)->with('roles')->first();
+            $user = User::where('email', $username)->with('role')->first();
         }
 
         if (!$user) {

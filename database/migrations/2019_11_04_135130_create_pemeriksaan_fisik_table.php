@@ -13,7 +13,7 @@ class CreatePemeriksaanFisikTable extends Migration {
 			$table->text('notes')->nullable();
 			$table->boolean('is_draw')->nullable();
 			$table->string('draw_path')->nullable();
-			$table->string('created_by', 50)->nullable();
+			$table->integer('created_by');
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
 			$table->timestamps();
