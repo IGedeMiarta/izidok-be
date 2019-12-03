@@ -24,12 +24,12 @@ class PasienController extends Controller
 				'message' => 'success',
 				'data' => $data
 			], 201);
-		} 
-		
+		}
+
 		$pasien = Pasien::where('user_id', $user->id)->paginate($request->limit);
 		$data['pasien'] = $pasien;
 
-		if(!$pasien){
+		if (!$pasien) {
 			return response()->json([
 				'success' => false,
 				'message' => 'failed, you dont have role to see this',
@@ -43,7 +43,6 @@ class PasienController extends Controller
 			'message' => 'success',
 			'data' => $data
 		], 201);
-
 	}
 
 	public function store(Request $request)
@@ -212,13 +211,13 @@ class PasienController extends Controller
 		$pasien->nomor_rekam_medis = $request->input('nomor_rekam_medis');
 		$status = $pasien->save();
 
-		if(!$status){
+		if (!$status) {
 			return response()->json([
 				'status' => false,
 				'message' => "something went wrong...",
 			]);
 		}
-		
+
 		return response()->json([
 			'status' => true,
 			'data' => $pasien,
@@ -278,7 +277,7 @@ class PasienController extends Controller
 				'message' => 'File image not found...',
 			]);
 		}
-		
+
 		$response = $imageAnnotator->textDetection($image);
 		$texts = $response->getTextAnnotations();
 		$text = $texts[0]->getDescription();
@@ -323,6 +322,27 @@ class PasienController extends Controller
 			'status' => true,
 			'message' => 'Text detection has done successfully...',
 			'data' => $data
+		]);
+	}
+
+	public function verifyPasien(Request $request)
+	{
+		$pasien = Pasien::where('id', $request->id)
+			->whereHas('transKlinik', function ($data) {
+				$data->where('status', Constant::QUEUED);
+			})->count();
+
+		if($pasien){
+			return response()->json([
+				'status' => false,
+				'message' => 'this customer has an active transaction...',
+				'data' => $pasien
+			]);
+		}
+
+		return response()->json([
+			'status' => true,
+			'message' => 'this customer is available for transaction...',
 		]);
 	}
 }

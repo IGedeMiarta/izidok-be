@@ -98,6 +98,7 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->put('/pasien/{id}', 'PasienController@update');
         $router->delete('/pasien/{id}', 'PasienController@delete');
         $router->post('/pasien/ocr', 'PasienController@getText');
+        $router->get('/pasien/verify/{id}', 'PasienController@verifyPasien');
 
         #transaksi klinik
         $router->get('/transaksi','TransKlinikController@index');
