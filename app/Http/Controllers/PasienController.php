@@ -26,7 +26,7 @@ class PasienController extends Controller
 			], 201);
 		}
 
-		$pasien = Pasien::where('user_id', $user->id)->paginate($request->limit);
+		$pasien = Pasien::where('created_by', $user->id)->paginate($request->limit);
 		$data['pasien'] = $pasien;
 
 		if (!$pasien) {

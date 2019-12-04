@@ -11,14 +11,59 @@ use App\Anamnesa;
 use App\Constant;
 use App\Diagnosa;
 use App\PemeriksaanFisik;
-
+use App\User;
 
 class RekamMedisController extends Controller
 {
     public function index(Request $request)
     {
-        $all_klinik = TransKlinik::where('pasien_id', $request->pasien_id)->get();
-        echo json_encode($all_klinik);
+        $user = User::find($request->user_id);
+        if($user->role_id == Constant::INTERNAL_ADMIN){
+            $rekam_medis = RekamMedis::paginate($request->limit);
+            $data['rekam_medis'] = $rekam_medis;
+			return response()->json([
+				'success' => true,
+				'message' => 'success',
+				'data' => $data
+			], 201);
+        }
+
+        if($request->pasien_id){
+            $data = $this->getRekamMedisByPasien($request);
+            return response()->json([
+				'success' => true,
+				'message' => 'success',
+				'data' => $data
+			], 201);
+        }
+
+        $rekam_medis = RekamMedis::where('created_by', $user->id)->paginate($request->limit);
+
+        if(!$rekam_medis){
+            return response()->json([
+				'success' => false,
+				'message' => 'failed, no data available...',
+				'data' => $data
+			], 201);
+        }
+
+        $data['rekam_medis'] = $rekam_medis;
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $data
+        ], 201);
+
+
+    }
+
+    private function getRekamMedisByPasien($request){
+        $rekam_medis = RekamMedis::whereHas('transKlinik', function($data) use ($request){
+            $data->where('pasien_id', $request->pasien_id);
+        })->paginate($request->limit);
+        $data['rekam_medis'] = $rekam_medis;
+
+        return $data;
     }
 
     public function store(Request $request)
@@ -119,5 +164,21 @@ class RekamMedisController extends Controller
                 'data' => ''
             ], 400);
         }
+    }
+
+    public function show(Request $request){
+        $rekam_medis = RekamMedis::find($request->id);
+		if (empty($rekam_medis)) {
+			return response()->json([
+				'status' => false,
+				'message' => "rekam medis not found",
+				'data' => ''
+			]);
+		} else {
+			return response()->json([
+				'status' => true,
+				'data' => $rekam_medis,
+			]);
+		}
     }
 }

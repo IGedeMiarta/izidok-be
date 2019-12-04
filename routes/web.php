@@ -12,6 +12,7 @@
 */
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 $router->get('/key', function() {
     return str_random(32);
@@ -115,8 +116,9 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->delete('/transaksi/{id}','TransKlinikController@delete');
 
         #rekam medis
-        $router->get('/rekam_medis/{pasien_id}','RekamMedisController@index');
-        $router->post('rekam_medis','RekamMedisController@store');
+        $router->get('/rekam_medis','RekamMedisController@index');
+        $router->post('/rekam_medis','RekamMedisController@store');
+        $router->get('/rekam_medis/{id}','RekamMedisController@show');
 
         #organ
         $router->get('/organ','OrganController@index');
