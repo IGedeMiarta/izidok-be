@@ -82,7 +82,7 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->get('/kode_penyakit/{id}', 'KodePenyakitController@show');
         $router->put('/kode_penyakit/{id}', 'KodePenyakitController@update');
         $router->delete('/kode_penyakit/{id}', 'KodePenyakitController@delete');
-        $router->get('/kode_penyakit/name/{name}', 'KodePenyakitController@get_by_name'); // get by name
+        $router->get('/kode_penyakit/name/{name}', 'KodePenyakitController@getByName'); // get by name
 
         #layanan
         $router->get('/layanan', 'LayananController@index');
@@ -124,6 +124,7 @@ $router->group(['prefix'=>'api/v1'], function() use($router){
         $router->get('/organ/{id}', 'OrganController@show');
         $router->put('/organ/{id}', 'OrganController@update');
         $router->delete('/organ/{id}', 'OrganController@delete');
+        $router->get('/organ/name/{name}', 'OrganController@getByName'); // get by name
 
         #dashboard
         $router->get('/dash-pasien','DashboardController@getPasien');
