@@ -5,10 +5,10 @@ namespace App;
 class Constant
 {
 	#Role
-	const INTERNAL_ADMIN = 1; #medlink
-	const KLINIK_ADMIN = 2; #PIC Klinik
+	const INTERNAL_ADMIN = 1; #super admin (medlink)
+	const KLINIK_ADMIN = 2; #admin klinik
 	const KLINIK_OPERATOR = 3; #operator
-	const KLINIK_OWNER = 4; #PIC Tempate Praktik
+	const KLINIK_OWNER = 4; #dokter praktek
 	const DOKTER = 5; #dokter
 
 	#Tipe Klinik
