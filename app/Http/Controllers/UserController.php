@@ -314,6 +314,11 @@ class UserController extends Controller
 
     public function reset(Request $request)
     {
+        $this->validate($request, [
+            'password' => 'required|min:6',
+            'konfirm_password' => 'required|min:6',
+        ]);
+
         $token = $request->token;
         $forgot_password = ForgotPassword::where('token', $token)->first();
         $password = $request->input('password');
