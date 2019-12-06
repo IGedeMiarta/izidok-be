@@ -15,7 +15,7 @@ class DashboardController extends Controller
 	public function getPasien(Request $request)
 	{
 		$this->validate($request, [
-			'status' => 'required|string',
+			'type' => 'required|string',
 			'from' => 'required|date_format:Y-m-d',
 			'to' => 'required|date_format:Y-m-d',
         ]);
