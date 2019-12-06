@@ -16,7 +16,7 @@ class LayananController extends Controller
 	{
 		$user = User::find($request->user_id);
 
-		if ($user->role_id == Constant::INTERNAL_ADMIN) {
+		if ($user->hasRole(Constant::SUPER_ADMIN)) {
 			$layanan = Layanan::paginate($request->limit);
 			$data['layanan'] = $layanan;
 			if ($layanan) {

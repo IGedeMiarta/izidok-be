@@ -14,133 +14,134 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-$router->get('/key', function() {
+$router->get('/key', function () {
     return str_random(32);
 });
 
-$router->group(['prefix'=>'api/v1'], function() use($router){
+$router->group(['prefix' => 'api/v1'], function () use ($router) {
 
-    $router->get('/email/verify','UserController@verifyEmail');
-    $router->get('/username/verify','UserController@verifyUsername');
-   
+    $router->get('/email/verify', 'UserController@verifyEmail');
+    $router->get('/username/verify', 'UserController@verifyUsername');
+
     #registration
-    $router->post('/user','UserController@store');
+    $router->post('/user', 'UserController@store');
     $router->post('/klinik', 'KlinikController@store');
-    $router->get('/activate/{token}','UserController@activate');
+    $router->get('/activate/{token}', 'UserController@activate');
     $router->get('/email/resend/{user_id}', 'UserController@sendEmail');
-    $router->post('/login','UserController@login');
+    $router->post('/login', 'UserController@login');
 
     #reset password
-    $router->post('/forgot','UserController@forgot');
-    $router->get('/check_forgot/{token}','UserController@check_forgot');
-    $router->post('/reset','UserController@reset');
+    $router->post('/forgot', 'UserController@forgot');
+    $router->get('/check_forgot/{token}', 'UserController@check_forgot');
+    $router->post('/reset', 'UserController@reset');
 
     #operator
-    $router->get('/operator/check/{token}','OperatorController@check_activation');
-    $router->post('/operator/activation','OperatorController@activation');
+    $router->get('/operator/check/{token}', 'OperatorController@check_activation');
+    $router->post('/operator/activation', 'OperatorController@activation');
 
 
-    $router->group(['middleware' => 'auth'], function() use($router){
+    $router->group(['middleware' => 'auth'], function () use ($router) {
         #user
-        $router->get('/user','UserController@index');
-        $router->get('/user/{id}','UserController@show');
-        $router->put('/user/{id}','UserController@update');
-        $router->delete('/user/{id}','UserController@delete');
-        $router->post('/logout','UserController@logout');
+        $router->group(['middleware' => 'role:super_admin|admin_klinik'], function () use ($router) {
+            $router->get('/user', 'UserController@index');
+            $router->get('/user/{id}', 'UserController@show');
+            $router->put('/user/{id}', 'UserController@update');
+            $router->delete('/user/{id}', 'UserController@delete');
+        });
+        $router->post('/logout', 'UserController@logout');
 
         #klinik
-        $router->get('/klinik', 'KlinikController@index');
-        $router->get('/klinik/{id}', 'KlinikController@show');
-        $router->put('/klinik/{id}', 'KlinikController@update');
-        $router->delete('/klinik/{id}', 'KlinikController@delete');
+        $router->get('/klinik', ['middleware' => 'permission:read-klinik', 'uses' => 'KlinikController@index']);
+        $router->get('/klinik/{id}', ['middleware' => 'permission:read-klinik', 'uses' => 'KlinikController@show']);
+        $router->put('/klinik/{id}', ['middleware' => 'permission:update-klinik', 'uses' => 'KlinikController@update']);
+        $router->delete('/klinik/{id}', ['middleware' => 'permission:delete-klinik', 'uses' => 'KlinikController@delete']);
 
         #role
-        $router->get('/role', 'RoleController@index');
-        $router->post('/role', 'RoleController@store');
-        $router->get('/role/{id}', 'RoleController@show');
-        $router->put('/role/{id}', 'RoleController@update');
-        $router->delete('/role/{id}', 'RoleController@delete');
+        $router->group(['middleware' => 'role:super_admin'], function () use ($router) {
+            $router->get('/role', 'RoleController@index');
+            $router->post('/role', 'RoleController@store');
+            $router->get('/role/{id}', 'RoleController@show');
+            // $router->put('/role/{id}', 'RoleController@update');
+            $router->delete('/role/{id}', 'RoleController@delete');
+        });
 
         #operator
-        $router->get('/operator', 'OperatorController@index');
-        $router->post('/operator', 'OperatorController@store');
-
-        $router->get('/operator/{id}', 'OperatorController@show');
-        $router->put('/operator/{id}', 'OperatorController@update');
-        $router->delete('/operator/{id}', 'OperatorController@delete');
+        $router->get('/operator', ['middleware' => 'permission:read-operator', 'uses' => 'OperatorController@index']);
+        $router->post('/operator', ['middleware' => 'permission:create-operator', 'uses' => 'OperatorController@store']);
+        $router->get('/operator/{id}', ['middleware' => 'permission:read-operator', 'uses' => 'OperatorController@show']);
+        $router->put('/operator/{id}', ['middleware' => 'permission:update-operator', 'uses' => 'OperatorController@update']);
+        $router->delete('/operator/{id}', ['middleware' => 'permission:delete-operator', 'uses' => 'OperatorController@delete']);
 
         #dokter
-        $router->get('/dokter', 'DokterController@index');
-        $router->post('/dokter', 'DokterController@store');
-        $router->get('/dokter/{id}', 'DokterController@show');
-        $router->put('/dokter/{id}', 'DokterController@update');
-        $router->delete('/dokter/{id}', 'DokterController@delete');
+        $router->get('/dokter', ['middleware' => 'permission:read-dokter', 'uses' => 'DokterController@index']);
+        $router->post('/dokter', ['middleware' => 'permission:create-dokter', 'uses' => 'DokterController@store']);
+        $router->get('/dokter/{id}', ['middleware' => 'permission:read-dokter', 'uses' => 'DokterController@show']);
+        $router->put('/dokter/{id}', ['middleware' => 'permission:update-dokter', 'uses' => 'DokterController@update']);
+        $router->delete('/dokter/{id}', ['middleware' => 'permission:delete-dokter', 'uses' => 'DokterController@delete']);
 
         #kode penyakit
-        $router->get('/kode_penyakit', 'KodePenyakitController@index');
-        $router->post('/kode_penyakit', 'KodePenyakitController@store');
-        $router->post('/kode_penyakit/excel', 'KodePenyakitController@store_excel');
-        $router->get('/kode_penyakit/{id}', 'KodePenyakitController@show');
-        $router->put('/kode_penyakit/{id}', 'KodePenyakitController@update');
-        $router->delete('/kode_penyakit/{id}', 'KodePenyakitController@delete');
-        $router->get('/kode_penyakit/name/{name}', 'KodePenyakitController@getByName'); // get by name
+        $router->group(['middleware' => 'role:super_admin'], function () use ($router) {
+            $router->get('/kode_penyakit', 'KodePenyakitController@index');
+            $router->post('/kode_penyakit', 'KodePenyakitController@store');
+            $router->post('/kode_penyakit/excel', 'KodePenyakitController@store_excel');
+            $router->get('/kode_penyakit/{id}', 'KodePenyakitController@show');
+            $router->put('/kode_penyakit/{id}', 'KodePenyakitController@update');
+            $router->delete('/kode_penyakit/{id}', 'KodePenyakitController@delete');
+            $router->get('/kode_penyakit/name/{name}', 'KodePenyakitController@getByName'); // get by name
+        });
 
         #layanan
-        $router->get('/layanan', 'LayananController@index');
-        $router->post('/layanan', 'LayananController@store');
-        $router->get('/layanan/{id}', 'LayananController@show');
-        $router->put('/layanan/{id}', 'LayananController@update');
-        $router->delete('/layanan/{id}', 'LayananController@delete');
+        $router->group(['middleware' => 'role:super_admin|admin_klinik|dokter_praktek|operator'], function () use ($router) {
+            $router->get('/layanan', 'LayananController@index');
+            $router->post('/layanan', 'LayananController@store');
+            $router->get('/layanan/{id}', 'LayananController@show');
+            $router->put('/layanan/{id}', 'LayananController@update');
+            $router->delete('/layanan/{id}', 'LayananController@delete');
+        });
 
         #pasien
-        $router->get('/pasien', 'PasienController@index');
-        $router->post('/pasien', 'PasienController@store');
-        $router->get('/pasien/{id}', 'PasienController@show');
-        $router->put('/pasien/{id}', 'PasienController@update');
-        $router->delete('/pasien/{id}', 'PasienController@delete');
-        $router->post('/pasien/ocr', 'PasienController@getText');
-        $router->get('/pasien/verify/{id}', 'PasienController@verifyPasien');
+        $router->get('/pasien', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@index']);
+        $router->post('/pasien', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@store']);
+        $router->get('/pasien/{id}', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@show']);
+        $router->put('/pasien/{id}', ['middleware' => 'permission:update-pasien', 'uses' => 'PasienController@update']);
+        $router->delete('/pasien/{id}', ['middleware' => 'permission:delete-pasien', 'uses' => 'PasienController@delete']);
+        $router->post('/pasien/ocr', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@getText']);
+        $router->get('/pasien/verify/{id}', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@verifyPasien']);
 
         #transaksi klinik
-        $router->get('/transaksi','TransKlinikController@index');
-        $router->post('/transaksi', 'TransKlinikController@store');
-        $router->get('/transaksi/{id}','TransKlinikController@show');
-        $router->put('/transaksi/{id}','TransKlinikController@update');
-        $router->delete('/transaksi/{id}','TransKlinikController@delete');
-
-        #transaksi klinik
-        $router->get('/transaksi','TransKlinikController@index');
-        $router->post('/transaksi', 'TransKlinikController@store');
-        $router->get('/transaksi/{id}','TransKlinikController@show');
-        $router->put('/transaksi/{id}','TransKlinikController@update');
-        $router->delete('/transaksi/{id}','TransKlinikController@delete');
+        $router->get('/transaksi', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@index']);
+        $router->post('/transaksi', ['middleware' => 'permission:create-transklinik', 'uses' => 'TransKlinikController@store']);
+        $router->get('/transaksi/{id}', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@show']);
+        $router->put('/transaksi/{id}', ['middleware' => 'permission:update-transklinik', 'uses' => 'TransKlinikController@update']);
+        $router->delete('/transaksi/{id}', ['middleware' => 'permission:delete-transklinik', 'uses' => 'TransKlinikController@delete']);
 
         #rekam medis
-        $router->get('/rekam_medis','RekamMedisController@index');
-        $router->post('/rekam_medis','RekamMedisController@store');
-        $router->get('/rekam_medis/{id}','RekamMedisController@show');
+        $router->group(['middleware' => 'role:dokter_praktek|dokter_klinik'], function () use ($router) {
+            $router->get('/rekam_medis', 'RekamMedisController@index');
+            $router->post('/rekam_medis', 'RekamMedisController@store');
+            $router->get('/rekam_medis/{id}', 'RekamMedisController@show');
+        });
 
         #organ
-        $router->get('/organ','OrganController@index');
-        $router->post('/organ', 'OrganController@store');
-        $router->get('/organ/{id}', 'OrganController@show');
-        $router->put('/organ/{id}', 'OrganController@update');
-        $router->delete('/organ/{id}', 'OrganController@delete');
-        $router->get('/organ/name/{name}', 'OrganController@getByName'); // get by name
+        $router->group(['middleware' => 'role:super_admin'], function () use ($router) {
+            $router->get('/organ', 'OrganController@index');
+            $router->post('/organ', 'OrganController@store');
+            $router->get('/organ/{id}', 'OrganController@show');
+            $router->put('/organ/{id}', 'OrganController@update');
+            $router->delete('/organ/{id}', 'OrganController@delete');
+            $router->get('/organ/name/{name}', 'OrganController@getByName'); // get by name
+        });
 
         #dashboard
-        $router->get('/dash-pasien','DashboardController@getPasien');
-        $router->get('/dash-rawat-jalan','DashboardController@getPasienRawatJalan');
-        $router->get('/dash-antrian','DashboardController@getLastAntrian');
-
+        $router->get('/dash-pasien', 'DashboardController@getPasien');
+        $router->get('/dash-rawat-jalan', 'DashboardController@getPasienRawatJalan');
+        $router->get('/dash-antrian', 'DashboardController@getLastAntrian');
     });
 
-    $router->get('/image', function(Request $request){
+    $router->get('/image', function (Request $request) {
         $file = Storage::disk('minio')->get($request->path);
         return response($file, 200)->header('Content-Type', 'image/jpeg');
     });
-    
 
-    $router->get('/test','UserController@test');
+    $router->get('/test', ['middleware' => 'permission:read-dashboard', 'uses' => 'UserController@test']);
 });
-

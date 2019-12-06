@@ -23,8 +23,7 @@ class KlinikController extends Controller
     public function index(Request $request){
         $user = User::find($request->user_id);
 
-        if($user->role_id == Constant::INTERNAL_ADMIN)
-        {
+        if ($user->hasRole(Constant::SUPER_ADMIN)) {
             $klinik = Klinik::all()->paginate($request->limit); 
             $data['klinik'] = $klinik;
             return response()->json(['status' => true, 'data' => $data]);
@@ -94,8 +93,8 @@ class KlinikController extends Controller
     		"nama" => $nama_pic,
             "no_telp" => $request->nomor_telp,
             "klinik_id" => $klinik->id,
-            "role_id" => Constant::KLINIK_OWNER
         ]);
+        $user->assignRole(Constant::DOKTER_PRAKTEK);
         
         if(!$isKlinik){
             #data dokter

@@ -22,7 +22,7 @@ class OperatorController extends Controller
   {
     $user = User::find($request->user_id);
 
-    if ($user->role_id == Constant::INTERNAL_ADMIN) {
+    if ($user->hasRole(Constant::SUPER_ADMIN)) {
       $operator = Operator::all()->paginate($request->limit);
       $data['operator'] = $operator;
       return response()->json([
@@ -69,9 +69,9 @@ class OperatorController extends Controller
     $user = new User();
     $user->nama = $request->input('nama');
     $user->email = $request->input('email');
-    $user->role_id = Constant::KLINIK_OPERATOR;
     $user->klinik_id = $logged_user->klinik_id;
     $user->save();
+    $user->assignRole(Constant::OPERATOR);
 
     $operator = new Operator();
     $operator->nama = $request->input('nama');

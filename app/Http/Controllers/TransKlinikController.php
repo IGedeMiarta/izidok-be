@@ -31,7 +31,7 @@ class TransKlinikController extends Controller
 
     $user = User::find($request->user_id);
 
-		if ($user->role_id == Constant::INTERNAL_ADMIN) {
+    if ($user->hasRole(Constant::SUPER_ADMIN)) {
 			$trans_klinik = TransKlinik::where('status', $status)
       ->whereBetween('created_at',  [$from, $to])
       ->paginate($request->limit);

@@ -10,12 +10,13 @@ use App\ForgotPassword;
 use App\Activation;
 use App\Reference;
 use App\Constant;
-use App\Rereference;
 use App\Operator;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-
     public function index(Request $request)
     {
         $user = User::with('roles')->paginate($request->limit);
@@ -462,14 +463,165 @@ class UserController extends Controller
         ], 201);
     }
 
-    public function test(){
-        $role_admin = Constant::INTERNAL_ADMIN;
-        $user = User::where('id', 5)
-                    ->whereHas('roles', function($item) use ($role_admin){
-                        $item->where('role.id', $role_admin);
-                    })
-                    ->get();
+    public function createRoles(){
+        Role::create(['name' => 'super_admin']);
+        Role::create(['name' => 'admin_klinik']);
+        Role::create(['name' => 'dokter_praktek']);
+        Role::create(['name' => 'dokter_klinik']);
+        Role::create(['name' => 'operator']);
+    }
 
-        dd($user);
+    public function createPermissions(){
+        Permission::create(['name' => 'read-dashboard']);
+
+        Permission::create(['name' => 'create-transklinik']);
+        Permission::create(['name' => 'read-transklinik']);
+        Permission::create(['name' => 'update-transklinik']);
+        Permission::create(['name' => 'delete-transklinik']);
+
+        Permission::create(['name' => 'create-rekam-medis']);
+        Permission::create(['name' => 'read-rekam-medis']);
+        Permission::create(['name' => 'update-rekam-medis']);
+        Permission::create(['name' => 'delete-rekam-medis']);
+
+        Permission::create(['name' => 'create-klinik']);
+        Permission::create(['name' => 'read-klinik']);
+        Permission::create(['name' => 'update-klinik']);
+        Permission::create(['name' => 'delete-klinik']);
+
+        Permission::create(['name' => 'create-pasien']);
+        Permission::create(['name' => 'read-pasien']);
+        Permission::create(['name' => 'update-pasien']);
+        Permission::create(['name' => 'delete-pasien']);
+
+        Permission::create(['name' => 'create-dokter']);
+        Permission::create(['name' => 'read-dokter']);
+        Permission::create(['name' => 'update-dokter']);
+        Permission::create(['name' => 'delete-dokter']);
+
+        Permission::create(['name' => 'create-operator']);
+        Permission::create(['name' => 'read-operator']);
+        Permission::create(['name' => 'update-operator']);
+        Permission::create(['name' => 'delete-operator']);
+
+        Permission::create(['name' => 'create-tarif']);
+        Permission::create(['name' => 'read-tarif']);
+        Permission::create(['name' => 'update-tarif']);
+        Permission::create(['name' => 'delete-tarif']);
+    }
+
+    public function assignPermissions(){
+        $super_admin = Role::findByName('super_admin');
+        $admin_klinik = Role::findByName('admin_klinik');
+        $dokter_praktek = Role::findByName('dokter_praktek');
+        $dokter_klinik = Role::findByName('dokter_klinik');
+        $operator = Role::findByName('operator');
+
+        $super_admin->syncPermissions([
+            'read-dashboard',
+            'read-transklinik',
+            'create-klinik',
+            'read-klinik',
+            'update-klinik',
+            'delete-klinik',
+            'read-pasien',
+            'create-dokter',
+            'read-dokter',
+            'update-dokter',
+            'delete-dokter',
+            'create-operator',
+            'read-operator',
+            'update-operator',
+            'delete-operator',
+            'create-tarif',
+            'read-tarif',
+            'update-tarif',
+            'delete-tarif'
+            ]);
+        
+        $admin_klinik->syncPermissions([
+            'read-dashboard',
+            'create-transklinik',
+            'read-transklinik',
+            'update-transklinik',
+            'delete-transklinik',
+            'create-klinik',
+            'read-klinik',
+            'update-klinik',
+            'delete-klinik',
+            'read-pasien',
+            'update-pasien',
+            'delete-pasien',
+            'create-dokter',
+            'read-dokter',
+            'update-dokter',
+            'delete-dokter',
+            'create-operator',
+            'read-operator',
+            'update-operator',
+            'delete-operator',
+            'create-tarif',
+            'read-tarif',
+            'update-tarif',
+            'delete-tarif'
+            ]);
+        $dokter_praktek->syncPermissions([
+            'read-dashboard',
+            'create-transklinik',
+            'read-transklinik',
+            'update-transklinik',
+            'delete-transklinik',
+            'create-rekam-medis',
+            'read-rekam-medis',
+            'update-rekam-medis',
+            'delete-rekam-medis',
+            'create-klinik',
+            'read-klinik',
+            'update-klinik',
+            'delete-klinik',
+            'create-pasien',
+            'read-pasien',
+            'update-pasien',
+            'delete-pasien',
+            'create-operator',
+            'read-operator',
+            'update-operator',
+            'delete-operator',
+            'create-tarif',
+            'read-tarif',
+            'update-tarif',
+            'delete-tarif'
+            ]);
+        $dokter_klinik->syncPermissions([
+            'read-dashboard',
+            'create-rekam-medis',
+            'read-rekam-medis',
+            'update-rekam-medis',
+            'delete-rekam-medis',
+            'read-pasien',
+            'update-pasien',
+            'delete-pasien'
+            ]);
+        $operator->syncPermissions([
+            'read-dashboard',
+            'create-transklinik',
+            'read-transklinik',
+            'update-transklinik',
+            'delete-transklinik',
+            'create-pasien',
+            'read-pasien',
+            'update-pasien',
+            'delete-pasien',
+            'create-tarif',
+            'read-tarif',
+            'update-tarif',
+            'delete-tarif'
+            ]);
+    }
+
+    public function test(){
+        $user = Auth::user();
+        $user->syncRoles(Role::findByName('super_admin'));
+        return $user->roles;
     }
 }

@@ -18,7 +18,7 @@ class RekamMedisController extends Controller
     public function index(Request $request)
     {
         $user = User::find($request->user_id);
-        if($user->role_id == Constant::INTERNAL_ADMIN){
+        if ($user->hasRole(Constant::SUPER_ADMIN)) {
             $rekam_medis = RekamMedis::paginate($request->limit);
             $data['rekam_medis'] = $rekam_medis;
 			return response()->json([

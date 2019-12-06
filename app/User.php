@@ -9,14 +9,18 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract, Auditable
 {
     use Authenticatable, Authorizable;
     use SoftDeletes;
     use \OwenIt\Auditing\Auditable;
+    use HasRoles;
 
     protected $table = 'users';
+
+    protected $guard_name = 'api';
 
     protected $fillable = [
         'email', 

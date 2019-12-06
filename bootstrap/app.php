@@ -33,6 +33,8 @@ $app->configure('cors');
 
 $app->configure('filesystems');
 
+$app->configure('permission');
+
 $app->withFacades();
 
 $app->withEloquent();
@@ -76,6 +78,8 @@ $app->middleware([
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
+    'permission' => Spatie\Permission\Middlewares\PermissionMiddleware::class,
+    'role'       => Spatie\Permission\Middlewares\RoleMiddleware::class,
 ]);
 
 /*
@@ -98,6 +102,8 @@ $app->register(OwenIt\Auditing\AuditingServiceProvider::class);
 $app->register(App\Providers\HelperServiceProvider::class);
 $app->register('Nord\Lumen\Cors\CorsServiceProvider');
 $app->register(App\Providers\MinIOStorageServiceProvider::class);
+$app->alias('cache', \Illuminate\Cache\CacheManager::class);  // if you don't have this already
+$app->register(Spatie\Permission\PermissionServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
