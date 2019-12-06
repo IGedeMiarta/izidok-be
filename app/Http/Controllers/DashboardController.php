@@ -125,10 +125,10 @@ class DashboardController extends Controller
 
 		$trans_klinik = TransKlinik::select('nomor_antrian')
 			->where('klinik_id', $klinik->id)
-			->where('created_at', date('Y-m-d'))
+			->whereBetween('created_at', [date('Y-m-d 00:00:00'), date('Y-m-d 23:59:59')])
 			->orderBy('nomor_antrian', 'desc')
 			->first();
-
+		
 		if ($trans_klinik) {
 			return response()->json(['status' => true, 'data' => $trans_klinik]);
 		} else {
