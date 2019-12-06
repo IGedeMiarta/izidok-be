@@ -193,9 +193,9 @@
 											<!--<![endif]-->
 											<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]-->
 											<div align="center">
-												<a href="http://149.129.239.15/api/v1/image?path=logo/Logo-izidok-blue.png"><img width="50%"
+												<a href="https://ibb.co/BLbBjBq"><img width="50%"
 														style="padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;"
-														src="http://149.129.239.15/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok"
+														src="https://i.ibb.co/Tc6tRtm/logo-izidok.png" alt="logo-izidok"
 														border="0" /></a>
 											</div>
 											<!-- <div style="color:#058FE0;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
@@ -231,23 +231,13 @@
 											<!--<![endif]-->
 											<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]-->
 											<div
-												style="color:#555555;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;line-height:1.5;padding-top:5px;padding-right:10px;padding-bottom:30px;padding-left:10px;">
-												<div
-													style="font-size: 12px; line-height: 1.5; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #555555; mso-line-height-alt: 18px;">
-													<p
-														style="font-size: 14px; line-height: 1.5; mso-line-height-alt: 21px; margin: 0;">
-														Aktifkan Akun Izidok Anda sebagai Operator!</p>
-												</div>
-											</div>
-
-											<div
 												style="color:#132F40;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
 												<div
 													style="font-size: 12px; line-height: 1.2; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #132F40; mso-line-height-alt: 14px;">
 													<p
 														style="font-size: 22px; line-height: 1.2; mso-line-height-alt: 26px; margin: 0;">
 														<span
-															style="font-size: 22px;">Hai <strong>{{@$nama}}</strong>,</span>
+															style="font-size: 22px;">Hi <strong>{{@$username}}</strong>,</span>
 													</p>
 												</div>
 											</div>
