@@ -7,6 +7,7 @@ use App\Operator;
 use Illuminate\Http\Request;
 use App\Pasien;
 use App\TransKlinik;
+use App\User;
 use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
@@ -101,8 +102,8 @@ class DashboardController extends Controller
             'to' => 'required|date_format:Y-m-d',
 		]);
 		
-		$operator = Operator::where('user_id', $request->user_id)->first();
-		$klinik = $operator->klinik;
+		$user = User::find($request->user_id);
+		$klinik = $user->klinik;
 		$from = $request->from;
 		$to = $request->to;
 
@@ -119,8 +120,8 @@ class DashboardController extends Controller
 
 	public function getLastAntrian(Request $request)
 	{
-		$operator = Operator::where('user_id', $request->user_id)->first();
-		$klinik = $operator->klinik;
+		$user = User::find($request->user_id);
+		$klinik = $user->klinik;
 
 		$trans_klinik = TransKlinik::select('nomor_antrian')
 			->where('klinik_id', $klinik->id)

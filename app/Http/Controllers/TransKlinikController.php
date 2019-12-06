@@ -29,9 +29,24 @@ class TransKlinikController extends Controller
     $from = $request->from;
     $to = $request->to;
 
-    $trans_klinik = TransKlinik::where('status', $status)
+    $user = User::find($request->user_id);
+
+		if ($user->role_id == Constant::INTERNAL_ADMIN) {
+			$trans_klinik = TransKlinik::where('status', $status)
       ->whereBetween('created_at',  [$from, $to])
       ->paginate($request->limit);
+      $data['trans_klinik'] = $trans_klinik;
+
+			return response()->json([
+				'success' => true,
+				'message' => 'success',
+				'data' => $data
+			], 201);
+		}
+
+    $trans_klinik = TransKlinik::where('created_by', $user->id)->paginate($request->limit);
+		$data['trans_klinik'] = $trans_klinik;
+    
 
     if (!$trans_klinik) {
       return response()->json(['status' => false]);
