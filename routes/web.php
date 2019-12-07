@@ -24,7 +24,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->get('/username/verify', 'UserController@verifyUsername');
 
     #registration
-    $router->post('/user', 'UserController@store');
+    // $router->post('/user', 'UserController@store');
     $router->post('/klinik', 'KlinikController@store');
     $router->get('/activate/{token}', 'UserController@activate');
     $router->get('/email/resend/{user_id}', 'UserController@sendEmail');

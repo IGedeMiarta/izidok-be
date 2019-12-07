@@ -67,63 +67,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'username' => 'required|unique:users|string',
-            'nama' => 'required|string',
-            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
-            'email' => 'required|unique:users|email',
-            'password' => 'required|min:6'
-        ]);
-
-        $username = $request->input('username');
-        $email = $request->input('email');
-        $nama = $request->input('nama');
-        $nomor_telp = $request->input('nomor_telp');
-        $password = Hash::make($request->input('password'));
-
-        $activation_url = Reference::where('key', Constant::VERIFY_EMAIL)->first();
-
-        $user = User::create([
-            "username" => $username,
-            "email" => $email,
-            "password" => $password,
-            "nama" => $nama,
-            "nomor_telp" => $nomor_telp
-        ]);
-
-        #activation token
-        $activation = new Activation();
-        $activation->token = base64_encode(str_random(10));
-        $activation->user_id = $user->id;
-        $activation->expired_at = date('Y-m-d H:i:s', strtotime('+10 minutes'));
-        $activation->save();
-
-        $data['user'] = $user;
-        $data['activation_url'] =  url(env('APP_PREFIX', 'api/v1').$activation_url->value.'/'. $activation->token);
-
-        $email_data = [
-            'subject' => 'User Activation',
-            'activation_url' => $data['activation_url'],
-            'to' => [$user->email],
-            'from' => 'izidok.dev@gmail.com',
-            'username' => $user->username
-        ];
-
-        if ($user) {
-            if (\sendEmail($email_data, Constant::ACTIVATION_EMAIL_TEMPLATE)) {
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Register Success!!',
-                    'data' => $data
-                ], 201);
-            }
-        }
-
-        return response()->json([
-            'status' => false,
-            'message' => 'Register Fail!!',
-            'data' => ''
-        ], 400);
+        //
     }
 
     public function login(Request $request)
