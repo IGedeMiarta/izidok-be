@@ -31,7 +31,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'nomor_telp', 
         'is_first_login',
         'klinik_id',
-        'role_id'
     ];
 
     protected $hidden = [

@@ -21,7 +21,6 @@ class CreateUsersTable extends Migration
             $table->string('nama');
             $table->string('nomor_telp')->nullable();
             $table->integer('is_first_login')->default(1);
-            $table->integer('role_id');
             $table->integer('klinik_id');
             $table->integer('created_by')->nullable();
 			$table->string('updated_by', 50)->nullable();
@@ -40,5 +39,8 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('klinik_operator');
+        Schema::dropIfExists('role');
+        Schema::dropIfExists('user_role');
     }
 }

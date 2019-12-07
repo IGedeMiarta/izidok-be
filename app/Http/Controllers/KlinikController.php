@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Klinik;
-use App\Operator;
 use App\User;
-use App\UserRole;
 use App\Constant;
 use App\Dokter;
 use App\Activation;

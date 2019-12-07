@@ -42,7 +42,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
     $router->group(['middleware' => 'auth'], function () use ($router) {
         #user
-        $router->group(['middleware' => 'role:super_admin|admin_klinik'], function () use ($router) {
+        $router->group(['middleware' => ['role:super_admin|admin_klinik']], function () use ($router) {
             $router->get('/user', 'UserController@index');
             $router->get('/user/{id}', 'UserController@show');
             $router->put('/user/{id}', 'UserController@update');
@@ -91,7 +91,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         });
 
         #layanan
-        $router->group(['middleware' => 'role:super_admin|admin_klinik|dokter_praktek|operator'], function () use ($router) {
+        $router->group(['middleware' => ['role:dokter_praktek|admin_klinik|super_admin|operator']], function () use ($router) {
             $router->get('/layanan', 'LayananController@index');
             $router->post('/layanan', 'LayananController@store');
             $router->get('/layanan/{id}', 'LayananController@show');
@@ -116,7 +116,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->delete('/transaksi/{id}', ['middleware' => 'permission:delete-transklinik', 'uses' => 'TransKlinikController@delete']);
 
         #rekam medis
-        $router->group(['middleware' => 'role:dokter_praktek|dokter_klinik'], function () use ($router) {
+        $router->group(['middleware' => ['role:dokter_praktek|dokter_klinik']], function () use ($router) {
             $router->get('/rekam_medis', 'RekamMedisController@index');
             $router->post('/rekam_medis', 'RekamMedisController@store');
             $router->get('/rekam_medis/{id}', 'RekamMedisController@show');
@@ -129,8 +129,9 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->get('/organ/{id}', 'OrganController@show');
             $router->put('/organ/{id}', 'OrganController@update');
             $router->delete('/organ/{id}', 'OrganController@delete');
-            $router->get('/organ/name/{name}', 'OrganController@getByName'); // get by name
         });
+
+        $router->get('/organ/name/{name}', ['middleware' => ['role:dokter_praktek|dokter_klinik'], 'uses' => 'OrganController@getByName']); // get by name
 
         #dashboard
         $router->get('/dash-pasien', 'DashboardController@getPasien');
