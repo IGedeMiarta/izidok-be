@@ -177,7 +177,7 @@ class RekamMedisController extends Controller
 		} else {
             $data = array();
             $anamnesa = Anamnesa::find($rekam_medis->anamnesa_id);
-            $pemeriksaan = Diagnosa::find($rekam_medis->pemeriksaan_fisik_id);
+            $pemeriksaan = PemeriksaanFisik::find($rekam_medis->pemeriksaan_fisik_id);
             $diagnosa = Diagnosa::find($rekam_medis->diagnosa_id);
 
             $data['rekam_medis'] = $rekam_medis;
