@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Dokter;
 use App\User;
-use App\UserRole;
 use App\Operator;
 use App\Constant;
 use App\KlinikDokter;
