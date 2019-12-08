@@ -57,18 +57,22 @@ class DokterController extends Controller
       'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
     ]);
 
+    $logged_in_user = User::find($request->user_id);
+
     $user = new User();
     $user->nama = $request->input('nama');
     $user->username = $request->input('username');
     $user->password = Hash::make($request->input('password'));
     $user->email = $request->input('email');
     $user->nomor_telp = $request->input('nomor_telp');
+    $user->klinik_id = $logged_in_user->klinik_id;
     $user->save();
     $user->assignRole(Constant::DOKTER_KLINIK);
 
     $dokter = new Dokter();
     $dokter->nama = $request->input('nama');
     $dokter->user_id = $user->id;
+    $dokter->created_by = $request->user_id;
     $status = $dokter->save();
 
     if ($status) {
