@@ -4,18 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\TransKlinik;
-use App\Anamnesa;
 use App\Constant;
 use App\Pasien;
 use App\Klinik;
-use App\Dokter;
-use App\Operator;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 // use Carbon\Carbon;
 
 class TransKlinikController extends Controller
 {
+
+  public $user;
+
+	public function __construct(){
+		$this->user = Auth::user();
+  }
+  
   public function index(Request $request)
   {
 
@@ -29,7 +34,7 @@ class TransKlinikController extends Controller
     $from = $request->from;
     $to = $request->to;
 
-    $user = User::find($request->user_id);
+    $user = $this->user;
 
     if ($user->hasRole(Constant::SUPER_ADMIN)) {
       $trans_klinik = TransKlinik::where('status', $status)
@@ -144,6 +149,12 @@ class TransKlinikController extends Controller
     ]);
 
     $trans_klinik = TransKlinik::find($request->id);
+    $user = $this->user;
+
+		if ($user->cant('updateOrDelete', $trans_klinik)) {
+			abort(403);
+		}
+
     if (!$trans_klinik) {
       return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
     } else {
@@ -157,6 +168,11 @@ class TransKlinikController extends Controller
   public function delete($id = null)
   {
     $trans_klinik = TransKlinik::find($id);
+    $user = $this->user;
+
+		if ($user->cant('updateOrDelete', $trans_klinik)) {
+			abort(403);
+		}
 
     if (!$trans_klinik) {
       return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
