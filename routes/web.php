@@ -123,10 +123,10 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         });
 
         #organ
+        $router->get('/organ', ['middleware' => 'permission:read-transklinik', 'uses' => 'OrganController@index']);
+        $router->get('/organ/{id}', ['middleware' => 'permission:read-transklinik', 'uses' => 'OrganController@show']);
         $router->group(['middleware' => 'role:super_admin'], function () use ($router) {
-            $router->get('/organ', 'OrganController@index');
             $router->post('/organ', 'OrganController@store');
-            $router->get('/organ/{id}', 'OrganController@show');
             $router->put('/organ/{id}', 'OrganController@update');
             $router->delete('/organ/{id}', 'OrganController@delete');
         });
