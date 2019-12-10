@@ -52,7 +52,7 @@ class KlinikController extends Controller
             'email' => 'required|unique:users|email',
             'username' => 'required|unique:users|string',
             'password' => 'required|confirmed|min:6',
-            'alamat' => 'required|string',
+            'alamat' => 'string',
             'foto_profile' => 'file|max:5000',
         ];
         
