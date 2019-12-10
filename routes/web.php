@@ -80,14 +80,14 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->delete('/dokter/{id}', ['middleware' => 'permission:delete-dokter', 'uses' => 'DokterController@delete']);
 
         #kode penyakit
-        $router->group(['middleware' => 'role:super_admin'], function () use ($router) {
-            $router->get('/kode_penyakit', 'KodePenyakitController@index');
+        $router->get('/kode_penyakit', ['middleware' => 'permission:read-rekam-medis', 'uses' => 'KodePenyakitController@index']);
+        $router->get('/kode_penyakit/{id}', ['middleware' => 'permission:delete-rekam-medis', 'uses' => 'KodePenyakitController@show']);
+        $router->get('/kode_penyakit/name/{name}', ['middleware' => 'permission:delete-rekam-medis', 'uses' => 'KodePenyakitController@getByName']); // get by name
+        $router->group(['middleware' => 'role:super_admin'], function () use ($router) {            
             $router->post('/kode_penyakit', 'KodePenyakitController@store');
             $router->post('/kode_penyakit/excel', 'KodePenyakitController@store_excel');
-            $router->get('/kode_penyakit/{id}', 'KodePenyakitController@show');
             $router->put('/kode_penyakit/{id}', 'KodePenyakitController@update');
             $router->delete('/kode_penyakit/{id}', 'KodePenyakitController@delete');
-            $router->get('/kode_penyakit/name/{name}', 'KodePenyakitController@getByName'); // get by name
         });
 
         #layanan
@@ -123,8 +123,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         });
 
         #organ
-        $router->get('/organ', ['middleware' => 'permission:read-transklinik', 'uses' => 'OrganController@index']);
-        $router->get('/organ/{id}', ['middleware' => 'permission:read-transklinik', 'uses' => 'OrganController@show']);
+        $router->get('/organ', ['middleware' => 'permission:read-rekam-medis', 'uses' => 'OrganController@index']);
+        $router->get('/organ/{id}', ['middleware' => 'permission:read-rekam-medis', 'uses' => 'OrganController@show']);
         $router->group(['middleware' => 'role:super_admin'], function () use ($router) {
             $router->post('/organ', 'OrganController@store');
             $router->put('/organ/{id}', 'OrganController@update');
