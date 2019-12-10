@@ -114,13 +114,6 @@ class UserController extends Controller
             $api_key->api_key = $token;
             $api_key->save();
 
-            #get klinik
-            $operator = Operator::where('user_id', $user->id)->first();
-            $kliniks = null;
-            if($operator){
-                $kliniks = $operator->kliniks;
-            }
-
             return response()->json([
                 'status' => true,
                 'message' => 'Login Berhasil',
@@ -128,7 +121,7 @@ class UserController extends Controller
                     'user' => $user,
                     'token' => $token,
                     'first_login' => $first_login,
-                    'kliniks' => $kliniks
+                    'klinik' => $user->klinik
                 ]
             ], 201);
         } else {
