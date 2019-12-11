@@ -10,17 +10,17 @@ class CreatePasienTable extends Migration {
 		Schema::create('pasien', function(Blueprint $table) {
 			$table->increments('id');
 			$table->string('nama');
-			$table->string('nik', 50);
-			$table->string('tempat_lahir', 50);
+			$table->string('nik', 50)->nullable();
+			$table->string('tempat_lahir', 50)->nullable();
 			$table->date('tanggal_lahir');
 			$table->integer('jenis_kelamin');
 			$table->string('golongan_darah', 5)->nullable();
-			$table->string('alamat_rumah')->nullable();
+			$table->string('alamat_rumah');
 			$table->string('rt', 5)->nullable();
 			$table->string('rw',5)->nullable();
 			$table->string('kelurahan', 50)->nullable();
 			$table->string('kecamatan', 50)->nullable();
-			$table->string('status_perkawinan', 50)->nullable();
+			$table->string('status_perkawinan', 50);
 			$table->string('pekerjaan', 50)->nullable();
 			$table->string('nomor_hp', 30)->nullable();
 			$table->string('nama_penjamin',100)->nullable();
