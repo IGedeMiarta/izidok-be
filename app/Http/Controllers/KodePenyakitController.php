@@ -27,8 +27,7 @@ class KodePenyakitController extends Controller
 
 	public function getByName(Request $request)
 	{
-		$kode_penyakit = KodePenyakit::where('description', 'like', '%' . $request->name . '%')->get();
-		//echo $request->name;
+		$kode_penyakit = KodePenyakit::where('description', 'like', '%' . $request->query('query') . '%')->get();
 
 		if (count($kode_penyakit) == 0) {
 			return response()->json([
