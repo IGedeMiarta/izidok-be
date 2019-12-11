@@ -111,7 +111,7 @@ class PasienController extends Controller
 		$pasien->nomor_rekam_medis = $request->input('nomor_rekam_medis');
 		$pasien->user_id = $request->user_id;
 		$user = User::find($request->user_id);
-		$pasien->klinik_id = $request->klinik_id;
+		$pasien->klinik_id = $user->klinik_id;
 		$pasien->created_by = $request->user_id;
 		$status = $pasien->save();
 
