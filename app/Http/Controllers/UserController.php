@@ -12,6 +12,7 @@ use App\Reference;
 use App\Constant;
 use App\Operator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -53,16 +54,50 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
+        $this->validate($request, [
+            'nama' => 'required|string',
+            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
+            'email' => 'required|email',
+            'alamat' => 'string',
+        ]);
+
         $user = User::find($request->id);
         if (!$user) {
             return response()->json(['status' => false]);
         } else {
+            if ($user->email !== $request->email) {
+                $this->validate($request, [
+                    'email' => 'required|unique:users|email',
+                ]);
+            } 
+            
             $user->email = $request->email;
             $user->nama = $request->nama;
             $user->nomor_telp = $request->nomor_telp;
+            $user->alamat = $request->alamat;
             $user->save();
             return response()->json(['status' => true, 'data' => $user]);
         }
+    }
+
+    public function uploadFotoProfile (Request $request){
+        $this->validate($request, [
+            'foto_profile' => 'required|file|max:5000',
+        ]);
+
+        $user = User::find($request->id);
+        if(!$user){
+            return response()->json(['status' => false, 'message' => 'user not found...']);
+        }
+
+        $user->foto_profile = Storage::disk('minio')->put('foto_profile', $request->foto_profile);
+
+        if(!$user->save()){
+            return response()->json(['status' => false, 'message' => 'update user failed...']);
+        }
+
+        return response()->json(['status' => true, 'data' => $user]);
+
     }
 
     public function store(Request $request)
@@ -71,13 +106,13 @@ class UserController extends Controller
     }
 
     public function login(Request $request)
-    {   
+    {
         // $email = $request->email;
         $username = $request->username;
         $password = $request->password;
 
         $user = User::where('username', $username)->with('roles')->first();
-        if(!$user){
+        if (!$user) {
             $user = User::where('email', $username)->with('roles')->first();
         }
 
@@ -186,7 +221,7 @@ class UserController extends Controller
 
             $email_data = [
                 'subject' => 'Forgot Password',
-                'message' => 'Click link below to reset your password: \n '. $forgot_url,
+                'message' => 'Click link below to reset your password: \n ' . $forgot_url,
                 'activation_url' => $forgot_url,
                 'to' => ['helmysmp@gmail.com', $forgot_password->email],
                 'from' => 'izidok.dev@gmail.com',
@@ -194,7 +229,7 @@ class UserController extends Controller
                 'username' => $user->username,
             ];
 
-            if(\sendEmail($email_data, Constant::FORGOT_EMAIL_TEMPLATE)){
+            if (\sendEmail($email_data, Constant::FORGOT_EMAIL_TEMPLATE)) {
                 return response()->json([
                     'status' => true,
                     'message' => 'forgot password telah dibuat',
@@ -211,7 +246,8 @@ class UserController extends Controller
         }
     }
 
-    public function check_forgot($token){
+    public function check_forgot($token)
+    {
         // echo $token;
         $forgot_password = ForgotPassword::where('token', $token)->first();
 
@@ -236,9 +272,7 @@ class UserController extends Controller
             $data['url'] = $config->value;
 
             return redirect($config->value);
-        }
-        else
-        {
+        } else {
             $key = Constant::FORGOT_VALID;
             $category = Constant::REDIRECTION;
             $config = Reference::where('key', $key)
@@ -246,7 +280,7 @@ class UserController extends Controller
             $data['url'] = $config->value;
             $data['token'] = $token;
 
-            return redirect($config->value.$token);
+            return redirect($config->value . $token);
         }
     }
 
@@ -352,7 +386,7 @@ class UserController extends Controller
         $user = $activation->user;
 
         $data['user'] = $user;
-        $data['activation_url'] =  url(env('APP_PREFIX', 'api/v1').$activation_url->value.'/'. $activation->token);
+        $data['activation_url'] =  url(env('APP_PREFIX', 'api/v1') . $activation_url->value . '/' . $activation->token);
 
         $email_data = [
             'subject' => 'User Activation',
@@ -400,7 +434,8 @@ class UserController extends Controller
         ], 201);
     }
 
-    public function createRoles(){
+    public function createRoles()
+    {
         Role::create(['name' => 'super_admin']);
         Role::create(['name' => 'admin_klinik']);
         Role::create(['name' => 'dokter_praktek']);
@@ -408,7 +443,8 @@ class UserController extends Controller
         Role::create(['name' => 'operator']);
     }
 
-    public function createPermissions(){
+    public function createPermissions()
+    {
         Permission::create(['name' => 'read-dashboard']);
 
         Permission::create(['name' => 'create-transklinik']);
@@ -447,7 +483,8 @@ class UserController extends Controller
         Permission::create(['name' => 'delete-tarif']);
     }
 
-    public function assignPermissions(){
+    public function assignPermissions()
+    {
         $super_admin = Role::findByName('super_admin');
         $admin_klinik = Role::findByName('admin_klinik');
         $dokter_praktek = Role::findByName('dokter_praktek');
@@ -474,8 +511,8 @@ class UserController extends Controller
             'read-tarif',
             'update-tarif',
             'delete-tarif'
-            ]);
-        
+        ]);
+
         $admin_klinik->syncPermissions([
             'read-dashboard',
             'create-transklinik',
@@ -501,7 +538,7 @@ class UserController extends Controller
             'read-tarif',
             'update-tarif',
             'delete-tarif'
-            ]);
+        ]);
         $dokter_praktek->syncPermissions([
             'read-dashboard',
             'create-transklinik',
@@ -528,7 +565,7 @@ class UserController extends Controller
             'read-tarif',
             'update-tarif',
             'delete-tarif'
-            ]);
+        ]);
         $dokter_klinik->syncPermissions([
             'read-dashboard',
             'create-rekam-medis',
@@ -538,7 +575,7 @@ class UserController extends Controller
             'read-pasien',
             'update-pasien',
             'delete-pasien'
-            ]);
+        ]);
         $operator->syncPermissions([
             'read-dashboard',
             'create-transklinik',
@@ -553,10 +590,11 @@ class UserController extends Controller
             'read-tarif',
             'update-tarif',
             'delete-tarif'
-            ]);
+        ]);
     }
 
-    public function test(){
+    public function test()
+    {
         $user = Auth::user();
         $user->syncRoles(Role::findByName('super_admin'));
         return $user->roles;

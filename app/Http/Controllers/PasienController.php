@@ -281,8 +281,7 @@ class PasienController extends Controller
 		]);
 
 		if ($request->file) {
-			$filename = 'ktp/ktp-' . date('Ymdhms') . '.png';
-			$path =  Storage::disk('minio')->put($filename, $request->file);
+			$path =  Storage::disk('minio')->put('ktp', $request->file);
 		}
 
 		$image = Storage::disk('minio')->get($path);
