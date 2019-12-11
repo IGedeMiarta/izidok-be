@@ -38,7 +38,7 @@ class OrganController extends Controller
 
 	public function getByName(Request $request)
 	{
-		$organs = Organ::where('nama', 'like', '%' . $request->name . '%')->get();
+		$organs = Organ::where('nama', 'like', '%' . $request->query('query') . '%')->get();
 		//echo $request->name;
 
 		if (count($organs) == 0) {
