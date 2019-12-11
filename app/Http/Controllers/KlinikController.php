@@ -99,13 +99,11 @@ class KlinikController extends Controller
         
         if(!$isKlinik){
             #data dokter
-            $dokter = new Dokter([
+            $dokter = Dokter::create([
                 'nama' => $nama_dokter,
                 'user_id' => $user->id,
                 'created_by' => $user->id,
             ]);
-
-            $dokter->save();
         }
 
         #activation token
