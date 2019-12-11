@@ -5,23 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Dokter;
 use App\User;
-use App\UserRole;
 use App\Operator;
 use App\Constant;
 use App\KlinikDokter;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class DokterController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return Response
-   */
+  public $user;
+
+	public function __construct(){
+		$this->user = Auth::user();
+  }
+  
   public function index(Request $request)
   {
     $user_id = $request->user_id;
-    $user = User::find($user_id);
+    $user = $this->user;
 
     if ($user->hasRole(Constant::SUPER_ADMIN)) {
       $dokter = Dokter::paginate($request->limit);
@@ -125,7 +126,12 @@ class DokterController extends Controller
   {
     //echo $request->id;
     $dokter = Dokter::find($request->id);
+    $user = $this->user;
 
+		if ($user->cant('updateOrDelete', $dokter)) {
+			abort(403);
+    }
+    
     if (empty($dokter)) {
       return response()->json([
         'status' => false,
@@ -155,6 +161,11 @@ class DokterController extends Controller
   public function delete($id = null)
   {
     $dokter = Dokter::find($id);
+    $user = $this->user;
+
+		if ($user->cant('updateOrDelete', $dokter)) {
+			abort(403);
+		}
 
     if (empty($dokter)) {
       return response()->json([

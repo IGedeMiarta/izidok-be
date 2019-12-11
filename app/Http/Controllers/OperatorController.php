@@ -5,22 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Operator;
 use App\User;
-use App\UserRole;
 use App\Constant;
 use App\Reference;
 use App\Activation;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class OperatorController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return Response
-   */
+  public $user;
+
+	public function __construct(){
+		$this->user = Auth::user();
+  }
+  
   public function index(Request $request)
   {
-    $user = User::find($request->user_id);
+    $user = $this->user;
 
     if ($user->hasRole(Constant::SUPER_ADMIN)) {
       $operator = Operator::all()->paginate($request->limit);
@@ -52,11 +53,6 @@ class OperatorController extends Controller
     ], 201);
   }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @return Response
-   */
   public function store(Request $request)
   {
     $this->validate($request, [
@@ -64,7 +60,7 @@ class OperatorController extends Controller
       'email' => 'required|unique:users|email'
     ]);
 
-    $logged_user = User::find($request->user_id);
+    $logged_user = $this->user;
 
     $user = new User();
     $user->nama = $request->input('nama');
@@ -246,6 +242,11 @@ class OperatorController extends Controller
     ]);
 
     $operator = Operator::find($request->id);
+    $user = $this->user;
+
+    if ($user->cant('updateOrDelete', $operator)) {
+			abort(403);
+		}
 
     if (empty($operator)) {
       return response()->json([
@@ -280,7 +281,12 @@ class OperatorController extends Controller
   public function delete($id = null)
   {
     $operator = Operator::find($id);
+    $user = $this->user;
 
+    if ($user->cant('updateOrDelete', $operator)) {
+			abort(403);
+    }
+    
     if (empty($operator)) {
       return response()->json([
         'status' => false,

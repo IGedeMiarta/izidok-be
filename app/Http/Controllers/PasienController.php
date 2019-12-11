@@ -6,15 +6,21 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Pasien;
-use App\UserRole;
 use App\Constant;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class PasienController extends Controller
 {
+	public $user;
+
+	public function __construct(){
+		$this->user = Auth::user();
+	}
+	
 	public function index(Request $request)
 	{
-		$user = User::find($request->user_id);
+		$user = $this->user;
 
 		if ($user->hasRole(Constant::SUPER_ADMIN)) {
 			$pasien = Pasien::paginate($request->limit);
@@ -174,6 +180,11 @@ class PasienController extends Controller
 		]);
 
 		$pasien = Pasien::find($request->id);
+		$user = $this->user;
+
+		if ($user->cant('updateOrDelete', $pasien)) {
+			abort(403);
+		}
 
 		if (empty($pasien)) {
 			return response()->json([
@@ -228,6 +239,11 @@ class PasienController extends Controller
 	public function delete($id = null)
 	{
 		$pasien = Pasien::find($id);
+		$user = $this->user;
+
+		if ($user->cant('updateOrDelete', $pasien)) {
+			abort(403);
+		}
 
 		if (empty($pasien)) {
 			return response()->json([
@@ -265,8 +281,7 @@ class PasienController extends Controller
 		]);
 
 		if ($request->file) {
-			$filename = 'ktp/ktp-' . date('Ymdhms') . '.png';
-			$path =  Storage::disk('minio')->put($filename, $request->file);
+			$path =  Storage::disk('minio')->put('ktp', $request->file);
 		}
 
 		$image = Storage::disk('minio')->get($path);

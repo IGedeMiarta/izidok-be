@@ -11,7 +11,10 @@ class CreateKodePenyakitTable extends Migration {
 			$table->increments('id');
 			$table->string('kode', 10)->index();
 			$table->string('description', 255);
-			$table->integer('created_by');
+			$table->string('icd', 10);
+			$table->string('edc_code', 10);
+			$table->string('icd_code', 10);
+			$table->integer('created_by')->nullable();
 			$table->string('updated_by', 50)->nullable();
 			$table->string('deleted_by', 50)->nullable();
 			$table->timestamps();

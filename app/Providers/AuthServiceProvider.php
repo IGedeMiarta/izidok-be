@@ -2,15 +2,32 @@
 
 namespace App\Providers;
 
-use App\User;
+use App\Layanan;
 use App\ApiKey;
-use Illuminate\Support\Facades\Gate;
+use App\Dokter;
+use App\Operator;
+use App\Pasien;
+use App\Policies\DokterPolicy;
+use App\Policies\LayananPolicy;
+use App\Policies\OperatorPolicy;
+use App\Policies\PasienPolicy;
+use App\Policies\TransKlinikPolicy;
+use App\TransKlinik;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends ServiceProvider
 {
+
+    protected $policies = [
+        Layanan::class => LayananPolicy::class,
+        Operator::class => OperatorPolicy::class,
+        Dokter::class => DokterPolicy::class,
+        Pasien::class => PasienPolicy::class,
+        TransKlinik::class => TransKlinikPolicy::class,
+    ];
+
     /**
      * Register any application services.
      *

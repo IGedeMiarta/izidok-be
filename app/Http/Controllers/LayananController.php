@@ -5,16 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Layanan;
 use App\Constant;
-use App\UserRole;
-use App\Operator;
-use App\User;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class LayananController extends Controller
 {
+	public $user;
+
+	public function __construct(){
+		$this->user = Auth::user();
+	}
+
 	public function index(Request $request)
 	{
-		$user = User::find($request->user_id);
+		$user = $this->user;
 
 		if ($user->hasRole(Constant::SUPER_ADMIN)) {
 			$layanan = Layanan::paginate($request->limit);
@@ -118,6 +121,11 @@ class LayananController extends Controller
 		]);
 
 		$layanan = Layanan::find($request->id);
+		$user = $this->user;
+
+		if ($user->cant('updateOrDelete', $layanan)) {
+			abort(403);
+		}
 
 		if (empty($layanan)) {
 			return response()->json([
@@ -141,6 +149,11 @@ class LayananController extends Controller
 	public function delete($id = null)
 	{
 		$layanan = Layanan::find($id);
+		$user = $this->user;
+
+		if ($user->cant('updateOrDelete', $layanan)) {
+			abort(403);
+		}
 
 		if (empty($layanan)) {
 			return response()->json([

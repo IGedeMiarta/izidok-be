@@ -16,7 +16,7 @@ class Dokter extends Model implements Auditable
     use SoftDeletes;
 
     protected $fillable = [
-        'nama', 'user_id'
+        'nama', 'user_id', 'created_by'
     ];
 
     protected $dates = ['deleted_at'];

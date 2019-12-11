@@ -20,6 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->string('nama');
             $table->string('nomor_telp')->nullable();
+            $table->string('alamat', 255)->nullable();
+            $table->string('foto_profile', 255)->nullable();
             $table->integer('is_first_login')->default(1);
             $table->integer('klinik_id');
             $table->integer('created_by')->nullable();

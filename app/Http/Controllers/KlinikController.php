@@ -51,7 +51,9 @@ class KlinikController extends Controller
             'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
             'email' => 'required|unique:users|email',
             'username' => 'required|unique:users|string',
-            'password' => 'required|confirmed|min:6'
+            'password' => 'required|confirmed|min:6',
+            'alamat' => 'string',
+            'foto_profile' => 'file|max:5000',
         ];
         
         $activation_url = Reference::where('key', Constant::VERIFY_EMAIL)->first();
@@ -90,14 +92,17 @@ class KlinikController extends Controller
     		"nama" => $nama_pic,
             "no_telp" => $request->nomor_telp,
             "klinik_id" => $klinik->id,
+            "alamat" => $request->alamat,
+            "foto_profile" => \uploadToMinio('foto_profile',$request->foto_profile)
         ]);
         $user->assignRole(Constant::DOKTER_PRAKTEK);
         
         if(!$isKlinik){
             #data dokter
-            $dokter = new Dokter([
+            $dokter = Dokter::create([
                 'nama' => $nama_dokter,
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'created_by' => $user->id,
             ]);
         }
 
