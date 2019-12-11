@@ -101,8 +101,11 @@ class KlinikController extends Controller
             #data dokter
             $dokter = new Dokter([
                 'nama' => $nama_dokter,
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'created_by' => $user->id,
             ]);
+
+            $dokter->save();
         }
 
         #activation token
