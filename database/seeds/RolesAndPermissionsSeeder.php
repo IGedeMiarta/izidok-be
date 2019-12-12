@@ -128,7 +128,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'create-tarif',
             'read-tarif',
             'update-tarif',
-            'delete-tarif'
+            'delete-tarif',
+            'create-dokter',
+            'read-dokter',
+            'update-dokter',
+            'delete-dokter'
         ]);
 
         $role = Role::create(['name' => 'dokter_klinik']);

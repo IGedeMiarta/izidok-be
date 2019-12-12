@@ -59,7 +59,7 @@ class RoleController extends Controller
 	 */
 	public function show(Request $request)
 	{
-		$role = Role::findById($request->id);
+		$role = Role::with('permissions')->find($request->id);
 		if (empty($role)) {
 			return response()->json([
 				'status' => false,

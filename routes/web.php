@@ -81,9 +81,9 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->delete('/dokter/{id}', ['middleware' => 'permission:delete-dokter', 'uses' => 'DokterController@delete']);
 
         #kode penyakit
+        $router->get('/kode_penyakit/name', ['middleware' => 'permission:read-rekam-medis', 'uses' => 'KodePenyakitController@getByName']); // get by name
         $router->get('/kode_penyakit', ['middleware' => 'permission:read-rekam-medis', 'uses' => 'KodePenyakitController@index']);
         $router->get('/kode_penyakit/{id}', ['middleware' => 'permission:read-rekam-medis', 'uses' => 'KodePenyakitController@show']);
-        $router->get('/kode_penyakit/name', ['middleware' => 'permission:read-rekam-medis', 'uses' => 'KodePenyakitController@getByName']); // get by name
         $router->group(['middleware' => 'role:super_admin'], function () use ($router) {            
             $router->post('/kode_penyakit', 'KodePenyakitController@store');
             $router->post('/kode_penyakit/excel', 'KodePenyakitController@store_excel');
@@ -124,9 +124,9 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         });
 
         #organ
+        $router->get('/organ/name', ['middleware' => 'permission:read-rekam-medis', 'uses' => 'OrganController@getByName']); // get by name
         $router->get('/organ', ['middleware' => 'permission:read-rekam-medis', 'uses' => 'OrganController@index']);
         $router->get('/organ/{id}', ['middleware' => 'permission:read-rekam-medis', 'uses' => 'OrganController@show']);
-        $router->get('/organ/name', ['middleware' => 'permission:read-rekam-medis', 'uses' => 'OrganController@getByName']); // get by name
         $router->group(['middleware' => 'role:super_admin'], function () use ($router) {
             $router->post('/organ', 'OrganController@store');
             $router->put('/organ/{id}', 'OrganController@update');
