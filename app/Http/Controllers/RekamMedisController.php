@@ -153,13 +153,13 @@ class RekamMedisController extends Controller
 
         if ($status) {
             return response()->json([
-                'success' => true,
+                'status' => true,
                 'message' => 'success',
                 'data' => $data
             ], 201);
         } else {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'failed',
                 'data' => ''
             ], 400);
