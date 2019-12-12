@@ -21,7 +21,6 @@ class DokterController extends Controller
   
   public function index(Request $request)
   {
-    $user_id = $request->user_id;
     $user = $this->user;
 
     if ($user->hasRole(Constant::SUPER_ADMIN)) {
@@ -33,8 +32,8 @@ class DokterController extends Controller
         'data' => $data
       ], 201);
     }
-    $operator = Operator::where('user_id', $user_id)->first();
-    $dokter = KlinikDokter::where('klinik_id', $operator->klinik_id)->with('dokter')->paginate();
+
+    $dokter = KlinikDokter::where('klinik_id', $user->klinik_id)->with('dokter')->paginate();
     $data['dokter'] = $dokter;
     return response()->json([
       'success' => true,

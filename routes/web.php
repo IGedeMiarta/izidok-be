@@ -74,11 +74,11 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->delete('/operator/{id}', ['middleware' => 'permission:delete-operator', 'uses' => 'OperatorController@delete']);
 
         #dokter
-        $router->get('/dokter', ['middleware' => 'permission:read-dokter', 'uses' => 'DokterController@index']);
-        $router->post('/dokter', ['middleware' => 'permission:create-dokter', 'uses' => 'DokterController@store']);
-        $router->get('/dokter/{id}', ['middleware' => 'permission:read-dokter', 'uses' => 'DokterController@show']);
-        $router->put('/dokter/{id}', ['middleware' => 'permission:update-dokter', 'uses' => 'DokterController@update']);
-        $router->delete('/dokter/{id}', ['middleware' => 'permission:delete-dokter', 'uses' => 'DokterController@delete']);
+        $router->get('/dokter', ['uses' => 'DokterController@index']);
+        $router->post('/dokter', ['uses' => 'DokterController@store']);
+        $router->get('/dokter/{id}', ['uses' => 'DokterController@show']);
+        $router->put('/dokter/{id}', ['uses' => 'DokterController@update']);
+        $router->delete('/dokter/{id}', ['uses' => 'DokterController@delete']);
 
         #kode penyakit
         $router->get('/kode_penyakit/name', ['middleware' => 'permission:read-rekam-medis', 'uses' => 'KodePenyakitController@getByName']); // get by name
