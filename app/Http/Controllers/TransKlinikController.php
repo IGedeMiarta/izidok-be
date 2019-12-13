@@ -73,7 +73,7 @@ class TransKlinikController extends Controller
       'nomor_rekam_medis' => 'required|string',
 
       'nama_lengkap' => 'required|string',
-      'nik' => 'required|string',
+      'nik' => 'string',
       'jenis_kelamin' => 'required|integer|min:0|max:1',
       'nomor_telp' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
       'waktu_konsultasi' => 'required|string',
@@ -83,7 +83,6 @@ class TransKlinikController extends Controller
       'tensi_sistole' => 'integer',
       'tensi_diastole' => 'integer',
       'nadi' => 'integer',
-      'respirasi' => 'integer',
     ]);
 
     #klinik exist?
@@ -118,7 +117,6 @@ class TransKlinikController extends Controller
       $pasien->tensi_sistole = $request->tensi_sistole;
       $pasien->tensi_diastole = $request->tensi_diastole;
       $pasien->nadi = $request->nadi;
-      $pasien->respirasi = $request->respirasi;
       $pasien->save();
     }
 
