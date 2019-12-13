@@ -37,7 +37,8 @@ class TransKlinikController extends Controller
     $user = $this->user;
 
     if ($user->hasRole(Constant::SUPER_ADMIN)) {
-      $trans_klinik = TransKlinik::where('status', $status)
+      $trans_klinik = TransKlinik::with('pasien')
+        ->where('status', $status)
         ->whereBetween('created_at',  [$from, $to])
         ->paginate($request->limit);
       $data['trans_klinik'] = $trans_klinik;
@@ -49,7 +50,8 @@ class TransKlinikController extends Controller
       ], 201);
     }
 
-    $trans_klinik = TransKlinik::where('created_by', $user->id)
+    $trans_klinik = TransKlinik::with('pasien')
+      ->where('created_by', $user->id)
       ->where('status', $status)
       ->whereBetween('created_at',  [$from, $to])->paginate($request->limit);
     $data['trans_klinik'] = $trans_klinik;
