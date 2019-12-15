@@ -37,7 +37,8 @@ class TransKlinikController extends Controller
     $user = $this->user;
 
     if ($user->hasRole(Constant::SUPER_ADMIN)) {
-      $trans_klinik = TransKlinik::where('status', $status)
+      $trans_klinik = TransKlinik::with('pasien')
+        ->where('status', $status)
         ->whereBetween('created_at',  [$from, $to])
         ->paginate($request->limit);
       $data['trans_klinik'] = $trans_klinik;
@@ -49,7 +50,8 @@ class TransKlinikController extends Controller
       ], 201);
     }
 
-    $trans_klinik = TransKlinik::where('created_by', $user->id)
+    $trans_klinik = TransKlinik::with('pasien')
+      ->where('created_by', $user->id)
       ->where('status', $status)
       ->whereBetween('created_at',  [$from, $to])->paginate($request->limit);
     $data['trans_klinik'] = $trans_klinik;
@@ -71,7 +73,7 @@ class TransKlinikController extends Controller
       'nomor_rekam_medis' => 'required|string',
 
       'nama_lengkap' => 'required|string',
-      'nik' => 'required|string',
+      'nik' => 'string',
       'jenis_kelamin' => 'required|integer|min:0|max:1',
       'nomor_telp' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
       'waktu_konsultasi' => 'required|string',
@@ -81,7 +83,6 @@ class TransKlinikController extends Controller
       'tensi_sistole' => 'integer',
       'tensi_diastole' => 'integer',
       'nadi' => 'integer',
-      'respirasi' => 'integer',
     ]);
 
     #klinik exist?
@@ -116,7 +117,6 @@ class TransKlinikController extends Controller
       $pasien->tensi_sistole = $request->tensi_sistole;
       $pasien->tensi_diastole = $request->tensi_diastole;
       $pasien->nadi = $request->nadi;
-      $pasien->respirasi = $request->respirasi;
       $pasien->save();
     }
 
@@ -133,7 +133,7 @@ class TransKlinikController extends Controller
 
   public function show($id)
   {
-    $trans_klinik = TransKlinik::all()->find($id);
+    $trans_klinik = TransKlinik::all()->with('pasien')->find($id);
     if (!$trans_klinik) {
       return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
     } else {
