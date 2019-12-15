@@ -9,6 +9,8 @@ use App\Pasien;
 use App\Constant;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use App\TransKlinik;
+use App\Klinik;
 
 class PasienController extends Controller
 {
@@ -78,8 +80,7 @@ class PasienController extends Controller
 			'suhu' => 'integer',
 			'respirasi' => 'integer',
 			'tinggi_badan' => 'integer',
-			'berat_badan' => 'integer',
-			'nomor_rekam_medis' => 'integer',
+			'berat_badan' => 'integer'
 		]);
 
 		$pasien = new Pasien();
@@ -108,11 +109,32 @@ class PasienController extends Controller
 		$pasien->respirasi = $request->input('respirasi');
 		$pasien->tinggi_badan = $request->input('tinggi_badan');
 		$pasien->berat_badan = $request->input('berat_badan');
-		$pasien->nomor_rekam_medis = $request->input('nomor_rekam_medis');
 		$pasien->user_id = $request->user_id;
 		$user = User::find($request->user_id);
+		$klinik = Klinik::find($user->klinik_id);
+		$str_faskes = "";
+		if($klinik->tipe_faskes == Constant::TIPE_KLINIK)
+		{
+			$str_faskes = "20";
+		}
+		else if($klinik->tipe_faskes == Constant::DOKTER_PRAKTIK)
+		{
+			$str_faskes = "10";
+		}
+
+		$n_pasien = Pasien::select('id')
+			->orderBy('id', 'desc')
+			->first();
+
+		$n_pasien = $n_pasien + 1;
+
+		$nomor_pasien = sprintf('%06d', $n_pasien);
+
+		$pasien->nomor_rekam_medis = $str_faskes."10-".$klinik->kode_faskes."-".$nomor_pasien;
+
 		$pasien->klinik_id = $user->klinik_id;
 		$pasien->created_by = $request->user_id;
+
 		$status = $pasien->save();
 
 		if ($status) {

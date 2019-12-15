@@ -83,6 +83,9 @@ class KlinikController extends Controller
             'nomor_ijin' => $request->nomor_ijin,
             'nomor_telp' => $request->nomor_telp
         ]);
+
+        $klinik->kode_faskes = sprintf('%06d', $klinik->id);
+        $klinik->save();
             
         #data user
         $user = User::create([
