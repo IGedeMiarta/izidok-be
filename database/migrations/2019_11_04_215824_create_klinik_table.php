@@ -13,6 +13,7 @@ class CreateKlinikTable extends Migration {
 			$table->string('nama_klinik');
 			$table->string('nomor_telp');
 			$table->integer('tipe_faskes');
+			$table->string('kode_faskes')->nullable();
 			$table->string('nomor_ijin', 50)->nullable();
 			$table->integer('created_by')->nullable();
 			$table->string('updated_by', 50)->nullable();

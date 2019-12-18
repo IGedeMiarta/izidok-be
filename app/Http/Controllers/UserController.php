@@ -223,7 +223,7 @@ class UserController extends Controller
                 'subject' => 'Forgot Password',
                 'message' => 'Click link below to reset your password: \n ' . $forgot_url,
                 'activation_url' => $forgot_url,
-                'to' => ['helmysmp@gmail.com', $forgot_password->email],
+                'to' => [$forgot_password->email],
                 'from' => 'izidok.dev@gmail.com',
                 'nama' => $user->nama,
                 'username' => $user->username,
