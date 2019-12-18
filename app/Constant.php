@@ -22,10 +22,16 @@ class Constant
 	const DOKTER_PRAKTIK = 2;
 
 	#Status Transaksi Klinik
-	const QUEUED = 'QUEUED';
-	const REKAM_MEDIS = 'REKAM_MEDIS';
-	const CANCELLED = 'CANCELLED';
-	const COMPLETED = 'COMPLETED';
+	// const QUEUED = 'QUEUED';
+	// const REKAM_MEDIS = 'REKAM_MEDIS';
+	// const CANCELLED = 'CANCELLED';
+	// const COMPLETED = 'COMPLETED';
+
+	const TRX_MENUNGGU = 'MENUNGGU';
+	const TRX_KONSULTASI = 'KONSULTASI';
+	const TRX_BATAL = 'BATAL';
+	const TRX_SELESAI = 'SELESAI';
+
 
 	#redirection
 	const REDIRECTION = 'url_redirection';
