@@ -139,7 +139,7 @@ class PasienController extends Controller
 
 		$n_pasien = Pasien::select('id')
 			->orderBy('id', 'desc')
-			->first();
+			->pluck('id');
 
 		$n_pasien = $n_pasien + 1;
 
