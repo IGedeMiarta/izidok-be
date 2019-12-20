@@ -28,6 +28,8 @@ class TransKlinikController extends Controller
       'status' => 'required|string',
       'from' => 'required|date_format:Y-m-d',
       'to' => 'required|date_format:Y-m-d',
+      'nama_pasien' => 'string',
+      'no_rekam_medis' => 'string',
     ]);
 
     $status = $request->status;
@@ -36,11 +38,12 @@ class TransKlinikController extends Controller
 
     $user = $this->user;
 
+    $trans_klinik = TransKlinik::with('pasien')
+      ->where('status', $status)
+      ->whereBetween('created_at',  [$from, $to]);
+
     if ($user->hasRole(Constant::SUPER_ADMIN)) {
-      $trans_klinik = TransKlinik::with('pasien')
-        ->where('status', $status)
-        ->whereBetween('created_at',  [$from, $to])
-        ->paginate($request->limit);
+      $trans_klinik = $trans_klinik->paginate($request->limit);
       $data['trans_klinik'] = $trans_klinik;
 
       return response()->json([
@@ -50,12 +53,22 @@ class TransKlinikController extends Controller
       ], 201);
     }
 
-    $trans_klinik = TransKlinik::with('pasien')
-      ->where('created_by', $user->id)
-      ->where('status', $status)
-      ->whereBetween('created_at',  [$from, $to])->paginate($request->limit);
-    $data['trans_klinik'] = $trans_klinik;
+    $trans_klinik =  $trans_klinik->where('created_by', $user->id);
 
+    if(!empty($request->nama_pasien)){
+      $trans_klinik = $trans_klinik->whereHas('pasien', function($data) use ($request){
+        $data->where('nama', 'LIKE', "%{$request->nama_pasien}%");
+      });
+    }
+
+    if(!empty($request->no_rekam_medis)){
+      $trans_klinik = $trans_klinik->whereHas('pasien', function($data) use ($request){
+        $data->where('nomor_rekam_medis', 'LIKE', "%{$request->no_rekam_medis}%");
+      });
+    }
+
+    $trans_klinik = $trans_klinik->paginate($request->limit);
+    $data['trans_klinik'] = $trans_klinik;
 
     if (!$trans_klinik) {
       return response()->json(['status' => false]);
@@ -105,7 +118,7 @@ class TransKlinikController extends Controller
     $trans_klinik->created_by = $request->user_id;
     $trans_klinik->nomor_antrian = $this->getNextOrderNumber($request->klinik_id);
     $trans_klinik->waktu_konsultasi = $request->waktu_konsultasi;
-    $trans_klinik->status = Constant::QUEUED;
+    $trans_klinik->status = Constant::TRX_MENUNGGU;
     $trans_klinik->save();
 
     #update pasien
@@ -133,7 +146,7 @@ class TransKlinikController extends Controller
 
   public function show($id)
   {
-    $trans_klinik = TransKlinik::all()->with('pasien')->find($id);
+    $trans_klinik = TransKlinik::with('pasien')->find($id);
     if (!$trans_klinik) {
       return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
     } else {

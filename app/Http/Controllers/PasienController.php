@@ -22,6 +22,11 @@ class PasienController extends Controller
 	
 	public function index(Request $request)
 	{
+		$this->validate($request, [
+			'nama_pasien' => 'string',
+			'no_rekam_medis' => 'string',
+		]);
+
 		$user = $this->user;
 
 		if ($user->hasRole(Constant::SUPER_ADMIN)) {
@@ -34,7 +39,17 @@ class PasienController extends Controller
 			], 201);
 		}
 
-		$pasien = Pasien::where('created_by', $user->id)->paginate($request->limit);
+		$pasien = Pasien::where('created_by', $user->id);
+		
+		if(!empty($request->nama_pasien)){
+			$pasien = $pasien->where('nama', 'LIKE', "%{$request->nama_pasien}%");
+		}
+	
+		if(!empty($request->no_rekam_medis)){
+			$pasien = $pasien->where('nomor_rekam_medis', 'LIKE', "%{$request->no_rekam_medis}%");
+		}
+		
+		$pasien = $pasien->paginate($request->limit);
 		$data['pasien'] = $pasien;
 
 		if (!$pasien) {
@@ -128,6 +143,7 @@ class PasienController extends Controller
 		$n_pasien = $pasien_obj->id;
 		// dd($n_pasien);
 
+		$n_pasien = $n_pasien->id;  
 		$n_pasien = $n_pasien + 1;
 
 		$nomor_pasien = sprintf('%06d', $n_pasien);
@@ -269,6 +285,13 @@ class PasienController extends Controller
 			abort(403);
 		}
 
+		if(sizeof($pasien->transKlinik)){
+			return response()->json([
+				'status' => false,
+				'message' => 'delete gagal! pasien atas nama \'' . $pasien->nama . '\' telah memiliki transaksi rawat jalan...'
+			]);
+		}
+
 		if (empty($pasien)) {
 			return response()->json([
 				'status' => false,
@@ -276,11 +299,10 @@ class PasienController extends Controller
 				'message' => 'pasien not found'
 			]);
 		} else {
-			$nama = $pasien->nama;
 			$pasien->delete();
 			return response()->json([
 				'status' => true,
-				'message' => 'Pasien \'' . $nama . '\' has been deleted'
+				'message' => 'Pasien \'' . $pasien->nama . '\' has been deleted'
 			]);
 		}
 	}
