@@ -122,9 +122,11 @@ class PasienController extends Controller
 			$str_faskes = "10";
 		}
 
-		$n_pasien = Pasien::select('id')
+		$pasien_obj = Pasien::select('id')
 			->orderBy('id', 'desc')
 			->first();
+		$n_pasien = $pasien_obj->id;
+		// dd($n_pasien);
 
 		$n_pasien = $n_pasien + 1;
 
