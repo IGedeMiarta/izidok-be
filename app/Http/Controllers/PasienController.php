@@ -139,8 +139,9 @@ class PasienController extends Controller
 
 		$n_pasien = Pasien::select('id')
 			->orderBy('id', 'desc')
-			->pluck('id');
+			->first();
 
+		$n_pasien = $n_pasien->id;  
 		$n_pasien = $n_pasien + 1;
 
 		$nomor_pasien = sprintf('%06d', $n_pasien);
