@@ -16,10 +16,11 @@ class PasienController extends Controller
 {
 	public $user;
 
-	public function __construct(){
+	public function __construct()
+	{
 		$this->user = Auth::user();
 	}
-	
+
 	public function index(Request $request)
 	{
 		$this->validate($request, [
@@ -40,15 +41,15 @@ class PasienController extends Controller
 		}
 
 		$pasien = Pasien::where('created_by', $user->id);
-		
-		if(!empty($request->nama_pasien)){
+
+		if (!empty($request->nama_pasien)) {
 			$pasien = $pasien->where('nama', 'LIKE', "%{$request->nama_pasien}%");
 		}
-	
-		if(!empty($request->no_rekam_medis)){
+
+		if (!empty($request->no_rekam_medis)) {
 			$pasien = $pasien->where('nomor_rekam_medis', 'LIKE', "%{$request->no_rekam_medis}%");
 		}
-		
+
 		$pasien = $pasien->paginate($request->limit);
 		$data['pasien'] = $pasien;
 
@@ -128,12 +129,9 @@ class PasienController extends Controller
 		$user = User::find($request->user_id);
 		$klinik = Klinik::find($user->klinik_id);
 		$str_faskes = "";
-		if($klinik->tipe_faskes == Constant::TIPE_KLINIK)
-		{
+		if ($klinik->tipe_faskes == Constant::TIPE_KLINIK) {
 			$str_faskes = "20";
-		}
-		else if($klinik->tipe_faskes == Constant::DOKTER_PRAKTIK)
-		{
+		} else if ($klinik->tipe_faskes == Constant::DOKTER_PRAKTIK) {
 			$str_faskes = "10";
 		}
 
@@ -152,7 +150,7 @@ class PasienController extends Controller
 
 		$nomor_pasien = sprintf('%06d', $n_pasien);
 
-		$pasien->nomor_rekam_medis = $str_faskes."10-".$klinik->kode_faskes."-".$nomor_pasien;
+		$pasien->nomor_rekam_medis = $str_faskes . "10-" . $klinik->kode_faskes . "-" . $nomor_pasien;
 
 		$pasien->klinik_id = $user->klinik_id;
 		$pasien->created_by = $request->user_id;
@@ -289,7 +287,7 @@ class PasienController extends Controller
 			abort(403);
 		}
 
-		if(sizeof($pasien->transKlinik)){
+		if (sizeof($pasien->transKlinik)) {
 			return response()->json([
 				'status' => false,
 				'message' => 'delete gagal! pasien atas nama \'' . $pasien->nama . '\' telah memiliki transaksi rawat jalan...'
@@ -346,6 +344,7 @@ class PasienController extends Controller
 		$response = $imageAnnotator->textDetection($image);
 		$texts = $response->getTextAnnotations();
 		$text = $texts[0]->getDescription();
+
 		$wordToReplace = [
 			'gol. darah', 'nik', 'kewarganegaraan', 'nama',
 			'status perkawinan', 'berlaku hingga', 'alamat', 'agama',
@@ -380,6 +379,35 @@ class PasienController extends Controller
 
 		$imageAnnotator->close();
 
+		#check data
+		$check_words = array(
+			'birthdate' => 'birthdate',
+			'comma' => ','
+		);
+
+		$gender = array(
+			'male' => 'LAKI-LAKI',
+			'female' => 'PEREMPUAN'
+		);
+
+		#switch birthdate
+		foreach($result as $key => $item){
+			if (strpos($item, $check_words['comma']) !== false && $key !== $check_words['birthdate']) {
+				$tmp = $result['birthdate'];
+				$result['birthdate'] = $item; 
+				$result[$key] = $tmp;
+			}
+		}
+
+		#check gender
+		if(!in_array($result['gender'], $gender)){
+			foreach($res as $key => $item){
+				if(in_array(trim($item), $gender)){
+					$result['gender'] = $item;
+				}
+			}
+		}
+
 		$data['detected_text'] = $res;
 		$data['result'] = $result;
 
@@ -397,7 +425,7 @@ class PasienController extends Controller
 				$data->where('status', Constant::QUEUED);
 			})->count();
 
-		if($pasien){
+		if ($pasien) {
 			return response()->json([
 				'status' => false,
 				'message' => 'this customer has an active transaction...',
