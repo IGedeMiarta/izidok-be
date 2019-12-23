@@ -60,4 +60,10 @@ class Constant
 	const ACTIVATION_EMAIL_TEMPLATE = 'email-activation';
 	const OPERATOR_EMAIL_TEMPLATE = 'operator-activation';
 	const FORGOT_EMAIL_TEMPLATE = 'forgot-password';
+
+	#for nomor rekam medis
+	const KATEGORI_UMUM = "10";
+	const KATEGORI_GIGI = "20";
+	const TIPE_FASKES_DOKTER_PRAKTIK = "10";
+	const TIPE_FASKES_KLINIK = "20";
 }

@@ -96,7 +96,8 @@ class PasienController extends Controller
 			'suhu' => 'integer',
 			'respirasi' => 'integer',
 			'tinggi_badan' => 'integer',
-			'berat_badan' => 'integer'
+			'berat_badan' => 'integer',
+			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15'
 		]);
 
 		$pasien = new Pasien();
@@ -118,6 +119,7 @@ class PasienController extends Controller
 		$pasien->nomor_polis = $request->input('nomor_polis');
 		$pasien->email = $request->input('email');
 		$pasien->nama_penanggung_jawab = $request->input('nama_penanggung_jawab');
+		$pasien->nomor_hp_penanggung_jawab = $request->input('nomor_hp_penanggung_jawab');
 		$pasien->tensi_sistole = $request->input('tensi_sistole');
 		$pasien->tensi_diastole = $request->input('tensi_diastole');
 		$pasien->nadi = $request->input('nadi');
@@ -130,9 +132,9 @@ class PasienController extends Controller
 		$klinik = Klinik::find($user->klinik_id);
 		$str_faskes = "";
 		if ($klinik->tipe_faskes == Constant::TIPE_KLINIK) {
-			$str_faskes = "20";
+			$str_faskes = Constant::TIPE_FASKES_KLINIK;
 		} else if ($klinik->tipe_faskes == Constant::DOKTER_PRAKTIK) {
-			$str_faskes = "10";
+			$str_faskes = Constant::TIPE_FASKES_DOKTER_PRAKTIK;
 		}
 
 		$pasien_obj = Pasien::select('id')
@@ -150,7 +152,18 @@ class PasienController extends Controller
 
 		$nomor_pasien = sprintf('%06d', $n_pasien);
 
-		$pasien->nomor_rekam_medis = $str_faskes . "10-" . $klinik->kode_faskes . "-" . $nomor_pasien;
+		$rekam_medis = $str_faskes . Constant::KATEGORI_UMUM . $klinik->kode_faskes . $nomor_pasien;
+		$arr_rekam_medis = str_split($rekam_medis,4);
+		$str_rekam_medis = "";
+		foreach ($arr_rekam_medis as $rm) {
+			$str_rekam_medis .= $rm;
+			if($rm != end($arr_rekam_medis))
+			{
+				$str_rekam_medis .= "-";
+			}
+		}
+
+		$pasien->nomor_rekam_medis = $str_rekam_medis;
 
 		$pasien->klinik_id = $user->klinik_id;
 		$pasien->created_by = $request->user_id;
@@ -218,7 +231,7 @@ class PasienController extends Controller
 			'respirasi' => 'integer',
 			'tinggi_badan' => 'integer',
 			'berat_badan' => 'integer',
-			'nomor_rekam_medis' => 'integer',
+			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15'
 		]);
 
 		$pasien = Pasien::find($request->id);
@@ -261,7 +274,7 @@ class PasienController extends Controller
 		$pasien->respirasi = $request->input('respirasi');
 		$pasien->tinggi_badan = $request->input('tinggi_badan');
 		$pasien->berat_badan = $request->input('berat_badan');
-		$pasien->nomor_rekam_medis = $request->input('nomor_rekam_medis');
+		$pasien->nomor_hp_penanggung_jawab = $request->input('nomor_hp_penanggung_jawab');
 		$status = $pasien->save();
 
 		if (!$status) {
