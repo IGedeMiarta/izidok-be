@@ -137,6 +137,11 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/dash-pasien', 'DashboardController@getPasien');
         $router->get('/dash-rawat-jalan', 'DashboardController@getPasienRawatJalan');
         $router->get('/dash-antrian', 'DashboardController@getLastAntrian');
+
+        $router->get('/pekerjaan', 'PekerjaanController@index');
+        $router->get('/pekerjaan/{pekerjaan}', 'PekerjaanController@search');
+
+
     });
 
     $router->get('/image', function (Request $request) {
