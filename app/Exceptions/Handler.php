@@ -60,6 +60,15 @@ class Handler extends ExceptionHandler
                 ], 403);
             }
         }
+
+        if($exception instanceof HttpException){
+            if($exception->getStatusCode() === 440){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'api key has been expired, please login again...'
+                ], 440);
+            }
+        }
         
         return parent::render($request, $exception);
     }

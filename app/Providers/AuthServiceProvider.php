@@ -58,14 +58,17 @@ class AuthServiceProvider extends ServiceProvider
 
         Auth::viaRequest('api', function (Request $request) {
             $api_key = $request->bearerToken();
-            
+
             if ($api_key) {
+                
                 $api_key = ApiKey::whereApiKey($api_key)
                                     ->whereDate('expired_at', '>', date('Y-m-d'))
                                     ->where('logout_at', null)
                                     ->first();
-               
-                if(!empty($api_key)){
+
+                if(empty($api_key)){
+                    abort(440);
+                }else{
                     $request->request->add(['user_id' => $api_key->user->id]);
                     return $api_key->user;
                 }
