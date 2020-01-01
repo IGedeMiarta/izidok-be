@@ -169,7 +169,14 @@ class UserController extends Controller
     }
 
     public function logout(Request $request)
-    {
+    {   
+        if(!$request->bearerToken()){
+            return response()->json([
+                'status' => false,
+                'message' => 'Logout gagal, user belum melakukan login!',
+            ]);
+        }
+
         $api_key = $request->bearerToken();
         $api_key = ApiKey::whereApiKey($api_key)->first();
 

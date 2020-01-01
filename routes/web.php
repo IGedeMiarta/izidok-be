@@ -39,6 +39,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->get('/operator/check/{token}', 'OperatorController@check_activation');
     $router->post('/operator/activation', 'OperatorController@activation');
 
+    $router->post('/logout', 'UserController@logout');
 
     $router->group(['middleware' => 'auth'], function () use ($router) {
         #user
@@ -49,7 +50,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->get('/user/{id}', 'UserController@show');
             $router->delete('/user/{id}', 'UserController@delete');
         });
-        $router->post('/logout', 'UserController@logout');
+        
 
         #klinik
         $router->get('/klinik', ['middleware' => 'permission:read-klinik', 'uses' => 'KlinikController@index']);
