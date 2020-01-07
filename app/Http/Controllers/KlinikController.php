@@ -49,13 +49,24 @@ class KlinikController extends Controller
             'tipe_faskes' => 'required|min:1:max:2',
             'nama_klinik' => 'required|string',
             'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
-            'email' => 'required|unique:users|email',
-            'username' => 'required|unique:users|string',
+            'email' => 'required|email',
+            'username' => 'required|string',
             'password' => 'required|confirmed|min:6',
             'alamat' => 'string',
             'foto_profile' => 'file|max:5000',
         ];
+
+        #cek email & username
+        $em = User::where('email', $request->email)
+                    ->orWhere('username', $request->username)
+                    ->first();
         
+        if($em){
+            if($em->activation->status == 1){
+                return response()->json(['status' => false, 'message' => 'Email or username already in used!']);
+            }
+        }
+
         $activation_url = Reference::where('key', Constant::VERIFY_EMAIL)->first();
         $isKlinik = false;
         if($request->tipe_faskes == Constant::TIPE_KLINIK){
@@ -102,7 +113,7 @@ class KlinikController extends Controller
         
         if(!$isKlinik){
             #data dokter
-            $dokter = Dokter::create([
+            Dokter::create([
                 'nama' => $nama_dokter,
                 'user_id' => $user->id,
                 'created_by' => $user->id,
