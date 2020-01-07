@@ -33,7 +33,7 @@ class DokterController extends Controller
       ], 201);
     }
 
-    $dokter = KlinikDokter::where('klinik_id', $user->klinik_id)->with('dokter')->paginate();
+    $dokter = Dokter::where('user_id', $user->id)->paginate();
     $data['dokter'] = $dokter;
     return response()->json([
       'success' => true,

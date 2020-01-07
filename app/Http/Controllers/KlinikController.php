@@ -102,7 +102,7 @@ class KlinikController extends Controller
         
         if(!$isKlinik){
             #data dokter
-            $dokter = Dokter::create([
+            Dokter::create([
                 'nama' => $nama_dokter,
                 'user_id' => $user->id,
                 'created_by' => $user->id,
