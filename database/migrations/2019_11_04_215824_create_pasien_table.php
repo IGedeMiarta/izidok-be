@@ -36,6 +36,7 @@ class CreatePasienTable extends Migration {
 			$table->integer('tinggi_badan')->nullable();
 			$table->integer('berat_badan')->nullable();
 			$table->string('nomor_rekam_medis')->nullable();
+			$table->integer('nomor_pasien')->nullable();
 			$table->integer('user_id');
 			$table->integer('klinik_id');
 			$table->integer('created_by');

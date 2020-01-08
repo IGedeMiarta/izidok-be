@@ -137,22 +137,25 @@ class PasienController extends Controller
 			$str_faskes = Constant::TIPE_FASKES_DOKTER_PRAKTIK;
 		}
 
-		$pasien_obj = Pasien::select('id')
-			->orderBy('id', 'desc')
+		$last_pasien = Pasien::where('klinik_id',$user->klinik_id)
+			->orderBy('created_at','desc')
 			->first();
 
 		$n_pasien = 0;
-		if(!empty($pasien_obj))
+
+		if(empty($last_pasien) || empty($last_pasien->nomor_pasien))
 		{
-			$n_pasien = $pasien_obj->id;
+			$n_pasien = 1;
 		}
-		// dd($n_pasien);
-		//$n_pasien = $n_pasien->id;  
-		$n_pasien = $n_pasien + 1;
+		else
+		{
+			$n_pasien = $last_pasien->nomor_pasien + 1;
+		}
+		$pasien->nomor_pasien = $n_pasien;
 
-		$nomor_pasien = sprintf('%06d', $n_pasien);
+		$nomor_pasien_rm = sprintf('%06d', $n_pasien);
 
-		$rekam_medis = $str_faskes . Constant::KATEGORI_UMUM . $klinik->kode_faskes . $nomor_pasien;
+		$rekam_medis = $str_faskes . Constant::KATEGORI_UMUM . $klinik->kode_faskes . $nomor_pasien_rm;
 		$arr_rekam_medis = str_split($rekam_medis,4);
 		$str_rekam_medis = "";
 		foreach ($arr_rekam_medis as $rm) {
