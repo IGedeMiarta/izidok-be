@@ -164,9 +164,9 @@ class TransKlinikController extends Controller
     $trans_klinik = TransKlinik::find($request->id);
     $user = $this->user;
 
-		if ($user->cant('updateOrDelete', $trans_klinik)) {
-			abort(403);
-		}
+		// if ($user->cant('updateOrDelete', $trans_klinik)) {
+		// 	abort(403);
+		// }
 
     if (!$trans_klinik) {
       return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);

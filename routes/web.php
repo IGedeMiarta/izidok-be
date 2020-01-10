@@ -142,6 +142,15 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/pekerjaan', 'PekerjaanController@index');
         $router->get('/pekerjaan/{pekerjaan}', 'PekerjaanController@search');
 
+        #pembayaran
+        $router->get('/pembayaran', ['uses' => 'PembayaranController@index']);
+        $router->post('/pembayaran', ['uses' => 'PembayaranController@store']);
+        $router->post('/pembayaran/detail', ['uses' => 'PembayaranController@addDetail']);
+        $router->get('/pembayaran/{id}', ['uses' => 'PembayaranController@show']);
+        $router->put('/pembayaran/{id}', ['uses' => 'PembayaranController@update']);
+        $router->delete('/pembayaran/{id}', ['uses' => 'PembayaranController@delete']);
+
+
 
     });
 
