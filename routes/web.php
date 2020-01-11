@@ -159,5 +159,5 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         return response($file, 200)->header('Content-Type', 'image/jpeg');
     });
 
-    $router->get('/test', ['middleware' => 'permission:read-dashboard', 'uses' => 'UserController@test']);
+    $router->post('/test-upload', 'RekamMedisController@uploadFile');
 });
