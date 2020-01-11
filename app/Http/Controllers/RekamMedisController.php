@@ -191,4 +191,17 @@ class RekamMedisController extends Controller
 			]);
 		}
     }
+
+    public function uploadFile(Request $request){
+
+        // dd($request->file());
+        $filePath = array();
+
+        foreach ($request->file() as $key => $item) {
+            // $filePath[$key] = \upload($item, '_test-'.$key, base_path('public/upload/_test/'));
+            $filePath[$key] = \uploadToAlibaba('_test', $item);
+        }
+
+        return $filePath;
+    }
 }

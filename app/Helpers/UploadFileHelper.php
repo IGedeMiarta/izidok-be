@@ -16,3 +16,11 @@
         Storage::disk('minio')->put($filename, $file);
         return $filename;
     }
+
+    function uploadToAlibaba($prefix, $file){
+        // $file = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file));
+        $filename = $prefix .'/'.$prefix. '-' . date('Ymdhms') . $file->getClientOriginalExtension();
+        
+        Storage::disk('oss')->put($filename, $file);
+        return $filename;
+    }
