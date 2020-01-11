@@ -22,7 +22,7 @@
         $filename = $prefix .'/'.$prefix. '-' . date('Ymdhms') . $file->getClientOriginalExtension();
         
         Storage::cloud()->put($filename, $file);
-        $url = Storage::cloud()->url($filename);
+        // $url = Storage::cloud()->url($filename);
 
-        return $url;
+        return $filename;
     }
