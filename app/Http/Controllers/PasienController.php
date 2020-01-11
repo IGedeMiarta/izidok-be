@@ -137,7 +137,8 @@ class PasienController extends Controller
 			$str_faskes = Constant::TIPE_FASKES_DOKTER_PRAKTIK;
 		}
 
-		$last_pasien = Pasien::where('klinik_id',$user->klinik_id)
+		$last_pasien = Pasien::withTrashed()
+			->where('klinik_id',$user->klinik_id)
 			->orderBy('created_at','desc')
 			->first();
 
