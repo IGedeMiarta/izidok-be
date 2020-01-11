@@ -155,7 +155,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     });
 
     $router->get('/image', function (Request $request) {
-        $file = Storage::disk('minio')->get($request->path);
+        $file = Storage::cloud()->get($request->path);
         return response($file, 200)->header('Content-Type', 'image/jpeg');
     });
 
