@@ -63,6 +63,14 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
 
+        'oss' => [
+            'driver' => 'oss',
+            'key' => env('OSS_ACCESS_KEY_ID'),
+            'secret' => env('OSS_SECRET_ACCESS_KEY'),
+            'bucket' => env('OSS_BUCKET'),
+            'url' => env('OSS_URL'),
+        ],
+
         'minio' => [
             'driver' => 'minio',
             'key' => env('MINIO_KEY', 'your minio server key'),
