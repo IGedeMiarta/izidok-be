@@ -112,7 +112,7 @@ class RekamMedisController extends Controller
         $anamnesa->berat_badan = ($request->berat_badan) ? $request->berat_badan : $pasien->berat_badan;
         $anamnesa->notes = $request->anamnesa_text;
         $anamnesa->is_draw = $request->anamnesa_is_draw;
-        $anamnesa->draw_path = \uploadToMinio('anamnesa',$request->anamnesa_draw);
+        $anamnesa->draw_path = \uploadToCloud('anamnesa',$request->anamnesa_draw);
         $anamnesa->created_by = $request->user_id;
         $anamnesa->save();
 
@@ -125,7 +125,7 @@ class RekamMedisController extends Controller
         $diagnosa->kode_penyakit_id = json_encode($arr_penyakit);
         $diagnosa->notes = $request->diagnosa_text;
         $diagnosa->is_draw = $request->diagnosa_is_draw;
-        $diagnosa->draw_path = \uploadToMinio('diagnosa',$request->diagnosa_draw);
+        $diagnosa->draw_path = \uploadToCloud('diagnosa',$request->diagnosa_draw);
         $diagnosa->created_by = $request->user_id;
         $diagnosa->save();
 
@@ -135,7 +135,7 @@ class RekamMedisController extends Controller
         $pemeriksaan_fisik->organ_id = $request->organ_id;
         $pemeriksaan_fisik->notes = $request->pemeriksaan_text;
         $pemeriksaan_fisik->is_draw = $request->pemeriksaan_is_draw;
-        $pemeriksaan_fisik->draw_path = \uploadToMinio('pemeriksaan',$request->pemeriksaan_draw);
+        $pemeriksaan_fisik->draw_path = \uploadToCloud('pemeriksaan',$request->pemeriksaan_draw);
         $pemeriksaan_fisik->created_by = $request->user_id;
         $pemeriksaan_fisik->save();
 

@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'cloud' => env('FILESYSTEM_CLOUD', 'minio'),
+    'cloud' => env('FILESYSTEM_CLOUD', 'oss'),
 
     /*
     |--------------------------------------------------------------------------

@@ -9,10 +9,10 @@
         return $name;
     }
 
-    function uploadToMinio($prefix, $file){
+    function uploadToCloud($prefix, $file){
         $file = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file));
         $filename = $prefix .'/'.$prefix. '-' . date('Ymdhms') . '.png';
         
-        Storage::disk('minio')->put($filename, $file);
+        Storage::cloud()->put($filename, $file);
         return $filename;
     }

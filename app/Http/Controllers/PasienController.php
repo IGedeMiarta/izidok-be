@@ -346,10 +346,10 @@ class PasienController extends Controller
 		]);
 
 		if ($request->file) {
-			$path =  Storage::disk('minio')->put('ktp', $request->file);
+			$path =  Storage::cloud()->put('ktp', $request->file);
 		}
 
-		$image = Storage::disk('minio')->get($path);
+		$image = Storage::cloud()->get($path);
 
 		if (!$image) {
 			return response()->json([

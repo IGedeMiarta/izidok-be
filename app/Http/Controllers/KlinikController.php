@@ -112,7 +112,7 @@ class KlinikController extends Controller
             "no_telp" => $request->nomor_telp,
             "klinik_id" => $klinik->id,
             "alamat" => $request->alamat,
-            "foto_profile" => \uploadToMinio('foto_profile', $request->foto_profile)
+            "foto_profile" => \uploadToCloud('foto_profile', $request->foto_profile)
         ]);
         $user->assignRole(Constant::DOKTER_PRAKTEK);
 
