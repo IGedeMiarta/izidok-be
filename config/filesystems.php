@@ -66,9 +66,10 @@ return [
         'oss' => [
             'driver' => 'oss',
             'key' => env('OSS_ACCESS_KEY_ID'),
-            'secret' => env('OSS_SECRET_ACCESS_KEY'),
+            'secret' => env('OSS_ACCESS_KEY_SECRET'),
+            'url' => env('OSS_ENDPOINT'),
             'bucket' => env('OSS_BUCKET'),
-            'url' => env('OSS_URL'),
+            'root' => env('OSS_PREFIX'),
         ],
 
         'minio' => [
