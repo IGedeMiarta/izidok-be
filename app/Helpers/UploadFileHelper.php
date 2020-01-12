@@ -19,9 +19,9 @@
 
     function testUpload($prefix, $file){
         // $file = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file));
-        $filename = $prefix .'/'.$prefix. '-' . date('Ymdhms') . $file->getClientOriginalExtension();
+        $filename = $prefix .'/'.$prefix. '-' . date('Ymdhms') .'.png';
         
-        Storage::cloud()->put($filename, $file);
+        Storage::disk('minio')->put($filename, $file);
         // $url = Storage::cloud()->url($filename);
 
         return $filename;
