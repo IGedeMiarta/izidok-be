@@ -60,17 +60,18 @@ class KlinikController extends Controller
             'foto_profile' => 'file|max:5000',
         ];
 
-        #cek email & username
+        #cek email
         $em = User::where('email', $request->email)
-            ->orWhere('username', $request->username)
             ->get();
+        if($this->isUserExist($em)){
+            return response()->json(['status' => false, 'message' => 'email is already in used!']);
+        }
 
-        if ($em) {
-            foreach ($em as $item) {
-                if ($item->activation->status == 1) {
-                    return response()->json(['status' => false, 'message' => 'Email or username already in used!']);
-                }
-            }
+        #cek username
+        $em = User::where('username', $request->username)
+            ->get();
+        if($this->isUserExist($em)){
+            return response()->json(['status' => false, 'message' => 'username is already in used!']);
         }
 
         $activation_url = Reference::where('key', Constant::VERIFY_EMAIL)->first();
@@ -176,5 +177,17 @@ class KlinikController extends Controller
             $klinik->delete();
             return response()->json(['status' => true, 'message' => 'Klinik \'' . $nama . '\' has been deleted']);
         }
+    }
+
+    public function isUserExist($users){
+        if ($users) {
+            foreach ($users as $item) {
+                if ($item->activation->status == 1) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
