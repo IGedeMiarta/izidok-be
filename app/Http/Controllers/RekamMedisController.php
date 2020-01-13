@@ -11,6 +11,8 @@ use App\Anamnesa;
 use App\Constant;
 use App\Diagnosa;
 use App\PemeriksaanFisik;
+use App\PemeriksaanPenunjang;
+use App\TataLaksana;
 use App\User;
 
 class RekamMedisController extends Controller
@@ -139,12 +141,31 @@ class RekamMedisController extends Controller
         $pemeriksaan_fisik->created_by = $request->user_id;
         $pemeriksaan_fisik->save();
 
+        #insert tata_laksana
+        $tata_laksana = new TataLaksana();
+        $tata_laksana->notes = $request->tatalaksana_text;
+        $tata_laksana->is_draw = $request->tatalaksana_is_draw;
+        $tata_laksana->draw_path = \uploadToCloud('tatalaksana',$request->tatalaksana_draw);
+        $tata_laksana->created_by = $request->user_id;
+        $tata_laksana->save();
+        
+        #insert pemeriksaan_penunjang
+        $p_penunjang = new PemeriksaanPenunjang();
+        $p_penunjang->notes = $request->pemeriksaan_penunjang_text;
+        $p_penunjang->is_draw = $request->pemeriksaan_penunjang_is_draw;
+        $p_penunjang->draw_path = \uploadToCloud('pemeriksaan_penunjang',$request->pemeriksaan_penunjang_draw);
+        $p_penunjang->files = json_encode($request->pemeriksaan_penunjang);
+        $p_penunjang->created_by = $request->user_id;
+        $p_penunjang->save();
+
         #insert rekam_medis
         $rekam_medis = new RekamMedis();
         $rekam_medis->nomor_rekam_medis = $pasien->nomor_rekam_medis;
         $rekam_medis->anamnesa_id = $anamnesa->id;
         $rekam_medis->pemeriksaan_fisik_id = $pemeriksaan_fisik->id;
         $rekam_medis->diagnosa_id = $diagnosa->id;
+        $rekam_medis->tata_laksana_id = $tata_laksana->id;
+        $rekam_medis->pemeriksaan_penunjang_id = $p_penunjang->id;
         $rekam_medis->transklinik_id = $trans_klinik->id;
         $rekam_medis->created_by = $request->user_id;
         $status = $rekam_medis->save();
@@ -193,12 +214,10 @@ class RekamMedisController extends Controller
     }
 
     public function uploadFile(Request $request){
-        
         $url = [];
         foreach ($request->file() as $key => $item) {
-            $url[$key] = testUpload('_test', $item);
+            $url[$key] = uploadToCloud('pemeriksaan_penunjang', $item);
         }
-        
         return $url;
     }
 }

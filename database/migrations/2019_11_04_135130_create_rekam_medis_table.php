@@ -13,6 +13,8 @@ class CreateRekamMedisTable extends Migration {
 			$table->integer('anamnesa_id');
 			$table->integer('pemeriksaan_fisik_id');
 			$table->integer('diagnosa_id');
+			$table->integer('tata_laksana_id');
+			$table->integer('pemeriksaan_penunjang_id');
 			$table->integer('transklinik_id');
 			$table->integer('created_by');
 			$table->string('updated_by', 50)->nullable();
