@@ -11,18 +11,20 @@
 
     function uploadToCloud($prefix, $file){
         $file = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file));
-        $filename = $prefix .'/'.$prefix. '-' . date('Ymdhms') . '.png';
+        $rand = rand();
+        $filename = $prefix .'/'.$prefix. '-' . date('Ymdhms') .'-'. $rand . '.png';
         
         Storage::cloud()->put($filename, $file);
         return $filename;
     }
 
     function testUpload($prefix, $file){
-        // $file = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file));
-        $filename = $prefix .'/'.$prefix. '-' . date('Ymdhms') .'.'. $file->extension();
+
+        $rand = rand();
+        $filename = $prefix. '-' . date('Ymdhms').'-'. $rand .'.'. $file->extension();
         
-        // Storage::disk('minio')->put($filename, $file);
-        Storage::cloud()->put($filename, $file);
+        // Storage::cloud()->putFile($filename, $file);
+        Storage::cloud()->putFileAs($prefix, $file, $filename);
         $url = Storage::cloud()->url($filename);
 
         return $url;
