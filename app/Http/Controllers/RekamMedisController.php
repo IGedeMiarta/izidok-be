@@ -193,11 +193,12 @@ class RekamMedisController extends Controller
     }
 
     public function uploadFile(Request $request){
-        // $filepath = [];
-        // foreach ($request->file() as $key => $item) {
-        //     $filepath[$key] = testUpload('_test', $item);
-        // }
         
-        return $request;
+        $url = [];
+        foreach ($request->file() as $key => $item) {
+            $url[$key] = testUpload('_test', $item);
+        }
+        
+        return $url;
     }
 }
