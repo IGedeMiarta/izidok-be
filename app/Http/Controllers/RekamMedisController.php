@@ -216,7 +216,9 @@ class RekamMedisController extends Controller
     public function uploadFile(Request $request){
         $url = [];
         foreach ($request->file() as $key => $item) {
-            $url[$key] = uploadToCloud('pemeriksaan_penunjang', $item);
+            // $url[$key] = uploadToCloud('pemeriksaan_penunjang', $item);
+            $url['name'] = $key;
+            $url['url'] = uploadToCloud('pemeriksaan_penunjang', $item);
         }
         return $url;
     }
