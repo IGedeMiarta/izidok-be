@@ -10,7 +10,7 @@
     }
 
     function uploadToCloud($prefix, $file){
-        $filename = $prefix .'/'.$prefix. '-' . date('Ymdhms') .'-'. rand(); 
+        $filename = $prefix. '-' . date('Ymdhms') .'-'. rand(); 
 
         if ( is_string($file)){
             $file = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file));
