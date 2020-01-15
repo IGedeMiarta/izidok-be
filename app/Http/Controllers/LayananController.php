@@ -11,13 +11,22 @@ class LayananController extends Controller
 {
 	public $user;
 
-	public function __construct(){
+	public function __construct()
+	{
 		$this->user = Auth::user();
 	}
 
 	public function index(Request $request)
 	{
 		$user = $this->user;
+
+		if ($request->kode) {
+			#get by kode
+		}
+
+		if ($request->name) {
+			#get by name
+		}
 
 		if ($user->hasRole(Constant::SUPER_ADMIN)) {
 			$layanan = Layanan::paginate($request->limit);
@@ -29,17 +38,27 @@ class LayananController extends Controller
 					'data' => $data
 				], 201);
 			}
-		} 
+		}
+
+		$layanan = Layanan::where('klinik_id', $user->klinik_id);
 		
-		$layanan = Layanan::where('klinik_id', $user->klinik_id)->paginate($request->limit);
+		if (!empty($request->kode_layanan)) {
+			$layanan = $layanan->where('kode_layanan', 'LIKE', "%{$request->kode_layanan}%");
+		}
+
+		if (!empty($request->nama_layanan)) {
+			$pasien = $layanan->where('nama_layanan', 'LIKE', "%{$request->nama_layanan}%");
+		}
+
+		$layanan = 	$layanan->paginate($request->limit);
 		$data['layanan'] = $layanan;
-		
+
 		if (!$layanan) {
 			return response()->json([
 				'success' => false,
 				'message' => 'failed, you dont have role to see this',
 				'data' => $data
-			], 400);	
+			], 400);
 		}
 
 		return response()->json([
@@ -101,9 +120,9 @@ class LayananController extends Controller
 			]);
 		}
 
-		if($layanan->created_by !== $request->user_id){
-            return response()->json(['status' => false, 'message' => 'you have no access to this layanan...'], 422);
-        }
+		if ($layanan->created_by !== $request->user_id) {
+			return response()->json(['status' => false, 'message' => 'you have no access to this layanan...'], 422);
+		}
 
 		return response()->json([
 			'status' => true,
