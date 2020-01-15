@@ -68,9 +68,9 @@ class KlinikController extends Controller
         }
 
         #cek username
-        $em = User::where('username', $request->username)
+        $us = User::where('username', $request->username)
             ->get();
-        if($this->isUserExist($em)){
+        if($this->isUserExist($us)){
             return response()->json(['status' => false, 'message' => 'username is already in used!']);
         }
 
