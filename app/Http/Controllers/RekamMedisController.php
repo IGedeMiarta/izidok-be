@@ -219,6 +219,13 @@ class RekamMedisController extends Controller
             // $url[$key] = uploadToCloud('pemeriksaan_penunjang', $item);
             $url['name'] = $key;
             $url['url'] = uploadToCloud('pemeriksaan_penunjang', $item);
+
+            if(!$url['url']){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'file not supported, please upload .pdf file...',
+                ]); 
+            }
         }
         return $url;
     }
