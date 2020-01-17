@@ -24,7 +24,8 @@ class CreatePasienTable extends Migration {
 			$table->string('pekerjaan', 50)->nullable();
 			$table->string('nomor_hp', 30)->nullable();
 			$table->string('nama_penjamin',100)->nullable();
-			$table->string('nomor_polis', 50)->nullable();
+			$table->string('nomor_polis_asuransi', 50)->nullable();
+			$table->string('nomor_member_asuransi', 50)->nullable();
 			$table->string('email', 50)->nullable();
 			$table->string('nama_penanggung_jawab',100)->nullable();
 			$table->string('nomor_hp_penanggung_jawab',100)->nullable();
