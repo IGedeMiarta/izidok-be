@@ -100,6 +100,24 @@ class PasienController extends Controller
 			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15'
 		]);
 
+		$user = User::find($request->user_id);
+		$klinik = Klinik::find($user->klinik_id);
+
+		$check_pasien = Pasien::where("nama",$request->nama)
+		->where("tanggal_lahir",$request->tanggal_lahir)
+		->where("nomor_hp",$request->nomor_hp)
+		->where("klinik_id",$user->klinik_id)
+		->first();
+
+		if(!empty($check_pasien))
+		{
+			return response()->json([
+				'success' => false,
+				'message' => 'failed, pasien is already exists',
+				'data' => ''
+			], 400);
+		}
+
 		$pasien = new Pasien();
 		$pasien->nama = $request->input('nama');
 		$pasien->nik = $request->input('nik');
@@ -128,8 +146,7 @@ class PasienController extends Controller
 		$pasien->tinggi_badan = $request->input('tinggi_badan');
 		$pasien->berat_badan = $request->input('berat_badan');
 		$pasien->user_id = $request->user_id;
-		$user = User::find($request->user_id);
-		$klinik = Klinik::find($user->klinik_id);
+		
 		$str_faskes = "";
 		if ($klinik->tipe_faskes == Constant::TIPE_KLINIK) {
 			$str_faskes = Constant::TIPE_FASKES_KLINIK;
