@@ -241,6 +241,19 @@ class RekamMedisController extends Controller
 
     public function deleteUploadedFile(Request $request)
     {   
-        // $res = deleteFromCloud($request->filenames);
+        $filenames = [];
+        foreach ($request->filenames as $key => $item) {
+            array_push($filenames, 'pemeriksaan_penunjang/'.$item);
+        }
+
+        $res = deleteFromCloud($filenames);
+        if($res){
+            $data['deleted_files'] = $filenames;
+
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+            ]);
+        }
     }
 }

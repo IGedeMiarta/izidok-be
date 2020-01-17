@@ -74,6 +74,6 @@ function compressPDF($file)
 }
 
 function deleteFromCloud($filenames){
-    // $res = Storage::cloud()->delete(['pemeriksaan_penunjang/pemeriksaan_penunjang-20200117120128-573006481.jpeg']);
-    // dd($res);
+    Storage::cloud()->delete($filenames);
+    return true;
 }
