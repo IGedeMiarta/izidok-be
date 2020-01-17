@@ -226,6 +226,26 @@ class PasienController extends Controller
 		}
 	}
 
+	public function getByDate(Request $request)
+	{
+		$tanggal = $request->date;
+		$pasien = Pasien::where("tanggal_lahir",$tanggal)->get();
+		if (count($pasien) == 0) {
+			return response()->json([
+				'status' => false,
+				'message' => "pasien not found",
+				'data' => ''
+			]);
+		} else {
+			return response()->json([
+				'status' => true,
+				'data' => $pasien,
+				'message' => 'success'
+			]);
+		}
+
+	}
+
 	public function update(Request $request)
 	{
 		$this->validate($request, [
