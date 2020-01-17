@@ -87,7 +87,8 @@ class PasienController extends Controller
 			'pekerjaan' => 'string',
 			'nomor_hp' => 'string',
 			'nama_penjamin' => 'string',
-			'nomor_polis' => 'string',
+			'nomor_polis_asuransi' => 'string',
+			'nomor_member_asuransi' => 'string',
 			'email' => 'string',
 			'nama_penanggung_jawab' => 'string',
 			'tensi_sistole' => 'integer',
@@ -134,7 +135,8 @@ class PasienController extends Controller
 		$pasien->pekerjaan = $request->input('pekerjaan');
 		$pasien->nomor_hp = $request->input('nomor_hp');
 		$pasien->nama_penjamin = $request->input('nama_penjamin');
-		$pasien->nomor_polis = $request->input('nomor_polis');
+		$pasien->nomor_polis_asuransi = $request->input('nomor_polis_asuransi');
+		$pasien->nomor_member_asuransi = $request->input('nomor_member_asuransi');
 		$pasien->email = $request->input('email');
 		$pasien->nama_penanggung_jawab = $request->input('nama_penanggung_jawab');
 		$pasien->nomor_hp_penanggung_jawab = $request->input('nomor_hp_penanggung_jawab');
@@ -242,7 +244,8 @@ class PasienController extends Controller
 			'pekerjaan' => 'string',
 			'nomor_hp' => 'string',
 			'nama_penjamin' => 'string',
-			'nomor_polis' => 'string',
+			'nomor_polis_asuransi' => 'string',
+			'nomor_member_asuransi' => 'string',
 			'email' => 'string',
 			'nama_penanggung_jawab' => 'string',
 			'tensi_sistole' => 'integer',
@@ -270,6 +273,24 @@ class PasienController extends Controller
 			]);
 		}
 
+		$check_pasien = Pasien::where("nama",$request->nama)
+		->where("tanggal_lahir",$request->tanggal_lahir)
+		->where("nomor_hp",$request->nomor_hp)
+		->where("klinik_id",$user->klinik_id)
+		->first();
+
+		if(!empty($check_pasien))
+		{
+			if($pasien->id != $check_pasien->id)
+			{
+				return response()->json([
+					'success' => false,
+					'message' => 'failed, pasien is already exists',
+					'data' => ''
+				], 400);
+			}
+		}
+
 		$pasien->nama = $request->input('nama');
 		$pasien->nik = $request->input('nik');
 		$pasien->tempat_lahir = $request->input('tempat_lahir');
@@ -285,7 +306,8 @@ class PasienController extends Controller
 		$pasien->pekerjaan = $request->input('pekerjaan');
 		$pasien->nomor_hp = $request->input('nomor_hp');
 		$pasien->nama_penjamin = $request->input('nama_penjamin');
-		$pasien->nomor_polis = $request->input('nomor_polis');
+		$pasien->nomor_polis_asuransi = $request->input('nomor_polis_asuransi');
+		$pasien->nomor_member_asuransi = $request->input('nomor_member_asuransi');
 		$pasien->email = $request->input('email');
 		$pasien->nama_penanggung_jawab = $request->input('nama_penanggung_jawab');
 		$pasien->tensi_sistole = $request->input('tensi_sistole');
