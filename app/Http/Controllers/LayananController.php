@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Layanan;
 use App\Constant;
 use Illuminate\Support\Facades\Auth;
+use App\User;
 
 class LayananController extends Controller
 {
@@ -105,6 +106,32 @@ class LayananController extends Controller
 				'success' => false,
 				'message' => 'failed',
 				'data' => ''
+			], 400);
+		}
+	}
+
+	public function getByKode(Request $request)
+	{
+		$kode = $request->kode;
+		$user = User::find($request->user_id);
+
+		$layanan = Layanan::where("klinik_id",$user->klinik_id)
+					->where("kode_layanan",$kode)
+					->get();
+
+		if(count($layanan) == 0)
+		{
+			return response()->json([
+				'success' => true,
+				'message' => 'layanan is not exsist'
+			], 400);	
+		}
+		else
+		{
+			return response()->json([
+				'success' => false,
+				'message' => 'failed, layanan is already exists in this klinik',
+				'data' => $layanan
 			], 400);
 		}
 	}
