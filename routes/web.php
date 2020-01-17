@@ -99,6 +99,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->get('/layanan/{id}', 'LayananController@show');
             $router->put('/layanan/{id}', 'LayananController@update');
             $router->delete('/layanan/{id}', 'LayananController@delete');
+            $router->get('/layanan/{kode}/kode', 'LayananController@getByKode');
         });
 
         #pasien

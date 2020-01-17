@@ -229,7 +229,10 @@ class PasienController extends Controller
 	public function getByDate(Request $request)
 	{
 		$tanggal = $request->date;
-		$pasien = Pasien::where("tanggal_lahir",$tanggal)->get();
+		$user = User::find($request->user_id);
+		$pasien = Pasien::where("tanggal_lahir",$tanggal)
+					->where("klinik_id",$user->klinik_id)
+					->get();
 		if (count($pasien) == 0) {
 			return response()->json([
 				'status' => false,
