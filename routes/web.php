@@ -159,5 +159,6 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         return response($file, 200)->header('Content-Type', 'image/jpeg');
     });
 
-    $router->post('/test-upload', 'RekamMedisController@uploadFile');
+    $router->post('/upload-cloud', 'RekamMedisController@uploadFile');
+    $router->post('/delete-cloud', 'RekamMedisController@deleteUploadedFile');
 });

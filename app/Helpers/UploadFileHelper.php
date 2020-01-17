@@ -19,26 +19,28 @@ function upload($file, $name_type, $path)
 
 function uploadToCloud($prefix, $file)
 {
-    $filename = $prefix . '/' . $prefix . '-' . date('Ymdhms') . '-' . rand();
+    $filename =  $prefix . '-' . date('Ymdhms') . '-' . rand();
 
     if (is_string($file)) {
         $file = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file));
         $filename .= '.png';
-        Storage::cloud()->put($filename, $file);
+        Storage::cloud()->put($prefix . '/' .$filename, $file);
+        $url = Storage::cloud()->url($prefix . '/' .$filename);
     } else {
+        if (strtolower($file->extension()) === 'pdf') {
+            #run script compress PDF
+            $compressed = compressPDF($file);
+            $compressed_file = file_get_contents($compressed['output']);
 
-        if (strtolower($file->extension()) !== 'pdf') {
-            return false;
+            $filename .= '.pdf';
+            Storage::cloud()->put($prefix . '/' .$filename, $compressed_file);
+            $url = Storage::cloud()->url($prefix . '/' .$filename);
+        } else {
+            $filename .= '.' . $file->extension();
+            Storage::cloud()->putFileAs($prefix, $file, $filename);
+            $url = Storage::cloud()->url($prefix, $filename);
         }
-        #run script compress PDF
-        $compressed = compressPDF($file);
-        $compressed_file = file_get_contents($compressed['output']);
-
-        $filename .= '.pdf';
-        Storage::cloud()->put($filename, $compressed_file);
     }
-
-    $url = Storage::cloud()->url($filename);
 
     if ($url) {
         #delete local files
@@ -46,7 +48,10 @@ function uploadToCloud($prefix, $file)
         $file->cleanDirectory(storage_path('tmp'));
     }
 
-    return $url;
+    $data['url'] = $url;
+    $data['uploaded_name'] = $filename;
+
+    return $data;
 }
 
 function compressPDF($file)
@@ -66,4 +71,9 @@ function compressPDF($file)
     $data['output'] = $output_path;
 
     return $data;
+}
+
+function deleteFromCloud($filenames){
+    // $res = Storage::cloud()->delete(['pemeriksaan_penunjang/pemeriksaan_penunjang-20200117120128-573006481.jpeg']);
+    // dd($res);
 }

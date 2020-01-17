@@ -23,30 +23,30 @@ class RekamMedisController extends Controller
         if ($user->hasRole(Constant::SUPER_ADMIN)) {
             $rekam_medis = RekamMedis::paginate($request->limit);
             $data['rekam_medis'] = $rekam_medis;
-			return response()->json([
-				'success' => true,
-				'message' => 'success',
-				'data' => $data
-			], 201);
+            return response()->json([
+                'success' => true,
+                'message' => 'success',
+                'data' => $data
+            ], 201);
         }
 
-        if($request->pasien_id){
+        if ($request->pasien_id) {
             $data = $this->getRekamMedisByPasien($request);
             return response()->json([
-				'success' => true,
-				'message' => 'success',
-				'data' => $data
-			], 201);
+                'success' => true,
+                'message' => 'success',
+                'data' => $data
+            ], 201);
         }
 
         $rekam_medis = RekamMedis::where('created_by', $user->id)->paginate($request->limit);
 
-        if(!$rekam_medis){
+        if (!$rekam_medis) {
             return response()->json([
-				'success' => false,
-				'message' => 'failed, no data available...',
-				'data' => $data
-			], 201);
+                'success' => false,
+                'message' => 'failed, no data available...',
+                'data' => $data
+            ], 201);
         }
 
         $data['rekam_medis'] = $rekam_medis;
@@ -55,12 +55,11 @@ class RekamMedisController extends Controller
             'message' => 'success',
             'data' => $data
         ], 201);
-
-
     }
 
-    private function getRekamMedisByPasien($request){
-        $rekam_medis = RekamMedis::whereHas('transKlinik', function($data) use ($request){
+    private function getRekamMedisByPasien($request)
+    {
+        $rekam_medis = RekamMedis::whereHas('transKlinik', function ($data) use ($request) {
             $data->where('pasien_id', $request->pasien_id);
         })->paginate($request->limit);
         $data['rekam_medis'] = $rekam_medis;
@@ -114,7 +113,7 @@ class RekamMedisController extends Controller
         $anamnesa->berat_badan = ($request->berat_badan) ? $request->berat_badan : $pasien->berat_badan;
         $anamnesa->notes = $request->anamnesa_text;
         $anamnesa->is_draw = $request->anamnesa_is_draw;
-        $anamnesa->draw_path = \uploadToCloud('anamnesa',$request->anamnesa_draw);
+        $anamnesa->draw_path = \uploadToCloud('anamnesa', $request->anamnesa_draw);
         $anamnesa->created_by = $request->user_id;
         $anamnesa->save();
 
@@ -127,7 +126,7 @@ class RekamMedisController extends Controller
         $diagnosa->kode_penyakit_id = json_encode($arr_penyakit);
         $diagnosa->notes = $request->diagnosa_text;
         $diagnosa->is_draw = $request->diagnosa_is_draw;
-        $diagnosa->draw_path = \uploadToCloud('diagnosa',$request->diagnosa_draw);
+        $diagnosa->draw_path = \uploadToCloud('diagnosa', $request->diagnosa_draw);
         $diagnosa->created_by = $request->user_id;
         $diagnosa->save();
 
@@ -137,7 +136,7 @@ class RekamMedisController extends Controller
         $pemeriksaan_fisik->organ_id = $request->organ_id;
         $pemeriksaan_fisik->notes = $request->pemeriksaan_text;
         $pemeriksaan_fisik->is_draw = $request->pemeriksaan_is_draw;
-        $pemeriksaan_fisik->draw_path = \uploadToCloud('pemeriksaan',$request->pemeriksaan_draw);
+        $pemeriksaan_fisik->draw_path = \uploadToCloud('pemeriksaan', $request->pemeriksaan_draw);
         $pemeriksaan_fisik->created_by = $request->user_id;
         $pemeriksaan_fisik->save();
 
@@ -145,15 +144,15 @@ class RekamMedisController extends Controller
         $tata_laksana = new TataLaksana();
         $tata_laksana->notes = $request->tatalaksana_text;
         $tata_laksana->is_draw = $request->tatalaksana_is_draw;
-        $tata_laksana->draw_path = \uploadToCloud('tatalaksana',$request->tatalaksana_draw);
+        $tata_laksana->draw_path = \uploadToCloud('tatalaksana', $request->tatalaksana_draw);
         $tata_laksana->created_by = $request->user_id;
         $tata_laksana->save();
-        
+
         #insert pemeriksaan_penunjang
         $p_penunjang = new PemeriksaanPenunjang();
         $p_penunjang->notes = $request->pemeriksaan_penunjang_text;
         $p_penunjang->is_draw = $request->pemeriksaan_penunjang_is_draw;
-        $p_penunjang->draw_path = \uploadToCloud('pemeriksaan_penunjang',$request->pemeriksaan_penunjang_draw);
+        $p_penunjang->draw_path = \uploadToCloud('pemeriksaan_penunjang', $request->pemeriksaan_penunjang_draw);
         $p_penunjang->files = json_encode($request->pemeriksaan_penunjang);
         $p_penunjang->created_by = $request->user_id;
         $p_penunjang->save();
@@ -187,15 +186,16 @@ class RekamMedisController extends Controller
         }
     }
 
-    public function show(Request $request){
+    public function show(Request $request)
+    {
         $rekam_medis = RekamMedis::find($request->id);
-		if (empty($rekam_medis)) {
-			return response()->json([
-				'status' => false,
-				'message' => "rekam medis not found",
-				'data' => ''
-			]);
-		} else {
+        if (empty($rekam_medis)) {
+            return response()->json([
+                'status' => false,
+                'message' => "rekam medis not found",
+                'data' => ''
+            ]);
+        } else {
             $data = array();
             $anamnesa = Anamnesa::find($rekam_medis->anamnesa_id);
             $pemeriksaan = PemeriksaanFisik::find($rekam_medis->pemeriksaan_fisik_id);
@@ -206,27 +206,41 @@ class RekamMedisController extends Controller
             $data['pemeriksaan_fisik'] = $pemeriksaan;
             $data['diagnosa'] = $diagnosa;
 
-			return response()->json([
-				'status' => true,
-				'data' => $rekam_medis,
-			]);
-		}
+            return response()->json([
+                'status' => true,
+                'data' => $rekam_medis,
+            ]);
+        }
     }
 
-    public function uploadFile(Request $request){
-        $url = [];
-        foreach ($request->file() as $key => $item) {
-            // $url[$key] = uploadToCloud('pemeriksaan_penunjang', $item);
-            $url['name'] = $key;
-            $url['url'] = uploadToCloud('pemeriksaan_penunjang', $item);
+    public function uploadFile(Request $request)
+    {
+        $extension = ['png', 'jpg', 'jpeg', 'pdf'];
 
-            if(!$url['url']){
+        $data = [];
+        foreach ($request->file() as $key => $item) {
+
+            if (!in_array(strtolower($item->extension()), $extension)) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'file not supported, please upload .pdf file...',
-                ]); 
+                    'original_name' => $key,
+                    'message' => 'file not supported, please upload PNG, JPG or PDF file...',
+                ]);
             }
+
+            $res = uploadToCloud('pemeriksaan_penunjang', $item);
+
+            $data['name'] = $key;
+            $data['url'] = $res['url'];
+            $data['uploaded_name'] = $res['uploaded_name'];
         }
-        return $url;
+
+        $data['status'] = true;
+        return $data;
+    }
+
+    public function deleteUploadedFile(Request $request)
+    {   
+        // $res = deleteFromCloud($request->filenames);
     }
 }
