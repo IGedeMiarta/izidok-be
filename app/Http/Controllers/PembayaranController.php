@@ -21,8 +21,18 @@ class PembayaranController extends Controller
   {
     $user = $this->user;
 
+    $this->validate($request, [
+      'from' => 'required|date_format:Y-m-d',
+      'to' => 'required|date_format:Y-m-d',
+    ]);
+
+    $from = $request->from;
+    $to = $request->to;
+
+    $pembayaran = Pembayaran::with('detail');
+
 		if ($user->hasRole(Constant::SUPER_ADMIN)) {
-			$pembayaran = Pembayaran::with('detail')->paginate($request->limit);
+			$pembayaran->paginate($request->limit);
 			$data['pembayaran'] = $pembayaran;
 			if ($pembayaran) {
 				return response()->json([
@@ -31,9 +41,20 @@ class PembayaranController extends Controller
 					'data' => $data
 				], 201);
 			}
-		} 
-		
-		$pembayaran = Pembayaran::with('detail')->where('klinik_id', $user->klinik_id)->paginate($request->limit);
+    } 
+    
+		$pembayaran = $pembayaran->whereBetween('created_at',  [$from, $to])
+              ->orWhereDate('created_at', $from)
+              ->where('klinik_id', $user->klinik_id);
+              
+    if($request->sort){
+      $this->validate($request, [
+        'sort' => 'in:asc,desc',
+      ]);
+      $pembayaran = $pembayaran->orderBy('created_at', $request->sort);
+    }
+
+    $pembayaran = $pembayaran->paginate($request->limit);
 		$data['pembayaran'] = $pembayaran;
 
 		return response()->json([
@@ -190,5 +211,3 @@ class PembayaranController extends Controller
   }
   
 }
-
-?>
