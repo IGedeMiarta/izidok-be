@@ -27,4 +27,15 @@ class Pembayaran extends Model
     {
         return $this->hasMany(DetailPembayaran::class, 'pembayaran_id');
     }
+
+    public function transklinik()
+    {
+        return $this->belongsTo(TransKlinik::class, 'transklinik_id');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
 }

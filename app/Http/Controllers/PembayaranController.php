@@ -29,7 +29,7 @@ class PembayaranController extends Controller
     $from = $request->from;
     $to = $request->to;
 
-    $pembayaran = Pembayaran::with('detail');
+    $pembayaran = new Pembayaran;
 
 		if ($user->hasRole(Constant::SUPER_ADMIN)) {
 			$pembayaran->paginate($request->limit);
@@ -43,10 +43,31 @@ class PembayaranController extends Controller
 			}
     } 
     
+    #filter by date
 		$pembayaran = $pembayaran->whereBetween('created_at',  [$from, $to])
               ->orWhereDate('created_at', $from)
               ->where('klinik_id', $user->klinik_id);
-              
+    
+    #filter by nama pasien & no. rekam medis
+    if (!empty($request->nama_pasien)) {
+			$pembayaran = Pembayaran::whereHas('transklinik', function($transklinik) use ($request){
+        $transklinik->whereHas('pasien', function($pasien) use ($request){
+          $pasien->where('nama', 'LIKE', "%{$request->nama_pasien}%");
+        });
+      });
+    }
+    
+		if (!empty($request->no_rekam_medis)) {
+      $pembayaran = Pembayaran::whereHas('transklinik', function($transklinik) use ($request){
+        $transklinik->whereHas('pasien', function($pasien) use ($request){
+          $pasien->where('nomor_rekam_medis', 'LIKE', "%{$request->no_rekam_medis}%");
+        });
+      });
+		}
+
+    #get data pasien and dokter
+    $pembayaran = $pembayaran->with(['transklinik.pasien', 'createdBy', 'detail']);
+
     if($request->sort){
       $this->validate($request, [
         'sort' => 'in:asc,desc',
