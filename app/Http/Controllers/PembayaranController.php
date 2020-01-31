@@ -67,12 +67,11 @@ class PembayaranController extends Controller
 
     #get data pasien and dokter
     $pembayaran = $pembayaran->with(['transklinik.pasien', 'createdBy', 'detail']);
-
     if($request->sort){
       $this->validate($request, [
         'sort' => 'in:asc,desc',
       ]);
-      $pembayaran = $pembayaran->orderBy('created_at', $request->sort);
+      $pembayaran = $pembayaran->orderBy('status', $request->sort);
     }
 
     $pembayaran = $pembayaran->paginate($request->limit);
