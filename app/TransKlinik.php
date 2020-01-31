@@ -37,4 +37,9 @@ class TransKlinik extends Model implements Auditable
         return $this->hasMany('App\RekamMedis', 'transklinik_id', 'id');
     }
 
+    public function examinationBy()
+    {
+        return $this->belongsTo('App\User', 'examination_by', 'id');
+    }
+
 }

@@ -38,10 +38,10 @@ class TransKlinikController extends Controller
 
     $user = $this->user;
 
-    $trans_klinik = TransKlinik::with('pasien')
+    $trans_klinik = TransKlinik::with(['pasien', 'examinationBy'])
       ->where('status', $status)
-      ->whereBetween('created_at',  [$from, $to])
-      ->orWhereDate('created_at', $from);
+      ->whereBetween('waktu_konsultasi',  [$from, $to])
+      ->orWhereDate('waktu_konsultasi', $from);
 
     if ($user->hasRole(Constant::SUPER_ADMIN)) {
       $trans_klinik = $trans_klinik->paginate($request->limit);
