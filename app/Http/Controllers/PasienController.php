@@ -83,7 +83,7 @@ class PasienController extends Controller
 			'rw' => 'string',
 			'kelurahan' => 'string',
 			'kecamatan' => 'string',
-			'status_perkawinan' => 'required|string',
+			'status_perkawinan' => 'string',
 			'pekerjaan' => 'string',
 			'nomor_hp' => 'string',
 			'nama_penjamin' => 'string',
