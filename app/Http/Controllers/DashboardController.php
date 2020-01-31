@@ -49,6 +49,11 @@ class DashboardController extends Controller
 			return response()->json(['status' => true, 'data' => $result]);
 		}
 
+		if ($type === Constant::TOTAL) { #total registered pasien (di tgl berjalan)
+			$result = $this->pasienTotal($user_id);
+			return response()->json(['status' => true, 'data' => $result]);
+		}
+
 		return response()->json(['status' => false, 'message' => 'something went wrong...'], 422);
 	}
 
@@ -92,6 +97,14 @@ class DashboardController extends Controller
 			->groupBy(function ($date) {
 				return Carbon::parse($date->created_at)->format('Y');
 			});
+		return $pasien_baru;
+	}
+
+	private function pasienTotal($user_id)
+	{
+		$pasien_baru = Pasien::where('user_id', $user_id)
+			->whereDate('created_at', Carbon::today())
+			->count();
 		return $pasien_baru;
 	}
 
