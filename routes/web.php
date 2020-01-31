@@ -110,7 +110,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->put('/pasien/{id}', ['middleware' => 'permission:update-pasien', 'uses' => 'PasienController@update']);
         $router->delete('/pasien/{id}', ['middleware' => 'permission:delete-pasien', 'uses' => 'PasienController@delete']);
         $router->post('/pasien/ocr', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@getText']);
-        $router->get('/pasien/verify/{id}', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@verifyPasien']);
+        $router->get('/pasien/verify', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@verifyPasien']);
 
         #transaksi klinik
         $router->get('/transaksi', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@index']);

@@ -265,7 +265,7 @@ class PasienController extends Controller
 			'kecamatan' => 'string',
 			'status_perkawinan' => 'required|string',
 			'pekerjaan' => 'string',
-			'nomor_hp' => 'string',
+			'nomor_hp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
 			'nama_penjamin' => 'string',
 			'nomor_polis_asuransi' => 'string',
 			'nomor_member_asuransi' => 'string',
@@ -499,22 +499,44 @@ class PasienController extends Controller
 
 	public function verifyPasien(Request $request)
 	{
-		$pasien = Pasien::where('id', $request->id)
-			->whereHas('transKlinik', function ($data) {
-				$data->where('status', Constant::QUEUED);
-			})->count();
+		$this->validate($request, [
+			'nama' => 'required|string',
+			'tanggal_lahir' => 'required|date:Y-m-d',
+			'nomor_hp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15'
+		  ]);
 
-		if ($pasien) {
+		$conditions = array(
+			'nama' => $request->nama,
+			'tanggal_lahir' => $request->tanggal_lahir,
+			'nomor_hp' => $request->nomor_hp
+		);
+		
+		$pasien = Pasien::where($conditions);
+		$is_exist = $pasien->count();
+
+		if(!$is_exist){
 			return response()->json([
 				'status' => false,
-				'message' => 'this customer has an active transaction...',
-				'data' => $pasien
+				'message' => 'patient not found...',
+			]);
+		}
+
+		$available = $pasien->whereHas('transKlinik', function ($data) {
+										$data->where('status', Constant::TRX_MENUNGGU);
+									})->count();
+		$pasien = $pasien->first();
+
+		if ($available) {
+			return response()->json([
+				'status' => false,
+				'message' => 'this patient has an active transaction...',
 			]);
 		}
 
 		return response()->json([
 			'status' => true,
-			'message' => 'this customer is available for transaction...',
+			'message' => 'this patient is available for transaction...',
+			'data' => $pasien
 		]);
 	}
 }
