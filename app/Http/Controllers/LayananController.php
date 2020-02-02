@@ -82,6 +82,24 @@ class LayananController extends Controller
 		$arr_layanan = $request->arr;
 		$result = array();
 
+		$flag = 0;
+		$error_layanan = array();
+		$user = User::find($request->user_id);
+
+		foreach ($arr_layanan as $row) {
+
+			$layanan = Layanan::where("klinik_id",$user->klinik_id)
+					->where("kode_layanan",$row['kode_layanan'])
+					->get();
+			if(count($layanan) > 0)
+			{
+				return response()->json([
+					'success' => false,
+					'message' => 'layanan with code '.$row['kode_layanan'].' is already exsist in this klinik',
+				], 400);
+			}
+		}
+
 		foreach ($arr_layanan as $layanan_obj) {
 			$layanan = new Layanan();
 			$layanan->kode_layanan = $layanan_obj['kode_layanan'];
@@ -122,17 +140,17 @@ class LayananController extends Controller
 		if(count($layanan) == 0)
 		{
 			return response()->json([
-				'success' => true,
+				'success' => false,
 				'message' => 'layanan is not exsist'
-			], 400);	
+			], 404);	
 		}
 		else
 		{
 			return response()->json([
-				'success' => false,
-				'message' => 'failed, layanan is already exists in this klinik',
+				'success' => true,
+				'message' => 'success',
 				'data' => $layanan
-			], 400);
+			], 200);
 		}
 	}
 

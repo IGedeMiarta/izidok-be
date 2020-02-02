@@ -23,4 +23,9 @@ class RekamMedis extends Model implements Auditable
         return $this->belongsTo('App\TransKlinik', 'transklinik_id', 'id');
     }
 
+    public function pasien()
+    {
+        return $this->belongsTo('App\Pasien', 'nomor_rekam_medis', 'nomor_rekam_medis');
+    }
+
 }
