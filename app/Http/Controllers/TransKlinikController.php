@@ -118,7 +118,7 @@ class TransKlinikController extends Controller
     $trans_klinik->pasien_id = $request->pasien_id;
     $trans_klinik->klinik_id = $request->klinik_id;
     $trans_klinik->created_by = $request->user_id;
-    $trans_klinik->nomor_antrian = $this->getNextOrderNumber($request->klinik_id);
+    $trans_klinik->nomor_antrian = $this->getNextOrderNumber($request->klinik_id,$request->waktu_konsultasi);
     $trans_klinik->waktu_konsultasi = $request->waktu_konsultasi;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
     $trans_klinik->save();
@@ -198,10 +198,11 @@ class TransKlinikController extends Controller
     }
   }
 
-  public function getNextOrderNumber($klinik_id)
+  public function getNextOrderNumber($klinik_id,$waktu_konsultasi)
   {
     $trans_klinik = TransKlinik::where('klinik_id', $klinik_id)
-      ->orderBy('created_at', 'desc')->first();
+      ->where('waktu_konsultasi',$waktu_konsultasi)
+      ->orderBy('nomor_antrian', 'desc')->first();
 
     $number = 1;
 

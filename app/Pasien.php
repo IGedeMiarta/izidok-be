@@ -27,4 +27,9 @@ class Pasien extends Model implements Auditable
         return $this->hasMany('App\TransKlinik', 'pasien_id', 'id');
     }
 
+    public function rekamMedis()
+    {
+        return $this->hasOne('App\RekamMedis', 'nomor_rekam_medis', 'nomor_rekam_medis');
+    }
+
 }

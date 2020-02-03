@@ -57,6 +57,31 @@ class RekamMedisController extends Controller
 
     }
 
+    public function getRekamMedisByTanggalLahir(Request $request)
+    {
+        // dd("joss");
+        $rekam_medis = RekamMedis::whereHas('pasien',function($data) use ($request){
+            $data->where('tanggal_lahir',$request->tanggal_lahir);
+        })->with('pasien')->paginate($request->limit);
+        $data['rekam_medis'] = $rekam_medis;
+        if(count($rekam_medis) > 0)
+        {
+            return response()->json([
+                'success' => true,
+                'message' => 'success',
+                'data' => $data
+            ], 200);
+        }
+        else
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'not found'
+            ], 404);
+        }
+
+    }
+
     private function getRekamMedisByPasien($request){
         $rekam_medis = RekamMedis::whereHas('transKlinik', function($data) use ($request){
             $data->where('pasien_id', $request->pasien_id);
