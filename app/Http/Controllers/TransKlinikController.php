@@ -40,6 +40,7 @@ class TransKlinikController extends Controller
 
     $trans_klinik = TransKlinik::with(['pasien', 'examinationBy'])
       ->where('status', $status)
+      ->where('created_by', $user->id)
       ->whereBetween('waktu_konsultasi',  [$from, $to])
       ->orWhereDate('waktu_konsultasi', $from);
 
