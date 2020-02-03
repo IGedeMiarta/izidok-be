@@ -59,7 +59,6 @@ class RekamMedisController extends Controller
 
     public function getRekamMedisByTanggalLahir(Request $request)
     {
-        // dd("joss");
         $rekam_medis = RekamMedis::whereHas('pasien',function($data) use ($request){
             $data->where('tanggal_lahir',$request->tanggal_lahir);
         })->with('pasien')->paginate($request->limit);
