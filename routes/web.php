@@ -124,7 +124,6 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->get('/rekam_medis', 'RekamMedisController@index');
             $router->post('/rekam_medis', 'RekamMedisController@store');
             $router->get('/rekam_medis/{id}', 'RekamMedisController@show');
-            $router->get('/rekam_medis/date', 'RekamMedisController@getRekamMedisByTanggalLahir');
         });
 
         #organ
