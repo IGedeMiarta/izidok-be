@@ -105,7 +105,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         #pasien
         $router->get('/pasien/verify', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@verifyPasien']);
         $router->get('/pasien', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@index']);
-        $router->get('/pasien/{date}/date', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@getByDate']);
+        // $router->get('/pasien/{date}/date', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@getByDate']);
         $router->post('/pasien', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@store']);
         $router->get('/pasien/{id}', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@show']);
         $router->put('/pasien/{id}', ['middleware' => 'permission:update-pasien', 'uses' => 'PasienController@update']);
@@ -124,7 +124,6 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->get('/rekam_medis', 'RekamMedisController@index');
             $router->post('/rekam_medis', 'RekamMedisController@store');
             $router->get('/rekam_medis/{id}', 'RekamMedisController@show');
-            $router->get('/rekam_medis/date', 'RekamMedisController@getRekamMedisByTanggalLahir');
         });
 
         #organ
@@ -158,9 +157,10 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     });
 
     $router->get('/image', function (Request $request) {
-        $file = Storage::disk('minio')->get($request->path);
+        $file = Storage::cloud()->get($request->path);
         return response($file, 200)->header('Content-Type', 'image/jpeg');
     });
 
-    $router->post('/test-upload', 'RekamMedisController@uploadFile');
+    $router->post('/upload-cloud', 'RekamMedisController@uploadFile');
+    $router->post('/delete-cloud', 'RekamMedisController@deleteUploadedFile');
 });

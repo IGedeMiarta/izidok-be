@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'cloud' => env('FILESYSTEM_CLOUD', 'minio'),
+    'cloud' => env('FILESYSTEM_CLOUD', 'oss'),
 
     /*
     |--------------------------------------------------------------------------
@@ -61,6 +61,18 @@ return [
             'secret' => env('AWS_SECRET'),
             'region' => env('AWS_REGION'),
             'bucket' => env('AWS_BUCKET'),
+        ],
+
+        'oss' => [
+            'driver' => 'oss',
+            'key' => env('OSS_ACCESS_KEY_ID'),
+            'secret' => env('OSS_ACCESS_KEY_SECRET'),
+            'url' => env('OSS_ENDPOINT'),
+            'bucket' => env('OSS_BUCKET'),
+            'root' => env('OSS_PREFIX'),
+            'options' => [
+                'custom_domain' => env('OSS_CUSTOM_DOMAIN'),
+            ],
         ],
 
         'minio' => [

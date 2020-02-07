@@ -40,6 +40,10 @@ class PasienController extends Controller
 			], 201);
 		}
 
+		if($request->tanggal_lahir){
+            return $this->getByDate($request);
+        }
+
 		$pasien = Pasien::where('created_by', $user->id);
 
 		if (!empty($request->nama_pasien)) {
@@ -85,7 +89,7 @@ class PasienController extends Controller
 			'kecamatan' => 'string',
 			'status_perkawinan' => 'string',
 			'pekerjaan' => 'string',
-			'nomor_hp' => 'string',
+			'nomor_hp' => 'regex:/^([0-9\s\-\+\(\)]*)$/|max:30',
 			'nama_penjamin' => 'string',
 			'nomor_polis_asuransi' => 'string',
 			'nomor_member_asuransi' => 'string',
@@ -228,7 +232,7 @@ class PasienController extends Controller
 
 	public function getByDate(Request $request)
 	{
-		$tanggal = $request->date;
+		$tanggal = $request->tanggal_lahir;
 		$user = User::find($request->user_id);
 		$pasien = Pasien::where("tanggal_lahir",$tanggal)
 					->where("klinik_id",$user->klinik_id)
@@ -408,10 +412,10 @@ class PasienController extends Controller
 		]);
 
 		if ($request->file) {
-			$path =  Storage::disk('minio')->put('ktp', $request->file);
+			$path =  Storage::cloud()->put('ktp', $request->file);
 		}
 
-		$image = Storage::disk('minio')->get($path);
+		$image = Storage::cloud()->get($path);
 
 		if (!$image) {
 			return response()->json([

@@ -8,6 +8,7 @@ use App\Constant;
 use App\Pasien;
 use App\Klinik;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 // use Carbon\Carbon;
@@ -90,7 +91,7 @@ class TransKlinikController extends Controller
       'nama_lengkap' => 'required|string',
       'nik' => 'string',
       'jenis_kelamin' => 'required|integer|min:0|max:1',
-      'nomor_telp' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
+      'nomor_telp' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
       'waktu_konsultasi' => 'required|string',
       'tinggi_badan' => 'integer',
       'berat_badan' => 'integer',

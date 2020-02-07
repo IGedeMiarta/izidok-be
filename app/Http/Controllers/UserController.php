@@ -90,7 +90,7 @@ class UserController extends Controller
             return response()->json(['status' => false, 'message' => 'user not found...']);
         }
 
-        $user->foto_profile = Storage::disk('minio')->put('foto_profile', $request->foto_profile);
+        $user->foto_profile = Storage::cloud()->put('foto_profile', $request->foto_profile);
 
         if(!$user->save()){
             return response()->json(['status' => false, 'message' => 'update user failed...']);
@@ -418,7 +418,7 @@ class UserController extends Controller
         $data['activation_url'] =  url(env('APP_PREFIX', 'api/v1') . $activation_url->value . '/' . $activation->token);
 
         $email_data = [
-            'subject' => 'User Activation',
+            'subject' => 'Konfirmasi Akun Izidok',
             'activation_url' => $data['activation_url'],
             'to' => $user->email,
             'from' => 'izidok.dev@gmail.com',
