@@ -70,6 +70,9 @@ return [
             'url' => env('OSS_ENDPOINT'),
             'bucket' => env('OSS_BUCKET'),
             'root' => env('OSS_PREFIX'),
+            'options' => [
+                'custom_domain' => env('OSS_CUSTOM_DOMAIN'),
+            ],
         ],
 
         'minio' => [
