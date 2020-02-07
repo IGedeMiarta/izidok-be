@@ -105,7 +105,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         #pasien
         $router->get('/pasien/verify', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@verifyPasien']);
         $router->get('/pasien', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@index']);
-        $router->get('/pasien/{date}/date', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@getByDate']);
+        // $router->get('/pasien/{date}/date', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@getByDate']);
         $router->post('/pasien', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@store']);
         $router->get('/pasien/{id}', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@show']);
         $router->put('/pasien/{id}', ['middleware' => 'permission:update-pasien', 'uses' => 'PasienController@update']);
