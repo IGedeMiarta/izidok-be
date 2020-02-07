@@ -218,7 +218,7 @@ class RekamMedisController extends Controller
     public function show(Request $request)
     {
         $rekam_medis = RekamMedis::where('id', $request->id)
-                                ->with(['anamnesa', 'diagnosa', 'pemeriksaan_fisik', 'pemeriksaan_penunjang'])
+                                ->with(['anamnesa', 'diagnosa', 'pemeriksaan_fisik', 'pemeriksaan_penunjang', 'tatalaksana'])
                                 ->first();
         if (empty($rekam_medis)) {
             return response()->json([
