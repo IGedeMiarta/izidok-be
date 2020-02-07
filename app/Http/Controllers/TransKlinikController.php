@@ -114,12 +114,14 @@ class TransKlinikController extends Controller
       return response()->json(['status' => false, 'message' => 'Pasien not found...'], 422);
 
     #transaksi
+  	$user = User::find($request->user_id);
+
     $trans_klinik = new TransKlinik;
     $trans_klinik->examination_by = $request->examination_by;
     $trans_klinik->pasien_id = $request->pasien_id;
-    $trans_klinik->klinik_id = $request->klinik_id;
+    $trans_klinik->klinik_id = $user->klinik_id;
     $trans_klinik->created_by = $request->user_id;
-    $trans_klinik->nomor_antrian = $this->getNextOrderNumber($request->klinik_id,$request->waktu_konsultasi);
+    $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id,$request->waktu_konsultasi);
     $trans_klinik->waktu_konsultasi = $request->waktu_konsultasi;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
     $trans_klinik->save();
@@ -210,12 +212,19 @@ class TransKlinikController extends Controller
     if (!$trans_klinik) {
       return $number;
     }
-
-    if ($trans_klinik->created_at->isToday()) {
-      $number = $trans_klinik->nomor_antrian;
-      return ($number + 1);
+    else
+    {
+    	$number = $trans_klinik->nomor_antrian + 1;
+    	return $number;
     }
 
-    return $number;
+
+
+    // if ($trans_klinik->created_at->isToday()) {
+    //   $number = $trans_klinik->nomor_antrian;
+    //   return ($number + 1);
+    // }
+
+    //return $number;
   }
 }
