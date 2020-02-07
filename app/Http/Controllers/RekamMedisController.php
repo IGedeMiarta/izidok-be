@@ -14,9 +14,17 @@ use App\PemeriksaanFisik;
 use App\PemeriksaanPenunjang;
 use App\TataLaksana;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class RekamMedisController extends Controller
 {
+    public $user;
+
+    public function __construct()
+    {
+        $this->user = Auth::user();
+    }
+
     public function index(Request $request)
     {
         $user = User::find($request->user_id);
@@ -39,13 +47,13 @@ class RekamMedisController extends Controller
             ], 201);
         }
 
-        if($request->tanggal_lahir){
+        if ($request->tanggal_lahir) {
             return $this->getRekamMedisByTanggalLahir($request);
         }
 
         $rekam_medis = RekamMedis::where('created_by', $user->id)
-                        ->with(['transKlinik.pasien', 'transKlinik.examinationBy'])
-                        ->paginate($request->limit);
+            ->with(['transKlinik.pasien', 'transKlinik.examinationBy'])
+            ->paginate($request->limit);
 
         if (!$rekam_medis) {
             return response()->json([
@@ -65,32 +73,34 @@ class RekamMedisController extends Controller
 
     private function getRekamMedisByTanggalLahir(Request $request)
     {
-        $rekam_medis = RekamMedis::whereHas('pasien',function($data) use ($request){
-            $data->where('tanggal_lahir',$request->tanggal_lahir);
-        })->with(['transKlinik.pasien', 'transKlinik.examinationBy'])->paginate($request->limit);
+        $rekam_medis = RekamMedis::whereHas('pasien', function ($data) use ($request) {
+            $data->where('tanggal_lahir', $request->tanggal_lahir);
+        })
+            ->with(['transKlinik.pasien', 'transKlinik.examinationBy'])
+            ->where('created_by', $this->user->id)->paginate($request->limit);
+
         $data['rekam_medis'] = $rekam_medis;
-        if(count($rekam_medis) > 0)
-        {
+        if (count($rekam_medis) > 0) {
             return response()->json([
                 'success' => true,
                 'message' => 'success',
                 'data' => $data
             ], 200);
-        }
-        else
-        {
+        } else {
             return response()->json([
                 'success' => false,
                 'message' => 'not found'
             ], 404);
         }
-
     }
     private function getRekamMedisByPasien($request)
     {
         $rekam_medis = RekamMedis::whereHas('transKlinik', function ($data) use ($request) {
             $data->where('pasien_id', $request->pasien_id);
-        })->with(['transKlinik.pasien', 'transKlinik.examinationBy'])->paginate($request->limit);
+        })
+        ->where('created_by', $this->user->id)
+        ->with(['transKlinik.pasien', 'transKlinik.examinationBy'])->paginate($request->limit);
+        
         $data['rekam_medis'] = $rekam_medis;
 
         return $data;
@@ -218,8 +228,8 @@ class RekamMedisController extends Controller
     public function show(Request $request)
     {
         $rekam_medis = RekamMedis::where('id', $request->id)
-                                ->with(['anamnesa', 'diagnosa', 'pemeriksaan_fisik', 'pemeriksaan_penunjang', 'tatalaksana'])
-                                ->first();
+            ->with(['anamnesa', 'diagnosa', 'pemeriksaan_fisik', 'pemeriksaan_penunjang', 'tatalaksana'])
+            ->first();
         if (empty($rekam_medis)) {
             return response()->json([
                 'status' => false,
@@ -261,14 +271,14 @@ class RekamMedisController extends Controller
     }
 
     public function deleteUploadedFile(Request $request)
-    {   
+    {
         $filenames = [];
         foreach ($request->filenames as $key => $item) {
-            array_push($filenames, 'pemeriksaan_penunjang/'.$item);
+            array_push($filenames, 'pemeriksaan_penunjang/' . $item);
         }
 
         $res = deleteFromCloud($filenames);
-        if($res){
+        if ($res) {
             $data['deleted_files'] = $filenames;
 
             return response()->json([
