@@ -43,4 +43,9 @@ class RekamMedis extends Model implements Auditable
         return $this->belongsTo('App\Diagnosa', 'diagnosa_id', 'id');
     }
 
+    public function pemeriksaan_penunjang()
+    {
+        return $this->belongsTo('App\PemeriksaanPenunjang', 'pemeriksaan_penunjang_id', 'id');
+    }
+
 }

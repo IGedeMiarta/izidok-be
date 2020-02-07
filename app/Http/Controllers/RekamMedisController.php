@@ -217,7 +217,9 @@ class RekamMedisController extends Controller
 
     public function show(Request $request)
     {
-        $rekam_medis = RekamMedis::find($request->id);
+        $rekam_medis = RekamMedis::where('id', $request->id)
+                                ->with(['anamnesa', 'diagnosa', 'pemeriksaan_fisik', 'pemeriksaan_penunjang'])
+                                ->first();
         if (empty($rekam_medis)) {
             return response()->json([
                 'status' => false,
@@ -225,16 +227,6 @@ class RekamMedisController extends Controller
                 'data' => ''
             ]);
         } else {
-            $data = array();
-            $anamnesa = Anamnesa::find($rekam_medis->anamnesa_id);
-            $pemeriksaan = PemeriksaanFisik::find($rekam_medis->pemeriksaan_fisik_id);
-            $diagnosa = Diagnosa::find($rekam_medis->diagnosa_id);
-
-            $data['rekam_medis'] = $rekam_medis;
-            $data['anamnesa'] = $anamnesa;
-            $data['pemeriksaan_fisik'] = $pemeriksaan;
-            $data['diagnosa'] = $diagnosa;
-
             return response()->json([
                 'status' => true,
                 'data' => $rekam_medis,
@@ -284,18 +276,5 @@ class RekamMedisController extends Controller
                 'data' => $data,
             ]);
         }
-    }
-
-    public function uploadFile(Request $request){
-
-        // dd($request->file());
-        $filePath = array();
-
-        foreach ($request->file() as $key => $item) {
-            // $filePath[$key] = \upload($item, '_test-'.$key, base_path('public/upload/_test/'));
-            $filePath[$key] = \uploadToAlibaba('_test', $item);
-        }
-
-        return $filePath;
     }
 }
