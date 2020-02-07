@@ -88,14 +88,33 @@ class LayananController extends Controller
 
 		foreach ($arr_layanan as $row) {
 
-			$layanan = Layanan::where("klinik_id",$user->klinik_id)
+			$cek_kode_layanan = Layanan::where("klinik_id",$user->klinik_id)
 					->where("kode_layanan",$row['kode_layanan'])
 					->get();
-			if(count($layanan) > 0)
+
+			$cek_nama_layanan = Layanan::where("klinik_id",$user->klinik_id)
+					->where("nama_layanan",$row['nama_layanan'])
+					->get();
+
+			if((count($cek_nama_layanan) > 0) && (count($cek_kode_layanan) > 0))
 			{
 				return response()->json([
 					'success' => false,
-					'message' => 'layanan with code '.$row['kode_layanan'].' is already exsist in this klinik',
+					'message' => 'nama layanan dan kode layanan tidak boleh sama',
+				], 400);
+			}
+			else if((count($cek_nama_layanan) > 0))
+			{
+				return response()->json([
+					'success' => false,
+					'message' => 'nama layanan tidak boleh sama',
+				], 400);
+			}
+			else if((count($cek_kode_layanan) > 0))
+			{
+				return response()->json([
+					'success' => false,
+					'message' => 'nama layanan tidak boleh sama',
 				], 400);
 			}
 		}

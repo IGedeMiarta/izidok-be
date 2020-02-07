@@ -114,7 +114,7 @@ class PasienController extends Controller
 		{
 			return response()->json([
 				'success' => false,
-				'message' => 'failed, pasien is already exists',
+				'message' => 'Data pasien telah terdaftar, silahkan cek ulang data anda!',
 				'data' => ''
 			], 400);
 		}
