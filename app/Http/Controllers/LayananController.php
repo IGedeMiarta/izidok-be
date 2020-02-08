@@ -52,6 +52,10 @@ class LayananController extends Controller
 			$layanan = $layanan->where('kode_layanan', 'LIKE', '%{$request->kode_layanan}%');
 		}
 
+		if($request->nama_layanan == "0")
+		{	
+			$layanan = $layanan->where('nama_layanan', 'LIKE', '%0%');
+		}
 		if (!empty($request->nama_layanan)) {
 			$pasien = $layanan->where('nama_layanan', 'LIKE', "%{$request->nama_layanan}%");
 		}
@@ -101,21 +105,21 @@ class LayananController extends Controller
 					->where("nama_layanan",$row['nama_layanan'])
 					->get();
 
-			if((count($cek_nama_layanan) > 0) && (count($cek_kode_layanan) > 0))
+			if(!empty($cek_nama_layanan) && !empty($cek_kode_layanan))
 			{
 				return response()->json([
 					'success' => false,
 					'message' => 'nama layanan dan kode layanan tidak boleh sama',
 				], 400);
 			}
-			else if((count($cek_nama_layanan) > 0))
+			else if(!empty($cek_nama_layanan))
 			{
 				return response()->json([
 					'success' => false,
 					'message' => 'nama layanan tidak boleh sama',
 				], 400);
 			}
-			else if((count($cek_kode_layanan) > 0))
+			else if(!empty($cek_kode_layanan))
 			{
 				return response()->json([
 					'success' => false,
