@@ -93,6 +93,7 @@ class RekamMedisController extends Controller
             ], 404);
         }
     }
+    
     private function getRekamMedisByPasien($request)
     {
         $rekam_medis = RekamMedis::whereHas('transKlinik', function ($data) use ($request) {
@@ -100,7 +101,7 @@ class RekamMedisController extends Controller
         })
         ->where('created_by', $this->user->id)
         ->with(['transKlinik.pasien', 'transKlinik.examinationBy'])->paginate($request->limit);
-        
+
         $data['rekam_medis'] = $rekam_medis;
 
         return $data;
