@@ -21,13 +21,13 @@ class LayananController extends Controller
 	{
 		$user = $this->user;
 
-		if ($request->kode) {
-			#get by kode
-		}
+		// if ($request->kode) {
+		// 	#get by kode
+		// }
 
-		if ($request->name) {
-			#get by name
-		}
+		// if ($request->name) {
+		// 	#get by name
+		// }
 
 		if ($user->hasRole(Constant::SUPER_ADMIN)) {
 			$layanan = Layanan::paginate($request->limit);
@@ -43,8 +43,13 @@ class LayananController extends Controller
 
 		$layanan = Layanan::where('klinik_id', $user->klinik_id);
 		
-		if (!empty($request->kode_layanan)) {
-			$layanan = $layanan->where('kode_layanan', 'LIKE', "%{$request->kode_layanan}%");
+
+		if($request->kode_layanan == "0")
+		{	
+			$layanan = $layanan->where('kode_layanan', 'LIKE', '%0%');
+		}
+		else if (!empty($request->kode_layanan)) {
+			$layanan = $layanan->where('kode_layanan', 'LIKE', '%{$request->kode_layanan}%');
 		}
 
 		if (!empty($request->nama_layanan)) {
