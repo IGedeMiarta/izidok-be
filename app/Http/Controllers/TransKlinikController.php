@@ -10,6 +10,7 @@ use App\Klinik;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 // use Carbon\Carbon;
 
@@ -42,8 +43,8 @@ class TransKlinikController extends Controller
     $trans_klinik = TransKlinik::with(['pasien', 'examinationBy'])
       ->where('status', $status)
       ->where('created_by', $user->id)
-      ->whereBetween('waktu_konsultasi',  [$from, $to])
-      ->orWhereDate('waktu_konsultasi', $from);
+      ->whereBetween(DB::raw('date(waktu_konsultasi)'),
+                    [$from, $to]);
 
     if ($user->hasRole(Constant::SUPER_ADMIN)) {
       $trans_klinik = $trans_klinik->paginate($request->limit);
