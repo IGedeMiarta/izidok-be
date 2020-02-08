@@ -153,7 +153,7 @@ class RekamMedisController extends Controller
         $anamnesa->berat_badan = ($request->berat_badan) ? $request->berat_badan : $pasien->berat_badan;
         $anamnesa->notes = $request->anamnesa_text;
         $anamnesa->is_draw = $request->anamnesa_is_draw;
-        $anamnesa->draw_path = \uploadToCloud('anamnesa', $request->anamnesa_draw);
+        $anamnesa->draw_path = \uploadToCloud('anamnesa', $request->anamnesa_draw)['url'];
         $anamnesa->created_by = $request->user_id;
         $anamnesa->save();
 
@@ -166,7 +166,7 @@ class RekamMedisController extends Controller
         $diagnosa->kode_penyakit_id = json_encode($arr_penyakit);
         $diagnosa->notes = $request->diagnosa_text;
         $diagnosa->is_draw = $request->diagnosa_is_draw;
-        $diagnosa->draw_path = \uploadToCloud('diagnosa', $request->diagnosa_draw);
+        $diagnosa->draw_path = \uploadToCloud('diagnosa', $request->diagnosa_draw)['url'];
         $diagnosa->created_by = $request->user_id;
         $diagnosa->save();
 
@@ -176,7 +176,7 @@ class RekamMedisController extends Controller
         $pemeriksaan_fisik->organ_id = $request->organ_id;
         $pemeriksaan_fisik->notes = $request->pemeriksaan_text;
         $pemeriksaan_fisik->is_draw = $request->pemeriksaan_is_draw;
-        $pemeriksaan_fisik->draw_path = \uploadToCloud('pemeriksaan', $request->pemeriksaan_draw);
+        $pemeriksaan_fisik->draw_path = \uploadToCloud('pemeriksaan', $request->pemeriksaan_draw)['url'];
         $pemeriksaan_fisik->created_by = $request->user_id;
         $pemeriksaan_fisik->save();
 
@@ -184,7 +184,7 @@ class RekamMedisController extends Controller
         $tata_laksana = new TataLaksana();
         $tata_laksana->notes = $request->tatalaksana_text;
         $tata_laksana->is_draw = $request->tatalaksana_is_draw;
-        $tata_laksana->draw_path = \uploadToCloud('tatalaksana', $request->tatalaksana_draw);
+        $tata_laksana->draw_path = \uploadToCloud('tatalaksana', $request->tatalaksana_draw)['url'];
         $tata_laksana->created_by = $request->user_id;
         $tata_laksana->save();
 
@@ -192,7 +192,7 @@ class RekamMedisController extends Controller
         $p_penunjang = new PemeriksaanPenunjang();
         $p_penunjang->notes = $request->pemeriksaan_penunjang_text;
         $p_penunjang->is_draw = $request->pemeriksaan_penunjang_is_draw;
-        $p_penunjang->draw_path = \uploadToCloud('pemeriksaan_penunjang', $request->pemeriksaan_penunjang_draw);
+        $p_penunjang->draw_path = \uploadToCloud('pemeriksaan_penunjang', $request->pemeriksaan_penunjang_draw)['url'];
         $p_penunjang->files = json_encode($request->pemeriksaan_penunjang);
         $p_penunjang->created_by = $request->user_id;
         $p_penunjang->save();
