@@ -112,7 +112,7 @@ class LayananController extends Controller
 					'message' => 'nama layanan dan kode layanan tidak boleh sama',
 				], 400);
 			}
-			else if(count($cek_kode_layanan) > 0)
+			else if(count($cek_nama_layanan) > 0)
 			{
 				return response()->json([
 					'success' => false,
@@ -133,7 +133,7 @@ class LayananController extends Controller
 			$layanan->kode_layanan = $layanan_obj['kode_layanan'];
 			$layanan->nama_layanan = $layanan_obj['nama_layanan'];
 			$layanan->tarif = $layanan_obj['tarif'];
-			$layanan->klinik_id = $layanan_obj['klinik_id'];
+			$layanan->klinik_id = $user->klinik_id;
 			$layanan->created_by = $request->user_id;
 			$layanan->save();
 			array_push($result, $layanan);
