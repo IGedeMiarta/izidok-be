@@ -78,16 +78,17 @@ class LayananController extends Controller
 
 	public function store(Request $request)
 	{
+		$user = User::find($request->user_id);
+
 		$this->validate($request, [
 			'arr' => 'required|array',
-			'arr.*.klinik_id' => 'required|integer',
 			'arr.*.kode_layanan' => [
 				'required','string',
-				Rule::unique('layanan')->where('klinik_id', $request->klinik_id)
+				Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
 			],
 			'arr.*.nama_layanan' => [
 				'required','string',
-				Rule::unique('layanan')->where('klinik_id', $request->klinik_id)
+				Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
 			],
 			'arr.*.tarif' => 'required|integer'
 		]);
@@ -100,7 +101,7 @@ class LayananController extends Controller
 			$layanan->kode_layanan = $layanan_obj['kode_layanan'];
 			$layanan->nama_layanan = $layanan_obj['nama_layanan'];
 			$layanan->tarif = $layanan_obj['tarif'];
-			$layanan->klinik_id = $layanan_obj['klinik_id'];
+			$layanan->klinik_id = $user->klinik_id;
 			$layanan->created_by = $request->user_id;
 			$layanan->save();
 			array_push($result, $layanan);
