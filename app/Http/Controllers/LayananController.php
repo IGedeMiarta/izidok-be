@@ -57,7 +57,7 @@ class LayananController extends Controller
 			$layanan = $layanan->where('nama_layanan', 'LIKE', '%0%');
 		}
 		if (!empty($request->nama_layanan)) {
-			$pasien = $layanan->where('nama_layanan', 'LIKE', "%{$request->nama_layanan}%");
+			$layanan = $layanan->where('nama_layanan', 'LIKE', "%{$request->nama_layanan}%");
 		}
 
 		$layanan = 	$layanan->paginate($request->limit);
