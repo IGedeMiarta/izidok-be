@@ -89,8 +89,9 @@ class UserController extends Controller
         if(!$user){
             return response()->json(['status' => false, 'message' => 'user not found...']);
         }
-
-        $user->foto_profile = Storage::cloud()->put('foto_profile', $request->foto_profile);
+        
+        $res = uploadToCloud('foto_profile', $request->foto_profile);
+        $user->foto_profile = $res['url'];
 
         if(!$user->save()){
             return response()->json(['status' => false, 'message' => 'update user failed...']);
