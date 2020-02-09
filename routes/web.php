@@ -51,6 +51,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->delete('/user/{id}', 'UserController@delete');
         });
         
+        $router->post('/change_password', 'UserController@changePassword');
 
         #klinik
         $router->get('/klinik', ['middleware' => 'permission:read-klinik', 'uses' => 'KlinikController@index']);

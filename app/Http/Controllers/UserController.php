@@ -629,4 +629,46 @@ class UserController extends Controller
         $user->syncRoles(Role::findByName('super_admin'));
         return $user->roles;
     }
+
+    public function changePassword(Request $request)
+    {
+        $this->validate($request, [
+            'old_password' => 'required|string|min:6',
+            'new_password' => 'required|string|min:6',
+            'confirm_new_password' => 'required|string|min:6',
+        ]);
+
+        //cek dengan password lama
+        $user = User::find($request->user_id);
+        if(!Hash::check($request->old_password,$user->password))
+        {
+            return response()->json([
+                'status' => false,
+                'message' => 'Password salah!'
+            ], 400);
+        }
+        else if($request->new_password != $request->confirm_new_password)
+        {
+            return response()->json([
+                    'status' => false,
+                    'message' => 'Konfirmasi Password tidak cocok'
+                ], 400);
+        }
+        else if(Hash::check($request->new_password,$user->password))
+        {
+            return response()->json([
+                    'status' => false,
+                    'message' => 'Password telah terdaftar. Silahkan masukkan password lain!'
+                ], 400);
+        }
+        else
+        {
+            $user->password = app('hash')->make($request->new_password);
+            $user->save();
+            return response()->json([
+                'status' => true,
+                'message' => 'Password Berhasil Diperbaharui'
+            ], 200);
+        }
+    }
 }

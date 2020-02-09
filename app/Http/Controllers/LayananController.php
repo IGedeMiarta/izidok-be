@@ -21,13 +21,13 @@ class LayananController extends Controller
 	{
 		$user = $this->user;
 
-		if ($request->kode) {
-			#get by kode
-		}
+		// if ($request->kode) {
+		// 	#get by kode
+		// }
 
-		if ($request->name) {
-			#get by name
-		}
+		// if ($request->name) {
+		// 	#get by name
+		// }
 
 		if ($user->hasRole(Constant::SUPER_ADMIN)) {
 			$layanan = Layanan::paginate($request->limit);
@@ -43,10 +43,19 @@ class LayananController extends Controller
 
 		$layanan = Layanan::where('klinik_id', $user->klinik_id);
 		
-		if (!empty($request->kode_layanan)) {
-			$layanan = $layanan->where('kode_layanan', 'LIKE', "%{$request->kode_layanan}%");
+
+		if($request->kode_layanan == "0")
+		{	
+			$layanan = $layanan->where('kode_layanan', 'LIKE', '%0%');
+		}
+		else if (!empty($request->kode_layanan)) {
+			$layanan = $layanan->where('kode_layanan', 'LIKE', '%{$request->kode_layanan}%');
 		}
 
+		if($request->nama_layanan == "0")
+		{	
+			$layanan = $layanan->where('nama_layanan', 'LIKE', '%0%');
+		}
 		if (!empty($request->nama_layanan)) {
 			$pasien = $layanan->where('nama_layanan', 'LIKE', "%{$request->nama_layanan}%");
 		}
@@ -96,21 +105,21 @@ class LayananController extends Controller
 					->where("nama_layanan",$row['nama_layanan'])
 					->get();
 
-			if((count($cek_nama_layanan) > 0) && (count($cek_kode_layanan) > 0))
+			if(!empty($cek_nama_layanan) && !empty($cek_kode_layanan))
 			{
 				return response()->json([
 					'success' => false,
 					'message' => 'nama layanan dan kode layanan tidak boleh sama',
 				], 400);
 			}
-			else if((count($cek_nama_layanan) > 0))
+			else if(!empty($cek_nama_layanan))
 			{
 				return response()->json([
 					'success' => false,
 					'message' => 'nama layanan tidak boleh sama',
 				], 400);
 			}
-			else if((count($cek_kode_layanan) > 0))
+			else if(!empty($cek_kode_layanan))
 			{
 				return response()->json([
 					'success' => false,
