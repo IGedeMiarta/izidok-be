@@ -31,22 +31,13 @@ class PembayaranController extends Controller
 
     $pembayaran = new Pembayaran;
 
-		if ($user->hasRole(Constant::SUPER_ADMIN)) {
-			$pembayaran->paginate($request->limit);
-			$data['pembayaran'] = $pembayaran;
-			if ($pembayaran) {
-				return response()->json([
-					'success' => true,
-					'message' => 'success',
-					'data' => $data
-				], 201);
-			}
+		if (!$user->hasRole(Constant::SUPER_ADMIN)) {
+      $pembayaran = $pembayaran->where('klinik_id', $user->klinik_id);
     } 
     
     #filter by date
 		$pembayaran = $pembayaran->whereBetween('created_at',  [$from, $to])
-              ->orWhereDate('created_at', $from)
-              ->where('klinik_id', $user->klinik_id);
+              ->orWhereDate('created_at', $from);
     
     #filter by nama pasien & no. rekam medis
     if (!empty($request->nama_pasien)) {
