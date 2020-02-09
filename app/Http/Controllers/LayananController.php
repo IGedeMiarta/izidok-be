@@ -91,7 +91,9 @@ class LayananController extends Controller
 				Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
 			],
 			'arr.*.tarif' => 'required|integer'
-		]);
+		],['unique' => 'Nama atau kode layanan tidak boleh sama']);
+
+		
 
 		$arr_layanan = $request->arr;
 		$result = array();
