@@ -105,21 +105,21 @@ class LayananController extends Controller
 					->where("nama_layanan",$row['nama_layanan'])
 					->get();
 
-			if(!empty($cek_nama_layanan) && !empty($cek_kode_layanan))
+			if(count($cek_nama_layanan)>0 && count($cek_kode_layanan) > 0)
 			{
 				return response()->json([
 					'success' => false,
 					'message' => 'nama layanan dan kode layanan tidak boleh sama',
 				], 400);
 			}
-			else if(!empty($cek_nama_layanan))
+			else if(count($cek_kode_layanan) > 0)
 			{
 				return response()->json([
 					'success' => false,
-					'message' => 'nama layanan tidak boleh sama',
+					'message' => 'kode layanan tidak boleh sama',
 				], 400);
 			}
-			else if(!empty($cek_kode_layanan))
+			else if(count($cek_nama_layanan) > 0)
 			{
 				return response()->json([
 					'success' => false,
