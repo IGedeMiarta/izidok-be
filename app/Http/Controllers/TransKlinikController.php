@@ -42,22 +42,12 @@ class TransKlinikController extends Controller
 
     $trans_klinik = TransKlinik::with(['pasien', 'examinationBy'])
       ->where('status', $status)
-      ->where('created_by', $user->id)
       ->whereBetween(DB::raw('date(waktu_konsultasi)'),
                     [$from, $to]);
 
-    if ($user->hasRole(Constant::SUPER_ADMIN)) {
-      $trans_klinik = $trans_klinik->paginate($request->limit);
-      $data['trans_klinik'] = $trans_klinik;
-
-      return response()->json([
-        'success' => true,
-        'message' => 'success',
-        'data' => $data
-      ], 201);
+    if (!$user->hasRole(Constant::SUPER_ADMIN)) {
+      $trans_klinik = $trans_klinik->where('created_by', $user->id);
     }
-
-    $trans_klinik =  $trans_klinik->where('created_by', $user->id);
 
     if(!empty($request->nama_pasien)){
       $trans_klinik = $trans_klinik->whereHas('pasien', function($data) use ($request){

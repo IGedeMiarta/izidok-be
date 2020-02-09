@@ -29,22 +29,15 @@ class PasienController extends Controller
 		]);
 
 		$user = $this->user;
+		$pasien = new Pasien;
 
-		if ($user->hasRole(Constant::SUPER_ADMIN)) {
-			$pasien = Pasien::paginate($request->limit);
-			$data['pasien'] = $pasien;
-			return response()->json([
-				'success' => true,
-				'message' => 'success',
-				'data' => $data
-			], 201);
+		if (!$user->hasRole(Constant::SUPER_ADMIN)) {
+			$pasien = $pasien->where('created_by', $user->id);
 		}
 
 		if($request->tanggal_lahir){
             return $this->getByDate($request);
         }
-
-		$pasien = Pasien::where('created_by', $user->id);
 
 		if (!empty($request->nama_pasien)) {
 			$pasien = $pasien->where('nama', 'LIKE', "%{$request->nama_pasien}%");

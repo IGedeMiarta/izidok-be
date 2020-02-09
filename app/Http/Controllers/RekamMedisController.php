@@ -28,14 +28,10 @@ class RekamMedisController extends Controller
     public function index(Request $request)
     {
         $user = User::find($request->user_id);
-        if ($user->hasRole(Constant::SUPER_ADMIN)) {
-            $rekam_medis = RekamMedis::paginate($request->limit);
-            $data['rekam_medis'] = $rekam_medis;
-            return response()->json([
-                'success' => true,
-                'message' => 'success',
-                'data' => $data
-            ], 201);
+        $rekam_medis = new RekamMedis;
+
+        if (!$user->hasRole(Constant::SUPER_ADMIN)) {
+            $rekam_medis = $rekam_medis->where('created_by', $user->id);
         }
 
         if ($request->pasien_id) {
@@ -51,8 +47,7 @@ class RekamMedisController extends Controller
             return $this->getRekamMedisByTanggalLahir($request);
         }
 
-        $rekam_medis = RekamMedis::where('created_by', $user->id)
-            ->with(['transKlinik.pasien', 'transKlinik.examinationBy'])
+        $rekam_medis = $rekam_medis->with(['transKlinik.pasien', 'transKlinik.examinationBy'])
             ->paginate($request->limit);
 
         if (!$rekam_medis) {

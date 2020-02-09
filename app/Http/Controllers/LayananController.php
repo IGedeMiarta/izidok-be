@@ -22,28 +22,10 @@ class LayananController extends Controller
 	{
 		$user = $this->user;
 
-		// if ($request->kode) {
-		// 	#get by kode
-		// }
-
-		// if ($request->name) {
-		// 	#get by name
-		// }
-
-		if ($user->hasRole(Constant::SUPER_ADMIN)) {
-			$layanan = Layanan::paginate($request->limit);
-			$data['layanan'] = $layanan;
-			if ($layanan) {
-				return response()->json([
-					'success' => true,
-					'message' => 'success',
-					'data' => $data
-				], 201);
-			}
+		$layanan = new Layanan;
+		if (!$user->hasRole(Constant::SUPER_ADMIN)) {
+			$layanan = $layanan->where('klinik_id', $user->klinik_id);
 		}
-
-		$layanan = Layanan::where('klinik_id', $user->klinik_id);
-
 
 		if ($request->kode_layanan == "0") {
 			$layanan = $layanan->where('kode_layanan', 'LIKE', '%0%');
