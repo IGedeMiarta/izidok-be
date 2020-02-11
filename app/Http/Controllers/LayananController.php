@@ -30,7 +30,7 @@ class LayananController extends Controller
 		if ($request->kode_layanan == "0") {
 			$layanan = $layanan->where('kode_layanan', 'LIKE', '%0%');
 		} else if (!empty($request->kode_layanan)) {
-			$layanan = $layanan->where('kode_layanan', 'LIKE', '%{$request->kode_layanan}%');
+			$layanan = $layanan->where('kode_layanan', 'LIKE', "%{$request->kode_layanan}%");
 		}
 
 		if ($request->nama_layanan == "0") {

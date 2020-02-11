@@ -16,6 +16,10 @@ class KodePenyakitController extends Controller
 	 */
 	public function index(Request $request)
 	{
+		if($request->name){
+			return $this->getByName($request);
+		}
+
 		$kode_penyakit = KodePenyakit::paginate($request->limit);
 		$data['kode_penyakit'] = $kode_penyakit;
 		return response()->json([
@@ -27,7 +31,7 @@ class KodePenyakitController extends Controller
 
 	public function getByName(Request $request)
 	{
-		$kode_penyakit = KodePenyakit::where('description', 'like', '%' . $request->query('query') . '%')->take(10)->get();
+		$kode_penyakit = KodePenyakit::where('description', 'like', '%' . $request->name . '%')->take(10)->get();
 
 		if (count($kode_penyakit) == 0) {
 			return response()->json([
