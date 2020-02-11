@@ -269,7 +269,7 @@ class RekamMedisController extends Controller
     public function deleteUploadedFile(Request $request)
     {
         $filenames = [];
-        foreach ($request->filenames as $key => $item) {
+        foreach ($request->filenames as $item) {
             array_push($filenames, 'pemeriksaan_penunjang/' . $item);
         }
 
