@@ -160,30 +160,96 @@ class LayananController extends Controller
 			'nama_layanan' => 'required|string',
 			'tarif' => 'required|integer'
 		]);
+		$user = User::find($request->user_id);
 
-		$layanan = Layanan::find($request->id);
-		$user = $this->user;
-
-		if ($user->cant('updateOrDelete', $layanan)) {
-			abort(403);
+		$cek_layanan_klinik = Layanan::where('klinik_id',$user->klinik_id)->where("id",$request->id)->get();
+		// dd($cek_layanan_klinik);
+		if(count($cek_layanan_klinik) == 0)
+		{
+			return response()->json([
+					'status' => false,
+					'message' => "Tidak ada layanan dengan id ".$request->id." di klinik anda" ,
+					'data' => ''
+				],422);
 		}
 
-		if (empty($layanan)) {
+		$cek_layanan = Layanan::where('klinik_id', $user->klinik_id)
+						->where(function ($q) use ($request) {
+					    	$q->where('kode_layanan', $request->kode_layanan)->orWhere('nama_layanan', $request->nama_layanan);
+						})->get();
+
+		if(count($cek_layanan) > 1)
+		{
 			return response()->json([
-				'status' => false,
-				'message' => "layanan not found",
-				'data' => ''
-			]);
-		} else {
-			$layanan->nama_layanan = $request->nama_layanan;
-			$layanan->kode_layanan = $request->kode_layanan;
-			$layanan->tarif = $request->tarif;
-			$layanan->save();
-			return response()->json([
-				'status' => true,
-				'data' => $layanan,
-				'message' => 'success'
-			]);
+					'status' => false,
+					'message' => "Nama atau kode layanan tidak boleh sama",
+					'data' => ''
+				],422);
+		}
+		else if(count($cek_layanan) == 1)
+		{
+			if($cek_layanan->first()->id == $request->id)
+			{
+				$layanan = Layanan::find($request->id);
+				$user = $this->user;
+
+				if ($user->cant('updateOrDelete', $layanan)) {
+					abort(403);
+				}
+
+				if (empty($layanan)) {
+					return response()->json([
+						'status' => false,
+						'message' => "layanan not found",
+						'data' => ''
+					]);
+				} else {
+					$layanan->nama_layanan = $request->nama_layanan;
+					$layanan->kode_layanan = $request->kode_layanan;
+					$layanan->tarif = $request->tarif;
+					$layanan->save();
+					return response()->json([
+						'status' => true,
+						'data' => $layanan,
+						'message' => 'success'
+					]);
+				}
+			}
+			else
+			{
+				return response()->json([
+					'status' => false,
+					'message' => "Nama atau kode layanan tidak boleh sama",
+					'data' => ''
+				],422);
+			}
+		}
+		else
+		{
+			$layanan = Layanan::find($request->id);
+			$user = $this->user;
+
+			if ($user->cant('updateOrDelete', $layanan)) {
+				abort(403);
+			}
+
+			if (empty($layanan)) {
+				return response()->json([
+					'status' => false,
+					'message' => "layanan not found",
+					'data' => ''
+				]);
+			} else {
+				$layanan->nama_layanan = $request->nama_layanan;
+				$layanan->kode_layanan = $request->kode_layanan;
+				$layanan->tarif = $request->tarif;
+				$layanan->save();
+				return response()->json([
+					'status' => true,
+					'data' => $layanan,
+					'message' => 'success'
+				]);
+			}
 		}
 	}
 
