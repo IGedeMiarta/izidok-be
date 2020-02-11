@@ -22,20 +22,15 @@ class OperatorController extends Controller
   public function index(Request $request)
   {
     $user = $this->user;
+    $operator = new Operator;
 
-    if ($user->hasRole(Constant::SUPER_ADMIN)) {
-      $operator = Operator::all()->paginate($request->limit);
-      $data['operator'] = $operator;
-      return response()->json([
-        'success' => true,
-        'message' => 'success',
-        'data' => $data
-      ], 201);
+    if (!$user->hasRole(Constant::SUPER_ADMIN)) {
+      $operator = $operator->wherehas('user', function ($data) use ($user) {
+        $data->where('users.klinik_id', $user->klinik_id);
+      });
     }
 
-    $operator = Operator::wherehas('user', function ($data) use ($user) {
-      $data->where('users.klinik_id', $user->klinik_id);
-    })->get();
+    $operator = $operator->paginate($request->limit);
 
     $data['operator'] = $operator;
 

@@ -63,14 +63,14 @@ class KlinikController extends Controller
         #cek email
         $em = User::where('email', $request->email)
             ->get();
-        if($this->isUserExist($em)){
+        if ($this->isUserExist($em)) {
             return response()->json(['status' => false, 'message' => 'email is already in used!']);
         }
 
         #cek username
         $us = User::where('username', $request->username)
             ->get();
-        if($this->isUserExist($us)){
+        if ($this->isUserExist($us)) {
             return response()->json(['status' => false, 'message' => 'username is already in used!']);
         }
 
@@ -113,7 +113,7 @@ class KlinikController extends Controller
             "no_telp" => $request->nomor_telp,
             "klinik_id" => $klinik->id,
             "alamat" => $request->alamat,
-            "foto_profile" => \uploadToMinio('foto_profile', $request->foto_profile)
+            // "foto_profile" => \uploadToCloud('foto_profile', $request->foto_profile)
         ]);
         $user->assignRole(Constant::DOKTER_PRAKTEK);
 
@@ -179,10 +179,11 @@ class KlinikController extends Controller
         }
     }
 
-    public function isUserExist($users){
+    public function isUserExist($users)
+    {
         if ($users) {
             foreach ($users as $item) {
-                if ($item->activation->status == 1) {
+                if ($item->activation->status == 1 || $item->activation->expired_at < date('Y-m-d H:i:s')) {
                     return true;
                 }
             }

@@ -51,6 +51,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->delete('/user/{id}', 'UserController@delete');
         });
         
+        $router->post('/change_password', 'UserController@changePassword');
 
         #klinik
         $router->get('/klinik', ['middleware' => 'permission:read-klinik', 'uses' => 'KlinikController@index']);
@@ -105,7 +106,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         #pasien
         $router->get('/pasien/verify', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@verifyPasien']);
         $router->get('/pasien', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@index']);
-        $router->get('/pasien/{date}/date', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@getByDate']);
+        // $router->get('/pasien/{date}/date', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@getByDate']);
         $router->post('/pasien', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@store']);
         $router->get('/pasien/{id}', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@show']);
         $router->put('/pasien/{id}', ['middleware' => 'permission:update-pasien', 'uses' => 'PasienController@update']);
@@ -140,6 +141,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/dash-pasien', 'DashboardController@getPasien');
         $router->get('/dash-rawat-jalan', 'DashboardController@getPasienRawatJalan');
         $router->get('/dash-antrian', 'DashboardController@getLastAntrian');
+        $router->get('/dash-summary', 'DashboardController@summary');
 
         $router->get('/pekerjaan', 'PekerjaanController@index');
         $router->get('/pekerjaan/{pekerjaan}', 'PekerjaanController@search');
@@ -157,9 +159,10 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     });
 
     $router->get('/image', function (Request $request) {
-        $file = Storage::disk('minio')->get($request->path);
+        $file = Storage::cloud()->get($request->path);
         return response($file, 200)->header('Content-Type', 'image/jpeg');
     });
 
-    $router->post('/test-upload', 'RekamMedisController@uploadFile');
+    $router->post('/upload-cloud', 'RekamMedisController@uploadFile');
+    $router->post('/delete-cloud', 'RekamMedisController@deleteUploadedFile');
 });

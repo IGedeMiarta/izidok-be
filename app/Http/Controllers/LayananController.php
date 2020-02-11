@@ -7,6 +7,7 @@ use App\Layanan;
 use App\Constant;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use Illuminate\Validation\Rule;
 
 class LayananController extends Controller
 {
@@ -21,34 +22,22 @@ class LayananController extends Controller
 	{
 		$user = $this->user;
 
-		if ($request->kode) {
-			#get by kode
+		$layanan = new Layanan;
+		if (!$user->hasRole(Constant::SUPER_ADMIN)) {
+			$layanan = $layanan->where('klinik_id', $user->klinik_id);
 		}
 
-		if ($request->name) {
-			#get by name
+		if ($request->kode_layanan == "0") {
+			$layanan = $layanan->where('kode_layanan', 'LIKE', '%0%');
+		} else if (!empty($request->kode_layanan)) {
+			$layanan = $layanan->where('kode_layanan', 'LIKE', '%{$request->kode_layanan}%');
 		}
 
-		if ($user->hasRole(Constant::SUPER_ADMIN)) {
-			$layanan = Layanan::paginate($request->limit);
-			$data['layanan'] = $layanan;
-			if ($layanan) {
-				return response()->json([
-					'success' => true,
-					'message' => 'success',
-					'data' => $data
-				], 201);
-			}
+		if ($request->nama_layanan == "0") {
+			$layanan = $layanan->where('nama_layanan', 'LIKE', '%0%');
 		}
-
-		$layanan = Layanan::where('klinik_id', $user->klinik_id);
-		
-		if (!empty($request->kode_layanan)) {
-			$layanan = $layanan->where('kode_layanan', 'LIKE', "%{$request->kode_layanan}%");
-		}
-
 		if (!empty($request->nama_layanan)) {
-			$pasien = $layanan->where('nama_layanan', 'LIKE', "%{$request->nama_layanan}%");
+			$layanan = $layanan->where('nama_layanan', 'LIKE', "%{$request->nama_layanan}%");
 		}
 
 		$layanan = 	$layanan->paginate($request->limit);
@@ -71,41 +60,32 @@ class LayananController extends Controller
 
 	public function store(Request $request)
 	{
+		$user = User::find($request->user_id);
+
 		$this->validate($request, [
 			'arr' => 'required|array',
-			'arr[*].klinik_id' => 'required|integer',
-			'arr[*].kode_layanan' => 'required|string',
-			'arr[*].nama_layanan' => 'required|string',
-			'arr[*].tarif' => 'required|integer'
-		]);
+			'arr.*.kode_layanan' => [
+				'required','string',
+				Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
+			],
+			'arr.*.nama_layanan' => [
+				'required','string',
+				Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
+			],
+			'arr.*.tarif' => 'required|integer'
+		],['unique' => 'Nama atau kode layanan tidak boleh sama']);
+
+		
 
 		$arr_layanan = $request->arr;
 		$result = array();
-
-		$flag = 0;
-		$error_layanan = array();
-		$user = User::find($request->user_id);
-
-		foreach ($arr_layanan as $row) {
-
-			$layanan = Layanan::where("klinik_id",$user->klinik_id)
-					->where("kode_layanan",$row['kode_layanan'])
-					->get();
-			if(count($layanan) > 0)
-			{
-				return response()->json([
-					'success' => false,
-					'message' => 'layanan with code '.$row['kode_layanan'].' is already exsist in this klinik',
-				], 400);
-			}
-		}
 
 		foreach ($arr_layanan as $layanan_obj) {
 			$layanan = new Layanan();
 			$layanan->kode_layanan = $layanan_obj['kode_layanan'];
 			$layanan->nama_layanan = $layanan_obj['nama_layanan'];
 			$layanan->tarif = $layanan_obj['tarif'];
-			$layanan->klinik_id = $layanan_obj['klinik_id'];
+			$layanan->klinik_id = $user->klinik_id;
 			$layanan->created_by = $request->user_id;
 			$layanan->save();
 			array_push($result, $layanan);
@@ -133,19 +113,16 @@ class LayananController extends Controller
 		$kode = $request->kode;
 		$user = User::find($request->user_id);
 
-		$layanan = Layanan::where("klinik_id",$user->klinik_id)
-					->where("kode_layanan",$kode)
-					->get();
+		$layanan = Layanan::where("klinik_id", $user->klinik_id)
+			->where("kode_layanan", $kode)
+			->get();
 
-		if(count($layanan) == 0)
-		{
+		if (count($layanan) == 0) {
 			return response()->json([
 				'success' => false,
 				'message' => 'layanan is not exsist'
-			], 404);	
-		}
-		else
-		{
+			], 404);
+		} else {
 			return response()->json([
 				'success' => true,
 				'message' => 'success',

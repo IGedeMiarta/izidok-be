@@ -55,7 +55,11 @@ class Constant
 	const BULANAN = 'bulanan';
 	const TAHUNAN = 'tahunan';
 	const DATE_RANGE = 'date_range';
-	const TOTAL = 'total'; #total registered pasien (di tgl berjalan)
+	
+	const SUM_PASIEN = 'pasien';
+	const SUM_RAWAT_JALAN = 'rawat_jalan';
+	const ANTREAN = 'antrean';
+	const SUM_PENDAPATAN = 'pendapatan';
 
 	#template email
 	const ACTIVATION_EMAIL_TEMPLATE = 'email-activation';
@@ -67,4 +71,10 @@ class Constant
 	const KATEGORI_GIGI = "20";
 	const TIPE_FASKES_DOKTER_PRAKTIK = "10";
 	const TIPE_FASKES_KLINIK = "20";
+
+	#status pembayaran
+	const DRAFT = 'DRAFT';
+	const BELUM_LUNAS = 'BELUM LUNAS';
+	const LUNAS = 'LUNAS';
+
 }

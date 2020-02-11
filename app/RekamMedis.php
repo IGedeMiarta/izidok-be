@@ -28,4 +28,28 @@ class RekamMedis extends Model implements Auditable
         return $this->belongsTo('App\Pasien', 'nomor_rekam_medis', 'nomor_rekam_medis');
     }
 
+    public function anamnesa()
+    {
+        return $this->belongsTo('App\Anamnesa', 'anamnesa_id', 'id');
+    }
+
+    public function pemeriksaan_fisik()
+    {
+        return $this->belongsTo('App\PemeriksaanFisik', 'pemeriksaan_fisik_id', 'id');
+    }
+
+    public function diagnosa()
+    {
+        return $this->belongsTo('App\Diagnosa', 'diagnosa_id', 'id');
+    }
+
+    public function pemeriksaan_penunjang()
+    {
+        return $this->belongsTo('App\PemeriksaanPenunjang', 'pemeriksaan_penunjang_id', 'id');
+    }
+
+    public function tatalaksana()
+    {
+        return $this->belongsTo('App\TataLaksana', 'tata_laksana_id', 'id');
+    }
 }

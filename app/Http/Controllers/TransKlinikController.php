@@ -8,7 +8,9 @@ use App\Constant;
 use App\Pasien;
 use App\Klinik;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 // use Carbon\Carbon;
 
@@ -40,22 +42,12 @@ class TransKlinikController extends Controller
 
     $trans_klinik = TransKlinik::with(['pasien', 'examinationBy'])
       ->where('status', $status)
-      ->where('created_by', $user->id)
-      ->whereBetween('waktu_konsultasi',  [$from, $to])
-      ->orWhereDate('waktu_konsultasi', $from);
+      ->whereBetween(DB::raw('date(waktu_konsultasi)'),
+                    [$from, $to]);
 
-    if ($user->hasRole(Constant::SUPER_ADMIN)) {
-      $trans_klinik = $trans_klinik->paginate($request->limit);
-      $data['trans_klinik'] = $trans_klinik;
-
-      return response()->json([
-        'success' => true,
-        'message' => 'success',
-        'data' => $data
-      ], 201);
+    if (!$user->hasRole(Constant::SUPER_ADMIN)) {
+      $trans_klinik = $trans_klinik->where('created_by', $user->id);
     }
-
-    $trans_klinik =  $trans_klinik->where('created_by', $user->id);
 
     if(!empty($request->nama_pasien)){
       $trans_klinik = $trans_klinik->whereHas('pasien', function($data) use ($request){
@@ -90,7 +82,7 @@ class TransKlinikController extends Controller
       'nama_lengkap' => 'required|string',
       'nik' => 'string',
       'jenis_kelamin' => 'required|integer|min:0|max:1',
-      'nomor_telp' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:12',
+      'nomor_telp' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
       'waktu_konsultasi' => 'required|string',
       'tinggi_badan' => 'integer',
       'berat_badan' => 'integer',
@@ -113,12 +105,14 @@ class TransKlinikController extends Controller
       return response()->json(['status' => false, 'message' => 'Pasien not found...'], 422);
 
     #transaksi
+  	$user = User::find($request->user_id);
+
     $trans_klinik = new TransKlinik;
     $trans_klinik->examination_by = $request->examination_by;
     $trans_klinik->pasien_id = $request->pasien_id;
-    $trans_klinik->klinik_id = $request->klinik_id;
+    $trans_klinik->klinik_id = $user->klinik_id;
     $trans_klinik->created_by = $request->user_id;
-    $trans_klinik->nomor_antrian = $this->getNextOrderNumber($request->klinik_id,$request->waktu_konsultasi);
+    $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id,$request->waktu_konsultasi);
     $trans_klinik->waktu_konsultasi = $request->waktu_konsultasi;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
     $trans_klinik->save();
@@ -209,12 +203,19 @@ class TransKlinikController extends Controller
     if (!$trans_klinik) {
       return $number;
     }
-
-    if ($trans_klinik->created_at->isToday()) {
-      $number = $trans_klinik->nomor_antrian;
-      return ($number + 1);
+    else
+    {
+    	$number = $trans_klinik->nomor_antrian + 1;
+    	return $number;
     }
 
-    return $number;
+
+
+    // if ($trans_klinik->created_at->isToday()) {
+    //   $number = $trans_klinik->nomor_antrian;
+    //   return ($number + 1);
+    // }
+
+    //return $number;
   }
 }
