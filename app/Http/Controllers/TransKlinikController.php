@@ -22,7 +22,7 @@ class TransKlinikController extends Controller
 	public function __construct(){
 		$this->user = Auth::user();
   }
-  
+
   public function index(Request $request)
   {
 
@@ -91,6 +91,12 @@ class TransKlinikController extends Controller
       'tensi_diastole' => 'integer',
       'nadi' => 'integer',
     ]);
+
+    $klinik_id = $request->klinik_id;
+    $consultation_time = $request->waktu_konsultasi;
+    if ($this->verifyConsultationTime($klinik_id, $consultation_time)) {
+        return response()->json(['status' => false, 'message' => 'Consultation time already exist']);
+    }
 
     #klinik exist?
     if (!Klinik::find($request->klinik_id))
@@ -208,9 +214,6 @@ class TransKlinikController extends Controller
     	$number = $trans_klinik->nomor_antrian + 1;
     	return $number;
     }
-
-
-
     // if ($trans_klinik->created_at->isToday()) {
     //   $number = $trans_klinik->nomor_antrian;
     //   return ($number + 1);
@@ -218,4 +221,16 @@ class TransKlinikController extends Controller
 
     //return $number;
   }
+
+    public function verifyConsultationTime($klinik_id, $consultation_time)
+    {
+        $consultation_time = TransKlinik::where('klinik_id', $klinik_id)
+            ->where('waktu_konsultasi', '=', $consultation_time)->exists();
+
+        if ($consultation_time) {
+            return true;
+        }
+
+        return false;
+    }
 }
