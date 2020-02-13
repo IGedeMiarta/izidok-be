@@ -11,6 +11,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\TransKlinik;
 use App\Klinik;
+use Carbon\Carbon;
 
 class PasienController extends Controller
 {
@@ -98,6 +99,11 @@ class PasienController extends Controller
 			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15'
 		]);
 
+        $dob = $request->tanggal_lahir;
+        if ($this->verifyDOB($dob)) {
+            return response()->json(['status' => false, 'message' => 'Birth date must be no later than today']);
+        }
+
 		$user = User::find($request->user_id);
 		$klinik = Klinik::find($user->klinik_id);
 
@@ -145,7 +151,7 @@ class PasienController extends Controller
 		$pasien->tinggi_badan = $request->input('tinggi_badan');
 		$pasien->berat_badan = $request->input('berat_badan');
 		$pasien->user_id = $request->user_id;
-		
+
 		$str_faskes = "";
 		if ($klinik->tipe_faskes == Constant::TIPE_KLINIK) {
 			$str_faskes = Constant::TIPE_FASKES_KLINIK;
@@ -470,7 +476,7 @@ class PasienController extends Controller
 		foreach($result as $key => $item){
 			if (strpos($item, $check_words['comma']) !== false && $key !== $check_words['birthdate']) {
 				$tmp = $result['birthdate'];
-				$result['birthdate'] = $item; 
+				$result['birthdate'] = $item;
 				$result[$key] = $tmp;
 			}
 		}
@@ -507,7 +513,7 @@ class PasienController extends Controller
 			'tanggal_lahir' => $request->tanggal_lahir,
 			'nomor_hp' => $request->nomor_hp
 		);
-		
+
 		$pasien = Pasien::where($conditions);
 		$is_exist = $pasien->count();
 
@@ -535,5 +541,16 @@ class PasienController extends Controller
 			'message' => 'this patient is available for transaction...',
 			'data' => $pasien
 		]);
-	}
+    }
+
+    public function verifyDOB($dob)
+    {
+        $dob = $dob > Carbon::now()->toDateString();
+
+        if ($dob) {
+            return true;
+        }
+
+        return false;
+    }
 }
