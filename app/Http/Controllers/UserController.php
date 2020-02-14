@@ -464,6 +464,18 @@ class UserController extends Controller
         ], 201);
     }
 
+    public function verifyPhone(Request $request)
+    {
+        $this->validate($request, [
+            'nomor_telp' => 'unique:users|string',
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Phone Number is available...'
+        ], 201);
+    }
+
     public function createRoles()
     {
         Role::create(['name' => 'super_admin']);
