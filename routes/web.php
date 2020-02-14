@@ -154,6 +154,11 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/pembayaran/{id}', ['uses' => 'PembayaranController@show']);
         $router->put('/pembayaran/{id}', ['uses' => 'PembayaranController@update']);
         $router->delete('/pembayaran/{id}', ['uses' => 'PembayaranController@delete']);
+
+        //provinsi kota
+        $router->get('/province', ['uses' => 'ProvinsiKotaController@getProvince']);
+        $router->get('/getcitybyprovince/{id}', ['uses' => 'ProvinsiKotaController@getCityByProvince']);
+
     });
 
     $router->get('/image', function (Request $request) {
