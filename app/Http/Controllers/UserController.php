@@ -69,8 +69,8 @@ class UserController extends Controller
                 $this->validate($request, [
                     'email' => 'required|unique:users|email',
                 ]);
-            } 
-            
+            }
+
             $user->email = $request->email;
             $user->nama = $request->nama;
             $user->nomor_telp = $request->nomor_telp;
@@ -89,7 +89,7 @@ class UserController extends Controller
         if(!$user){
             return response()->json(['status' => false, 'message' => 'user not found...']);
         }
-        
+
         $res = uploadToCloud('foto_profile', $request->foto_profile);
         $user->foto_profile = $res['url'];
 
@@ -112,7 +112,7 @@ class UserController extends Controller
         $username = $request->username;
         $password = $request->password;
 
-        $user = User::where('username', $username)->with('roles')->first();
+        $user = User::where('nomor_telp', $username)->with('roles')->first();
         if (!$user) {
             $user = User::where('email', $username)->with('roles')->first();
         }
@@ -170,7 +170,7 @@ class UserController extends Controller
     }
 
     public function logout(Request $request)
-    {   
+    {
         if(!$request->bearerToken()){
             return response()->json([
                 'status' => false,
@@ -217,12 +217,12 @@ class UserController extends Controller
                 'status' => false,
                 'message' => 'User not found'
             ]);
-        } 
-        else 
+        }
+        else
         {
             $all_activation = Activation::where("user_id","=",$user->id)->get();
             $flag = 0;
-            foreach ($all_activation as $row) 
+            foreach ($all_activation as $row)
             {
                 if($row->status == 1)
                 {
@@ -267,9 +267,9 @@ class UserController extends Controller
                 }
             }
 
-            // Mail::raw('You can reset password by klik :'.url('/api/v1/forgot_password/'.$forgot_password->token), function($msg) use ($request){ 
-            //     $msg->subject('Hi reset your password'); 
-            //     $msg->to([$request->email]); 
+            // Mail::raw('You can reset password by klik :'.url('/api/v1/forgot_password/'.$forgot_password->token), function($msg) use ($request){
+            //     $msg->subject('Hi reset your password');
+            //     $msg->to([$request->email]);
             //     $msg->from(['izi-dok@gmail.com']); });
 
 
