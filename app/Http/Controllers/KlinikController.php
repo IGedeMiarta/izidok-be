@@ -164,7 +164,9 @@ class KlinikController extends Controller
         if (!$klinik) {
             return response()->json(['status' => false, 'message' => 'klinik not found...']);
         } else {
-            $klinik->nama_klinik = $request->nama_klinik;
+            //$klinik->nama_klinik = $request->nama_klinik;
+            $klinik->nomor_ijin = $request->nomor_ijin;
+            $klinik->spesialisasi_id = $request->spesialisasi_id;
             $klinik->save();
             return response()->json(['status' => true, 'data' => $klinik]);
         }
