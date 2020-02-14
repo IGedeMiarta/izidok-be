@@ -18,7 +18,7 @@ class OperatorController extends Controller
 	public function __construct(){
 		$this->user = Auth::user();
   }
-  
+
   public function index(Request $request)
   {
     $user = $this->user;
@@ -52,49 +52,67 @@ class OperatorController extends Controller
   {
     $this->validate($request, [
       'nama' => 'required|string',
-      'email' => 'required|unique:users|email'
+      'email' => 'required|email',
+      'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
+      'password' => 'required|confirmed|min:6',
     ]);
+
+     #cek email
+     $email = User::where('email', $request->email)->exists();
+     if ($email) {
+         return response()->json(['status' => false, 'message' => 'email is already in used!']);
+     }
+
+     #cek nomor_telp
+     $nomor_telp = User::where('nomor_telp', $request->nomor_telp)->exists();
+     if ($nomor_telp) {
+         return response()->json(['status' => false, 'message' => 'no handphone is already in used!']);
+     }
 
     $logged_user = $this->user;
 
     $user = new User();
-    $user->nama = $request->input('nama');
-    $user->email = $request->input('email');
+    $user->username = $request->email;
+    $user->email = $request->email;
+    $user->password = Hash::make($request->password);
+    $user->nama = $request->nama;
+    $user->nomor_telp = $request->nomor_telp;
     $user->klinik_id = $logged_user->klinik_id;
     $user->save();
     $user->assignRole(Constant::OPERATOR);
 
     $operator = new Operator();
-    $operator->nama = $request->input('nama');
+    $operator->nama = $request->nama;
     $operator->user_id = $user->id;
     $operator->created_by = $request->user_id;
     $operator->save();
 
-    $activation = new Activation();
+    /*$activation = new Activation();
     $activation->token = base64_encode(str_random(30));
     $activation->user_id = $user->id;
+    $activation->status = 1;
     $activation->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
-    $activation->save();
+    $activation->save();*/
 
     $data['user'] = $user;
     $data['operator'] = $operator;
-    $data['activation'] = $activation;
+    //$data['activation'] = $activation;
 
-    $act_url = url(env('APP_PREFIX', 'api/v1') . '/operator/check/' . $activation->token);
+    //$act_url = url(env('APP_PREFIX', 'api/v1') . '/operator/check/' . $activation->token);*
 
     $email_data = [
-      'subject' => 'Operator Activation',
-      'message' => 'Click link below to activate operator: \n ' . $act_url,
-      'activation_url' => $act_url,
+      'subject' => 'Operator Login Data',
+      'from' => 'postmaster@esindo.net',
       'to' => [$user->email],
-      'from' => 'izidok.dev@gmail.com',
-      'nama' => $user->nama,
+      'name' => $user->nama,
+      'phone' => $user->nomor_telp,
+      'email' => $user->email,
+      'password' => $request->password,
     ];
 
     if (\sendEmail($email_data, Constant::OPERATOR_EMAIL_TEMPLATE)) {
       return response()->json([
         'status' => true,
-        'message' => 'aktivasi telah dibuat',
         'data' => $data
       ]);
     }
@@ -281,7 +299,7 @@ class OperatorController extends Controller
     if ($user->cant('updateOrDelete', $operator)) {
 			abort(403);
     }
-    
+
     if (empty($operator)) {
       return response()->json([
         'status' => false,
@@ -298,5 +316,18 @@ class OperatorController extends Controller
         'message' => 'Operator \'' . $nama . '\' has been deleted'
       ]);
     }
+  }
+
+  public function isUserExist($users)
+  {
+      if ($users) {
+          foreach ($users as $item) {
+              if ($item->activation->status == 1 || $item->activation->expired_at < date('Y-m-d H:i:s')) {
+                  return true;
+              }
+          }
+      }
+
+      return false;
   }
 }
