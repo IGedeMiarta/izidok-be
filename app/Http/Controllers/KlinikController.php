@@ -66,8 +66,8 @@ class KlinikController extends Controller
             return response()->json(['status' => false, 'message' => 'email is already in used!']);
         }
 
-        #cek username by nomor_telp
-        $username = User::where('username', $request->nomor_telp)->get();
+        #cek nomor_telp
+        $username = User::where('nomor_telp', $request->nomor_telp)->get();
         if ($this->isUserExist($username)) {
             return response()->json(['status' => false, 'message' => 'no handphone is already in used!']);
         }
@@ -105,12 +105,12 @@ class KlinikController extends Controller
         #data user
         //$random_password = str_random(8);
         $user = User::create([
-            "username" => $request->nomor_telp,
+            "username" => $request->email,
             "email" => $request->email,
             //'password' => Hash::make($random_password),
             'password' => Hash::make($request->password),
             "nama" => $nama_pic,
-            //"nomor_telp" => $request->nomor_telp,
+            "nomor_telp" => $request->nomor_telp,
             "klinik_id" => $klinik->id,
             //"alamat" => $request->alamat,
             //"foto_profile" => \uploadToCloud('foto_profile', $request->foto_profile)
@@ -140,11 +140,12 @@ class KlinikController extends Controller
 
         $email_data = [
             'subject' => 'Konfirmasi Akun izidok',
-            'from' => 'izidok.dev@gmail.com',
+            //'from' => 'izidok.dev@gmail.com',
+            'from' => 'postmaster@esindo.net',
             'to' => [$user->email],
             'activation_url' => $data['activation_url'],
             'name' => $user->nama,
-            'phone' => $user->username,
+            'phone' => $user->nomor_telp,
             'email' => $user->email,
             'password' => $request->password,
         ];
