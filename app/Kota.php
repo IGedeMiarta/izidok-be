@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Kota extends Model
 {
     protected $table = 'kota';
-    public $timestamps = false;
+    public $timestamps = true;
 
     use SoftDeletes;
 

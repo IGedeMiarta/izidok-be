@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Provinsi extends Model
 {
     protected $table = 'provinsi';
-    public $timestamps = false;
+    public $timestamps = true;
 
     use SoftDeletes;
 
