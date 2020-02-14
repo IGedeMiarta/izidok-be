@@ -9,7 +9,7 @@ use App\Constant;
 use App\Dokter;
 use App\Activation;
 use App\Reference;
-
+use Illuminate\Support\Facades\Hash;
 
 class KlinikController extends Controller
 {
@@ -50,38 +50,36 @@ class KlinikController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'tipe_faskes' => 'required|min:1:max:2',
+            //'tipe_faskes' => 'required|min:1:max:2',
             'nama_klinik' => 'required|string',
             'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
             'email' => 'required|email',
-            'username' => 'required|string',
+            //'username' => 'required|string',
             'password' => 'required|confirmed|min:6',
-            'alamat' => 'string',
-            'foto_profile' => 'file|max:5000',
+            //'alamat' => 'string',
+            //'foto_profile' => 'file|max:5000',
         ];
 
         #cek email
-        $em = User::where('email', $request->email)
-            ->get();
+        $em = User::where('email', $request->email)->get();
         if ($this->isUserExist($em)) {
             return response()->json(['status' => false, 'message' => 'email is already in used!']);
         }
 
-        #cek username
-        $us = User::where('username', $request->username)
-            ->get();
-        if ($this->isUserExist($us)) {
-            return response()->json(['status' => false, 'message' => 'username is already in used!']);
+        #cek username by nomor_telp
+        $username = User::where('username', $request->nomor_telp)->get();
+        if ($this->isUserExist($username)) {
+            return response()->json(['status' => false, 'message' => 'no handphone is already in used!']);
         }
 
         $activation_url = Reference::where('key', Constant::VERIFY_EMAIL)->first();
+
         $isKlinik = false;
         if ($request->tipe_faskes == Constant::TIPE_KLINIK) {
             $rules['nama_pic'] = 'required|string';
             $isKlinik = true;
         }
         $this->validate($request, $rules);
-
 
         if ($isKlinik) {
             $nama_pic = $request->nama_pic;
@@ -94,10 +92,10 @@ class KlinikController extends Controller
 
         #data klinik
         $klinik = Klinik::create([
-            'tipe_faskes' => $request->tipe_faskes,
+            'tipe_faskes' => 2,
             'nama_klinik' => $request->nama_klinik,
             'nama_pic' => $nama_pic,
-            'nomor_ijin' => $request->nomor_ijin,
+            //'nomor_ijin' => $request->nomor_ijin,
             'nomor_telp' => $request->nomor_telp
         ]);
 
@@ -105,15 +103,17 @@ class KlinikController extends Controller
         $klinik->save();
 
         #data user
+        //$random_password = str_random(8);
         $user = User::create([
-            "username" => $request->username,
+            "username" => $request->nomor_telp,
             "email" => $request->email,
-            "password" => app('hash')->make($request->password),
+            //'password' => Hash::make($random_password),
+            'password' => Hash::make($request->password),
             "nama" => $nama_pic,
-            "no_telp" => $request->nomor_telp,
+            //"nomor_telp" => $request->nomor_telp,
             "klinik_id" => $klinik->id,
-            "alamat" => $request->alamat,
-            // "foto_profile" => \uploadToCloud('foto_profile', $request->foto_profile)
+            //"alamat" => $request->alamat,
+            //"foto_profile" => \uploadToCloud('foto_profile', $request->foto_profile)
         ]);
         $user->assignRole(Constant::DOKTER_PRAKTEK);
 
@@ -135,14 +135,18 @@ class KlinikController extends Controller
 
         $data['klinik_id'] = $klinik->id;
         $data['user_id'] = $user->id;
-        $data['activation_url'] =  url(env('APP_PREFIX', 'api/v1') . $activation_url->value . '/' . $activation->token);
+        //$data['password'] = $random_password;
+        $data['activation_url'] = url(env('APP_PREFIX', 'api/v1') . $activation_url->value . '/' . $activation->token);
 
         $email_data = [
-            'subject' => 'User Activation',
-            'activation_url' => $data['activation_url'],
-            'to' => [$user->email],
+            'subject' => 'Konfirmasi Akun izidok',
             'from' => 'izidok.dev@gmail.com',
-            'username' => $user->username
+            'to' => [$user->email],
+            'activation_url' => $data['activation_url'],
+            'name' => $user->nama,
+            'phone' => $user->username,
+            'email' => $user->email,
+            'password' => $request->password,
         ];
 
         \sendEmail($email_data, Constant::ACTIVATION_EMAIL_TEMPLATE);
