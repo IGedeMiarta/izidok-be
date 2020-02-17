@@ -239,6 +239,11 @@ class UserController extends Controller
             }
             else
             {
+                $all_forgot = ForgotPassword::where("user_id", "=", $user->id)->get();
+                foreach ($all_forgot as $forgot) {
+                    $forgot->delete();
+                }
+
                 $forgot_password = new ForgotPassword();
                 $forgot_password->token = base64_encode(str_random(40));
                 $forgot_password->user_id = $user->id;
