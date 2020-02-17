@@ -23,6 +23,10 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->get('/username/verify', 'UserController@verifyUsername');
     $router->get('/phone/verify', 'UserController@verifyPhone');
     $router->get('/spesialisasi', 'SpesialisasiController@index');
+    
+    //provinsi kota
+    $router->get('/province', ['uses' => 'ProvinsiKotaController@getProvince']);
+    $router->get('/getcitybyprovince/{id}', ['uses' => 'ProvinsiKotaController@getCityByProvince']);
 
     //registration
     // $router->post('/user', 'UserController@store');
