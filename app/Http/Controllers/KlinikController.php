@@ -55,7 +55,7 @@ class KlinikController extends Controller
             'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
             'email' => 'required|email',
             //'username' => 'required|string',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|confirmed|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             //'alamat' => 'string',
             //'foto_profile' => 'file|max:5000',
         ];
