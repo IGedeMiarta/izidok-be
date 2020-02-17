@@ -419,11 +419,14 @@ class UserController extends Controller
         $data['activation_url'] =  url(env('APP_PREFIX', 'api/v1') . $activation_url->value . '/' . $activation->token);
 
         $email_data = [
-            'subject' => 'Konfirmasi Akun Izidok',
-            'activation_url' => $data['activation_url'],
-            'to' => $user->email,
+            'subject' => 'Konfirmasi Akun izidok',
             'from' => 'izidok.dev@gmail.com',
-            'username' => $user->username
+            'to' => [$user->email],
+            'activation_url' => $data['activation_url'],
+            'name' => $user->nama,
+            'phone' => $user->nomor_telp,
+            'email' => $user->email,
+            //'password' => $request->password,
         ];
 
         if (\sendEmail($email_data, Constant::ACTIVATION_EMAIL_TEMPLATE)) {
