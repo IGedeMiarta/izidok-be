@@ -146,7 +146,7 @@ class KlinikController extends Controller
             'name' => $user->nama,
             'phone' => $user->nomor_telp,
             'email' => $user->email,
-            'password' => $request->password,
+            //'password' => $request->password,
         ];
 
         \sendEmail($email_data, Constant::ACTIVATION_EMAIL_TEMPLATE);
