@@ -165,7 +165,7 @@ class KlinikController extends Controller
         if (!$klinik) {
             return response()->json(['status' => false, 'message' => 'klinik not found...']);
         } else {
-            Klinik::find($request->id)->fill(Input::all())->save();
+            Klinik::find($request->id)->fill(Input::except(['tipe_faskes', 'kode_faskes']))->save();
             $klinik = Klinik::find($request->id);
             return response()->json(['status' => true, 'data' => $klinik]);
         }
