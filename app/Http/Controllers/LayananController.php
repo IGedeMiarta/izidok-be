@@ -75,8 +75,6 @@ class LayananController extends Controller
 			'arr.*.tarif' => 'required|integer'
 		],['unique' => 'Nama atau kode layanan tidak boleh sama']);
 
-		
-
 		$arr_layanan = $request->arr;
 		$result = array();
 
@@ -89,9 +87,15 @@ class LayananController extends Controller
 			$layanan->created_by = $request->user_id;
 			$layanan->save();
 			array_push($result, $layanan);
-		}
+        }
 
-		$data['layanan'] = $result;
+        $user = Auth::user();
+	    if (!empty($user) && $user->is_first_login !== 0) {
+            $user->update(['is_first_login' => 0]);
+        }
+
+        $data['layanan'] = $result;
+        $data['is_first_login'] = $user->is_first_login;
 
 		if (count($data['layanan']) > 0) {
 			return response()->json([
