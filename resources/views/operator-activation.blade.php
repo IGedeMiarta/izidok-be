@@ -96,36 +96,24 @@
                                         </div>
                                         <!--[if mso]></td></tr></table><![endif]-->
                                         <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 5px; padding-bottom: 30px; font-family: Arial, sans-serif"><![endif]-->
-                                        <div style="color:#555555;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;line-height:1.5;padding-top:5px;padding-right:10px;padding-bottom:30px;padding-left:10px;">
-                                            <div style="font-size: 12px; line-height: 1.5; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #555555; mso-line-height-alt: 18px;">
-                                                <p style="font-size: 14px; line-height: 1.5; mso-line-height-alt: 21px; margin: 0;">Aktifkan Akun Izidok Anda sebagai Operator!</p>
-                                                <p style="font-size: 14px; line-height: 1.5; mso-line-height-alt: 21px; margin: 0;"><br></p>
-                                                <p style="font-size: 14px; line-height: 1.5; mso-line-height-alt: 21px; margin: 0;">Kami telah menerima permintaan pembuatan akun Izidok untuk anda. Mohon konfirmasi email ini untuk mengaktifkan akun Izidok Anda.</p>
-                                            </div>
-                                        </div>
-                                        <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp; &nbsp;Berikut merupakan data registrasi Akun izidok Anda :</p>
+                                        <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp; Berikut merupakan <span style="color: rgb(44, 130, 201);"><strong>data registrasi Asisten Dokter</strong></span> pada Akun izidok Anda :</p>
                                         <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><br></p>
                                         <table style="width: 85%; margin-left: calc(6%); margin-right: calc(9%); border: 1px solid;">
                                             <tbody>
                                                 <tr>
-                                                    <td style="width: 33.3649%;">Nama Operator</td>
-                                                    <td style="width: 8.8267%;">:</td>
-                                                    <td style="width: 57.6641%;">{{@$name}}</td>
+                                                    <td style="width: 39.7562%;">Nama Asisten Dokter</td>
+                                                    <td style="width: 9.9466%;">:</td>
+                                                    <td style="width: 49.8095%;">{{@$name}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="width: 33.3649%;">No. Handphone</td>
-                                                    <td style="width: 8.8267%;">:</td>
-                                                    <td style="width: 57.6641%;">{{@$phone}}</td>
+                                                    <td style="width: 39.7562%;">No. Handphone</td>
+                                                    <td style="width: 9.9466%;">:</td>
+                                                    <td style="width: 49.8095%;">{{@$phone}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="width: 33.3649%;">Email</td>
-                                                    <td style="width: 8.8267%;">:</td>
-                                                    <td style="width: 57.6641%;">{{@$email}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 33.3649%;">Password</td>
-                                                    <td style="width: 8.8267%;">:</td>
-                                                    <td style="width: 57.6641%;">{{@$password}}</td>
+                                                    <td style="width: 39.7562%;">Email</td>
+                                                    <td style="width: 9.9466%;">:</td>
+                                                    <td style="width: 49.8095%;">{{@$email}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -135,8 +123,8 @@
 Kasih,</span></p>
                                         <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
                                         <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
-                                        <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Izidok
-Team</span></p>
+                                        <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Tim izidok
+</span></p>
                                     </div>
                                 </div>
                                 <!--[if mso]></td></tr></table><![endif]-->
