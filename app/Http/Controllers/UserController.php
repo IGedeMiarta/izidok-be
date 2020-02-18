@@ -294,11 +294,13 @@ class UserController extends Controller
                 ->where('category', $category)->first();
             $data['url'] = $config->value;
 
-            return response()->json([
+            return redirect($config->value);
+
+            /*return response()->json([
                 'status' => false,
                 'message' => 'forgot password not found',
                 'data' => $data
-            ]);
+            ]);*/
         } else if (strtotime(date('Y-m-d H:i:s')) > strtotime($forgot_password->expired_at)) {
             $key = Constant::FORGOT_INVALID;
             $category = Constant::REDIRECTION;
