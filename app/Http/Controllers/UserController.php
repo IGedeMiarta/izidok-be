@@ -132,14 +132,14 @@ class UserController extends Controller
         }
 
         if (Hash::check($password, $user->password)) {
-            $first_login = false;
+            /*$first_login = false;
             if ($user->is_first_login == 1) {
                 $user->update([
                     'is_first_login' => 0
                 ]);
 
                 $first_login = true;
-            }
+            }*/
 
             $token = base64_encode(str_random(40));
 
@@ -156,7 +156,7 @@ class UserController extends Controller
                 'data' => [
                     'user' => $user,
                     'token' => $token,
-                    'first_login' => $first_login,
+                    //'first_login' => $first_login,
                     'klinik' => $user->klinik
                 ]
             ], 201);
