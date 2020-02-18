@@ -10,6 +10,7 @@ use App\Dokter;
 use App\Activation;
 use App\Reference;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
 
 class KlinikController extends Controller
 {
@@ -164,10 +165,8 @@ class KlinikController extends Controller
         if (!$klinik) {
             return response()->json(['status' => false, 'message' => 'klinik not found...']);
         } else {
-            //$klinik->nama_klinik = $request->nama_klinik;
-            $klinik->nomor_ijin = $request->nomor_ijin;
-            $klinik->spesialisasi_id = $request->spesialisasi_id;
-            $klinik->save();
+            Klinik::find($request->id)->fill(Input::all())->save();
+            $klinik = Klinik::find($request->id);
             return response()->json(['status' => true, 'data' => $klinik]);
         }
     }
