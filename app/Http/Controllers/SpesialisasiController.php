@@ -14,7 +14,7 @@ class SpesialisasiController extends Controller
      */
     public function index()
     {
-        $spesialisasi = Spesialisasi::all();
+        $spesialisasi = Spesialisasi::all(['id', 'nama']);
         $data['spesialisasi'] = $spesialisasi;
 
         return response()->json([
