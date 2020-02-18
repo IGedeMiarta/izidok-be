@@ -18,7 +18,7 @@ class Klinik extends Model implements Auditable
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'nama_pic', 'nama_klinik', 'nomor_telp', 'nomor_ijin', 'spesialisasi_id'
+        'nama_pic', 'nama_klinik', 'nomor_telp', 'tipe_faskes', 'nomor_ijin', 'spesialisasi_id'
     ];
 
     public function user()
