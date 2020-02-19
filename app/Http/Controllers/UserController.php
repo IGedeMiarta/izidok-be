@@ -142,7 +142,7 @@ class UserController extends Controller
             $api_key->save();
 
             $first_login = $user->is_first_login;
-            if ($first_login === 0) {
+            if ($first_login === 1) {
                 $first_login = true;
             } else {
                 $first_login = false;
