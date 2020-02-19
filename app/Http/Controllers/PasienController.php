@@ -70,23 +70,26 @@ class PasienController extends Controller
 	public function store(Request $request)
 	{
 		$this->validate($request, [
-			'nama' => 'required|string',
+            'nama' => 'required|string',
+            'jenis_identitas' => 'string',
 			'nik' => 'string',
 			'tempat_lahir' => 'string',
 			'tanggal_lahir' => 'required|date_format:Y-m-d',
 			'jenis_kelamin' => 'required|integer',
 			'golongan_darah' => 'string',
 			'alamat_rumah' => 'required|string',
-			'rt' => 'string',
-			'rw' => 'string',
-			'kelurahan' => 'string',
-			'kecamatan' => 'string',
+			//'rt' => 'string',
+			//'rw' => 'string',
+			//'kelurahan' => 'string',
+            //'kecamatan' => 'string',
+            'provinsi' => 'integer',
+            'kota' =>  'integer',
 			'status_perkawinan' => 'string',
-			'pekerjaan' => 'string',
-			'nomor_hp' => 'regex:/^([0-9\s\-\+\(\)]*)$/|max:30',
-			'nama_penjamin' => 'string',
-			'nomor_polis_asuransi' => 'string',
-			'nomor_member_asuransi' => 'string',
+			//'pekerjaan' => 'string',
+			'nomor_hp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|max:30',
+			//'nama_penjamin' => 'string',
+			//'nomor_polis_asuransi' => 'string',
+			//'nomor_member_asuransi' => 'string',
 			'email' => 'string',
 			'nama_penanggung_jawab' => 'string',
 			'tensi_sistole' => 'integer',
@@ -123,23 +126,26 @@ class PasienController extends Controller
 		}
 
 		$pasien = new Pasien();
-		$pasien->nama = $request->input('nama');
+        $pasien->nama = $request->input('nama');
+        $pasien->jenis_identitas = $request->input('jenis_identitas');
 		$pasien->nik = $request->input('nik');
 		$pasien->tempat_lahir = $request->input('tempat_lahir');
 		$pasien->tanggal_lahir = $request->input('tanggal_lahir');
 		$pasien->jenis_kelamin = $request->input('jenis_kelamin');
 		$pasien->golongan_darah = $request->input('golongan_darah');
 		$pasien->alamat_rumah = $request->input('alamat_rumah');
-		$pasien->rt = $request->input('rt');
-		$pasien->rw = $request->input('rw');
-		$pasien->kelurahan = $request->input('kelurahan');
-		$pasien->kecamatan = $request->input('kecamatan');
+		//$pasien->rt = $request->input('rt');
+		//$pasien->rw = $request->input('rw');
+		//$pasien->kelurahan = $request->input('kelurahan');
+        //$pasien->kecamatan = $request->input('kecamatan');
+        $pasien->provinsi = $request->input('provinsi');
+        $pasien->kota = $request->input('kota');
 		$pasien->status_perkawinan = $request->input('status_perkawinan');
-		$pasien->pekerjaan = $request->input('pekerjaan');
+		//$pasien->pekerjaan = $request->input('pekerjaan');
 		$pasien->nomor_hp = $request->input('nomor_hp');
-		$pasien->nama_penjamin = $request->input('nama_penjamin');
-		$pasien->nomor_polis_asuransi = $request->input('nomor_polis_asuransi');
-		$pasien->nomor_member_asuransi = $request->input('nomor_member_asuransi');
+		//$pasien->nama_penjamin = $request->input('nama_penjamin');
+		//$pasien->nomor_polis_asuransi = $request->input('nomor_polis_asuransi');
+		//$pasien->nomor_member_asuransi = $request->input('nomor_member_asuransi');
 		$pasien->email = $request->input('email');
 		$pasien->nama_penanggung_jawab = $request->input('nama_penanggung_jawab');
 		$pasien->nomor_hp_penanggung_jawab = $request->input('nomor_hp_penanggung_jawab');
@@ -173,14 +179,14 @@ class PasienController extends Controller
 		else
 		{
 			$n_pasien = $last_pasien->nomor_pasien + 1;
-		}
+        }
+
 		$pasien->nomor_pasien = $n_pasien;
-
 		$nomor_pasien_rm = sprintf('%06d', $n_pasien);
-
 		$rekam_medis = $str_faskes . Constant::KATEGORI_UMUM . $klinik->kode_faskes . $nomor_pasien_rm;
 		$arr_rekam_medis = str_split($rekam_medis,4);
-		$str_rekam_medis = "";
+        $str_rekam_medis = "";
+
 		foreach ($arr_rekam_medis as $rm) {
 			$str_rekam_medis .= $rm;
 			if($rm != end($arr_rekam_medis))
@@ -190,10 +196,8 @@ class PasienController extends Controller
 		}
 
 		$pasien->nomor_rekam_medis = $str_rekam_medis;
-
 		$pasien->klinik_id = $user->klinik_id;
 		$pasien->created_by = $request->user_id;
-
 		$status = $pasien->save();
 
 		if ($status) {
@@ -255,7 +259,7 @@ class PasienController extends Controller
 	public function update(Request $request)
 	{
 		$this->validate($request, [
-			'nama' => 'required|string',
+            'nama' => 'required|string',
 			'nik' => 'string',
 			'tempat_lahir' => 'string',
 			'tanggal_lahir' => 'required|date_format:Y-m-d',
@@ -368,7 +372,7 @@ class PasienController extends Controller
 		if ($user->cant('updateOrDelete', $pasien)) {
 			abort(403);
 		}
-
+        //dd($pasien->transKlinik);
 		if (sizeof($pasien->transKlinik)) {
 			return response()->json([
 				'status' => false,
