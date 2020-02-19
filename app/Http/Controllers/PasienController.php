@@ -260,7 +260,7 @@ class PasienController extends Controller
 			'rw' => 'string',
 			'kelurahan' => 'string',
 			'kecamatan' => 'string',
-			'status_perkawinan' => 'required|string',
+			'status_perkawinan' => 'string',
 			'pekerjaan' => 'string',
 			'nomor_hp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
 			'nama_penjamin' => 'string',
