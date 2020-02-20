@@ -118,7 +118,7 @@ class UserController extends Controller
         }
 
         if (!$user) {
-            \saveActivityLog('failed login',$request, null);
+            \saveActivityLog('failed login, user not found',$request, null);
             return response()->json([
                 'status' => false,
                 'message' => 'User not found...'
@@ -153,7 +153,8 @@ class UserController extends Controller
             $user->last_session = substr($token, 10,20);
             $user->save();
 
-            \saveActivityLog('success login',$request, null);
+            $request->userId = $user->id;
+            \saveActivityLog('login',$request, null);
 
             return response()->json([
                 'status' => true,

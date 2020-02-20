@@ -12,7 +12,7 @@ function saveActivityLog($activity, $request, $dta){
     $log = new ActivityLog();
     $log->activity = $activity;
     $log->ip = $request->ip();
-    $log->user_id = $userId;
+    $log->user_id = ($activity == 'login' ? $request->userId : $userId);
     $log->browser = $agent->browser();
     $log->device = $agent->device();
     $log->platform = $agent->platform();
