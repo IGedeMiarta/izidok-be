@@ -178,6 +178,7 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         if(!$request->bearerToken()){
+            \saveActivityLog('failed logout, user has not been logged in',$request, null);
             return response()->json([
                 'status' => false,
                 'message' => 'Logout gagal, user belum melakukan login!',
@@ -196,6 +197,8 @@ class UserController extends Controller
             $api_key->logout_at = date('Y/m/d h:i:s');
             $api_key->save();
 
+            \saveActivityLog('logout success',$request, null);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Logout Berhasil',
@@ -205,6 +208,7 @@ class UserController extends Controller
                 ]
             ], 201);
         } else {
+            \saveActivityLog('failed logout, user not found',$request, null);
             return response()->json([
                 'status' => false,
                 'message' => 'Logout gagal, user tidak ditemukan',
