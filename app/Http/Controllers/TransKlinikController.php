@@ -108,7 +108,7 @@ class TransKlinikController extends Controller
     $klinik_id = $request->klinik_id;
     $consultation_time = $request->waktu_konsultasi;
     if ($this->verifyConsultationDate($pasien_id, $klinik_id, $consultation_time)) {
-        return response()->json(['status' => false, 'message' => 'Pasien sudah teregistrasi']);
+        return response()->json(['status' => false, 'message' => 'Patient already registered']);
     }
 
     #transaksi
