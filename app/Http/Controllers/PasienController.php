@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\TransKlinik;
 use App\Klinik;
 use Carbon\Carbon;
+use DB;
 
 class PasienController extends Controller
 {
@@ -25,31 +26,33 @@ class PasienController extends Controller
 	public function index(Request $request)
 	{
 		$this->validate($request, [
-			'nama_pasien' => 'string',
-			'no_rekam_medis' => 'string',
+            'nomor_rekam_medis' => 'string',
+            'nama' => 'string',
+            'jenis_kelamin' => 'integer',
+            'nomor_hp' => 'string'
 		]);
 
 		$user = $this->user;
 		$pasien = new Pasien;
 
-		if (!$user->hasRole(Constant::SUPER_ADMIN)) {
-			$pasien = $pasien->where('created_by', $user->id);
-		}
-
-		if($request->tanggal_lahir){
-            return $this->getByDate($request);
+        if(empty($request->column) && empty($request->order)) {
+            $column = 'id';
+            $order = 'desc';
+        } else {
+            $column = $request->column;
+            $order = $request->order;
         }
 
-		if (!empty($request->nama_pasien)) {
-			$pasien = $pasien->where('nama', 'LIKE', "%{$request->nama_pasien}%");
-		}
+        $pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp')
+                ->where('nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
+                ->where('nama', 'like', "%{$request->nama}%")
+                ->where('jenis_kelamin', 'like', "%{$request->jenis_kelamin}%")
+                ->where('nomor_hp', 'like', "%{$request->nomor_hp}%")
+                ->where('created_by', $user->id)
+                ->orderBy($column, $order)
+                ->paginate($request->limit);
 
-		if (!empty($request->no_rekam_medis)) {
-			$pasien = $pasien->where('nomor_rekam_medis', 'LIKE', "%{$request->no_rekam_medis}%");
-		}
-
-		$pasien = $pasien->paginate($request->limit);
-		$data['pasien'] = $pasien;
+        $data['pasien'] = $pasien;
 
 		if (!$pasien) {
 			return response()->json([
@@ -58,7 +61,6 @@ class PasienController extends Controller
 				'data' => $data
 			], 201);
 		}
-
 
 		return response()->json([
 			'success' => true,
@@ -372,7 +374,7 @@ class PasienController extends Controller
 		if ($user->cant('updateOrDelete', $pasien)) {
 			abort(403);
 		}
-        //dd($pasien->transKlinik);
+
 		if (sizeof($pasien->transKlinik)) {
 			return response()->json([
 				'status' => false,
