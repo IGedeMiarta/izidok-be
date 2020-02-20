@@ -43,7 +43,7 @@ class PasienController extends Controller
             $order = $request->order;
         }
 
-        $pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp')
+        $pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id')
                 ->where('nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
                 ->where('nama', 'like', "%{$request->nama}%")
                 ->where('jenis_kelamin', 'like', "%{$request->jenis_kelamin}%")
