@@ -148,7 +148,7 @@ class UserController extends Controller
                 $first_login = false;
             }
 
-            $user->last_session = session_id();
+            $user->last_session = substr($token, 10,10);
             $user->save();
 
             return response()->json([
