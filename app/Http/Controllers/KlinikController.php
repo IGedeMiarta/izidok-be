@@ -104,7 +104,6 @@ class KlinikController extends Controller
         $klinik->save();
 
         #data user
-        //$random_password = str_random(8);
         $user = User::create([
             "username" => $request->email,
             "email" => $request->email,
@@ -136,7 +135,7 @@ class KlinikController extends Controller
 
         $data['klinik_id'] = $klinik->id;
         $data['user_id'] = $user->id;
-        //$data['password'] = $random_password;
+        $data['created_at'] = date_format($klinik->created_at, 'Y-m-d H:i:s');
         $data['activation_url'] = url(env('APP_PREFIX', 'api/v1') . $activation_url->value . '/' . $activation->token);
 
         $email_data = [
@@ -147,7 +146,6 @@ class KlinikController extends Controller
             'name' => $user->nama,
             'phone' => $user->nomor_telp,
             'email' => $user->email,
-            //'password' => $request->password,
         ];
 
         \sendEmail($email_data, Constant::ACTIVATION_EMAIL_TEMPLATE);
