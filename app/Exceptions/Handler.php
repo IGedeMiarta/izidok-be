@@ -75,7 +75,7 @@ class Handler extends ExceptionHandler
                 return response()->json([
                     'status' => false,
                     'message' => 'Your account has been logged in another device!'
-                ], 69);
+                ], 469);
             }
         }
         
