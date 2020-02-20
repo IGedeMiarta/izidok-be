@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Jenssegers\Agent\Agent;
 
 class UserController extends Controller
 {
@@ -118,12 +117,10 @@ class UserController extends Controller
             $user = User::where('email', $username)->with('roles')->first();
         }
 
-        $agent = new Agent();
-        // dd($agent->platform());
-
-        \saveActivityLog('req login',$request->server('HTTP_USER_AGENT'),$request->all());
+        \saveActivityLog('user login',$request->all());
 
         if (!$user) {
+            \saveActivityLog('failed login',$request->all());
             return response()->json([
                 'status' => false,
                 'message' => 'User not found...'
@@ -131,6 +128,7 @@ class UserController extends Controller
         }
 
         if ($user->activation->status == 0) {
+            \saveActivityLog('user has not been activated',$request->all());
             return response()->json([
                 'status' => false,
                 'message' => 'Please check your email to activate user...'
@@ -156,6 +154,8 @@ class UserController extends Controller
 
             $user->last_session = substr($token, 10,20);
             $user->save();
+
+            \saveActivityLog('success login',$request->all());
 
             return response()->json([
                 'status' => true,
