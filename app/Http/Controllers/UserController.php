@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Jenssegers\Agent\Agent;
 
 class UserController extends Controller
 {
@@ -116,6 +117,11 @@ class UserController extends Controller
         if (!$user) {
             $user = User::where('email', $username)->with('roles')->first();
         }
+
+        $agent = new Agent();
+        // dd($agent->platform());
+
+        \saveActivityLog('req login',$request->server('HTTP_USER_AGENT'),$request->all());
 
         if (!$user) {
             return response()->json([

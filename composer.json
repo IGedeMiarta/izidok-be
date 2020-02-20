@@ -13,6 +13,7 @@
         "guzzlehttp/guzzle": "^6.4",
         "illuminate/console": "5.8.35",
         "illuminate/mail": "5.8.35",
+        "jenssegers/agent": "^2.6",
         "laravel/helpers": "^1.1",
         "laravel/lumen-framework": "5.8.*",
         "laravelista/lumen-vendor-publish": "5.8",

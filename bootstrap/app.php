@@ -105,6 +105,7 @@ $app->register('Nord\Lumen\Cors\CorsServiceProvider');
 $app->register(App\Providers\MinIOStorageServiceProvider::class);
 $app->alias('cache', \Illuminate\Cache\CacheManager::class);  // if you don't have this already
 $app->register(Spatie\Permission\PermissionServiceProvider::class);
+$app->register(Jenssegers\Agent\AgentServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
