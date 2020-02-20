@@ -189,6 +189,7 @@ class UserController extends Controller
         $api_key = ApiKey::whereApiKey($api_key)->first();
 
         if ($api_key) {
+            \saveActivityLog('logout success',$request, null);
             // $user->update([
             //     'api_token' => ''
             // ]);
@@ -196,8 +197,6 @@ class UserController extends Controller
             #update api_key to expired
             $api_key->logout_at = date('Y/m/d h:i:s');
             $api_key->save();
-
-            \saveActivityLog('logout success',$request, null);
 
             return response()->json([
                 'status' => true,
