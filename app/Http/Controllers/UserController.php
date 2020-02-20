@@ -148,6 +148,9 @@ class UserController extends Controller
                 $first_login = false;
             }
 
+            $user->last_session = session_id();
+            $user->save();
+
             return response()->json([
                 'status' => true,
                 'message' => 'Login Berhasil',
