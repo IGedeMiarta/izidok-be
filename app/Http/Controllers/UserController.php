@@ -370,7 +370,7 @@ class UserController extends Controller
         }
 
         if (strtotime(date('Y-m-d H:i:s')) > strtotime($activation->expired_at)) {
-            $url = Reference::where('key', Constant::ACTIVATION_FAILED)->first();
+            $url = Reference::where('key', Constant::ACTIVATION_EXPIRED)->first();
             return redirect($url->value);
         }
 

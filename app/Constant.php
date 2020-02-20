@@ -42,7 +42,8 @@ class Constant
 	const ACT_OPT_INVALID = 'act_opt_invalid';
 
 	const ACTIVATION_SUCCESS = 'activation_success';
-	const ACTIVATION_FAILED = 'activation_failed';
+    const ACTIVATION_FAILED = 'activation_failed';
+    const ACTIVATION_EXPIRED = 'activation_expired';
 	const ALREADY_ACTIVATED = 'already_activated';
 	const VERIFY_EMAIL = 'verify_email';
 
@@ -55,7 +56,7 @@ class Constant
 	const BULANAN = 'bulanan';
 	const TAHUNAN = 'tahunan';
 	const DATE_RANGE = 'date_range';
-	
+
 	const SUM_PASIEN = 'pasien';
 	const SUM_RAWAT_JALAN = 'rawat_jalan';
 	const ANTREAN = 'antrean';
