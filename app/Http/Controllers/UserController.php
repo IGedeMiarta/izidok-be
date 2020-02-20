@@ -117,10 +117,10 @@ class UserController extends Controller
             $user = User::where('email', $username)->with('roles')->first();
         }
 
-        \saveActivityLog('user login',$request->all());
+        \saveActivityLog('user login',$request);
 
         if (!$user) {
-            \saveActivityLog('failed login',$request->all());
+            \saveActivityLog('failed login',$request);
             return response()->json([
                 'status' => false,
                 'message' => 'User not found...'
@@ -128,7 +128,7 @@ class UserController extends Controller
         }
 
         if ($user->activation->status == 0) {
-            \saveActivityLog('user has not been activated',$request->all());
+            \saveActivityLog('user has not been activated',$request);
             return response()->json([
                 'status' => false,
                 'message' => 'Please check your email to activate user...'
@@ -155,7 +155,7 @@ class UserController extends Controller
             $user->last_session = substr($token, 10,20);
             $user->save();
 
-            \saveActivityLog('success login',$request->all());
+            \saveActivityLog('success login',$request);
 
             return response()->json([
                 'status' => true,

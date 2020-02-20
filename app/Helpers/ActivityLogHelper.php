@@ -12,7 +12,7 @@ function saveActivityLog($activity, $data){
     $log->browser = $agent->browser();
     $log->device = $agent->device();
     $log->platform = $agent->platform();
-    $log->data = json_encode($data);
+    $log->data = json_encode($data->all());
     $log->save();
 
     return true;
