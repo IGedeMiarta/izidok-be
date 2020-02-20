@@ -19,7 +19,7 @@ class SingleDeviceMiddleware
     public function handle($request, Closure $next)
     {
         if (substr($request->bearerToken(), 10,20) != Auth::user()->last_session) {
-            abort(441);
+            abort(69);
         }
         return $next($request);
     }
