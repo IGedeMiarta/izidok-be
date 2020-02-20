@@ -80,6 +80,7 @@ $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'permission' => Spatie\Permission\Middlewares\PermissionMiddleware::class,
     'role'       => Spatie\Permission\Middlewares\RoleMiddleware::class,
+    'singdev'       => App\Http\Middleware\SingleDeviceMiddleware::class,
 ]);
 
 /*

@@ -69,6 +69,15 @@ class Handler extends ExceptionHandler
                 ], 440);
             }
         }
+
+        if($exception instanceof HttpException){
+            if($exception->getStatusCode() === 441){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Your account has been logged in another device!'
+                ], 441);
+            }
+        }
         
         return parent::render($request, $exception);
     }

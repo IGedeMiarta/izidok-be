@@ -46,7 +46,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
     $router->post('/logout', 'UserController@logout');
 
-    $router->group(['middleware' => 'auth'], function () use ($router) {
+    $router->group(['middleware' => ['auth','singdev']], function () use ($router) {
         //user
         $router->put('/user/{id}', 'UserController@update');
         $router->post('/user/upload-foto/{id}', 'UserController@uploadFotoProfile');
