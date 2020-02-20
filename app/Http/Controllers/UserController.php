@@ -460,18 +460,6 @@ class UserController extends Controller
         ], 201);
     }
 
-    public function verifyUsername(Request $request)
-    {
-        $this->validate($request, [
-            'username' => 'unique:users|string',
-        ]);
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Username is available...'
-        ], 201);
-    }
-
     public function verifyPhone(Request $request)
     {
         $this->validate($request, [
