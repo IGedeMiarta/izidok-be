@@ -92,12 +92,6 @@ class TransKlinikController extends Controller
       'nadi' => 'integer',
     ]);
 
-    $klinik_id = $request->klinik_id;
-    $consultation_time = $request->waktu_konsultasi;
-    if ($this->verifyConsultationTime($klinik_id, $consultation_time)) {
-        return response()->json(['status' => false, 'message' => 'Consultation time already exist']);
-    }
-
     #klinik exist?
     if (!Klinik::find($request->klinik_id))
       return response()->json(['status' => false, 'message' => 'Klinik not found...'], 422);
@@ -109,6 +103,13 @@ class TransKlinikController extends Controller
     #pasien exist?
     if (!Pasien::find($request->pasien_id))
       return response()->json(['status' => false, 'message' => 'Pasien not found...'], 422);
+
+    $pasien_id = $request->pasien_id;
+    $klinik_id = $request->klinik_id;
+    $consultation_time = $request->waktu_konsultasi;
+    if ($this->verifyConsultationDate($pasien_id, $klinik_id, $consultation_time)) {
+        return response()->json(['status' => false, 'message' => 'Pasien sudah teregistrasi']);
+    }
 
     #transaksi
   	$user = User::find($request->user_id);
@@ -222,12 +223,13 @@ class TransKlinikController extends Controller
     //return $number;
   }
 
-    public function verifyConsultationTime($klinik_id, $consultation_time)
+    public function verifyConsultationDate($pasien_id, $klinik_id, $consultation_time)
     {
-        $consultation_time = TransKlinik::where('klinik_id', $klinik_id)
+        $exist = TransKlinik::where('pasien_id', $pasien_id)
+            ->where('klinik_id', '=', $klinik_id)
             ->where('waktu_konsultasi', '=', $consultation_time)->exists();
 
-        if ($consultation_time) {
+        if ($exist) {
             return true;
         }
 
