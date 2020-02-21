@@ -83,7 +83,6 @@ class TransKlinikController extends Controller
       'nik' => 'string',
       'jenis_kelamin' => 'required|integer|min:0|max:1',
       'nomor_telp' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
-      'waktu_konsultasi' => 'required|string',
       'tinggi_badan' => 'integer',
       'berat_badan' => 'integer',
       'suhu' => 'integer',
@@ -120,7 +119,7 @@ class TransKlinikController extends Controller
     $trans_klinik->klinik_id = $user->klinik_id;
     $trans_klinik->created_by = $request->user_id;
     $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id,$request->waktu_konsultasi);
-    $trans_klinik->waktu_konsultasi = $request->waktu_konsultasi;
+    $trans_klinik->waktu_konsultasi = Carbon::now();
     $trans_klinik->status = Constant::TRX_MENUNGGU;
     $trans_klinik->save();
 
