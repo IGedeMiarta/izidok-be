@@ -445,7 +445,7 @@ class UserController extends Controller
             'name' => $user->nama,
             'phone' => $user->nomor_telp,
             'email' => $user->email,
-            //'password' => $request->password,
+            'password' => 'Password sesuai dengan yang diinput',
         ];
 
         if (\sendEmail($email_data, Constant::ACTIVATION_EMAIL_TEMPLATE)) {
