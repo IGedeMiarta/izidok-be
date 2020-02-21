@@ -91,7 +91,7 @@
                                         <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]-->
                                         <div style="color:#132F40;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
                                             <div style="font-size: 12px; line-height: 1.2; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #132F40; mso-line-height-alt: 14px;">
-                                                <p style="font-size: 22px; line-height: 1.2; mso-line-height-alt: 26px; margin: 0;"><span style="font-size: 22px;">Hai, <strong>{{@$name}}</strong>,</span></p>
+                                                <p style="font-size: 22px; line-height: 1.2; mso-line-height-alt: 26px; margin: 0;"><span style="font-size: 22px;">Hai, <strong>{{@$doctor_name}}</strong>,</span></p>
                                             </div>
                                         </div>
                                         <!--[if mso]></td></tr></table><![endif]-->
