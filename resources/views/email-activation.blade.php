@@ -1,13 +1,8 @@
 <!-- [if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG></o:AllowPNG><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
-<p>&nbsp;</p>
 <!-- [if !mso]><!-->
-<p>&nbsp;</p>
 <!--<![endif]-->
-<p>&nbsp;</p>
 <!-- [if !mso]><!-->
-<p>&nbsp;</p>
 <!--<![endif]-->
-<p>&nbsp;</p>
 <!-- [if IE]><div class="ie-browser"><![endif]-->
 <table class="nl-container" style="table-layout: fixed; vertical-align: top; min-width: 320px; margin: 0 auto; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #b8cce2; width: 100%;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#B8CCE2">
 <tbody>
