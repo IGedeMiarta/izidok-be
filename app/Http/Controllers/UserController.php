@@ -190,7 +190,7 @@ class UserController extends Controller
         $api_key = ApiKey::whereApiKey($api_key)->first();
 
         if ($api_key) {
-            \saveAudits('logout success',$request, null);
+            \saveAudits('logout',$request, null);
             // $user->update([
             //     'api_token' => ''
             // ]);
