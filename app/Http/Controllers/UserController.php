@@ -263,6 +263,7 @@ class UserController extends Controller
                 $forgot_password->save();
 
                 $forgot_url = url(env('APP_PREFIX', 'api/v1') . '/check_forgot/' . $forgot_password->token);
+                $current_user_name = User::select('nama')->where('id', $user->id)->value('nama');
 
                 $email_data = [
                     'subject' => 'Forgot Password',
@@ -270,8 +271,7 @@ class UserController extends Controller
                     'activation_url' => $forgot_url,
                     'to' => [$forgot_password->email],
                     'from' => 'izidok.dev@gmail.com',
-                    'nama' => $user->nama,
-                    'username' => $user->username,
+                    'name' =>  $current_user_name,
                 ];
 
                 if (\sendEmail($email_data, Constant::FORGOT_EMAIL_TEMPLATE)) {
@@ -382,13 +382,13 @@ class UserController extends Controller
             return redirect($url->value);
         }
 
-        if (strtotime(date('Y-m-d H:i:s')) > strtotime($activation->expired_at)) {
-            $url = Reference::where('key', Constant::ACTIVATION_EXPIRED)->first();
+        if ($activation->status == 1) {
+            $url = Reference::where('key', Constant::ALREADY_ACTIVATED)->first();
             return redirect($url->value);
         }
 
-        if ($activation->status == 1) {
-            $url = Reference::where('key', Constant::ALREADY_ACTIVATED)->first();
+        if (strtotime(date('Y-m-d H:i:s')) > strtotime($activation->expired_at)) {
+            $url = Reference::where('key', Constant::ACTIVATION_EXPIRED)->first();
             return redirect($url->value);
         }
 

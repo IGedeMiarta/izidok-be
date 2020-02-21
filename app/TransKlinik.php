@@ -22,6 +22,11 @@ class TransKlinik extends Model implements Auditable
         return $this->belongsTo('App\KlinikDokter', 'klinik_dokter_id', 'id');
     }
 
+    public function klinikOperator()
+    {
+        return $this->belongsTo('App\KlinikOperator', 'klinik_operator_id', 'id');
+    }
+
     public function pasien()
     {
         return $this->belongsTo('App\Pasien', 'pasien_id', 'id');

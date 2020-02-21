@@ -33,7 +33,7 @@ class PasienController extends Controller
 		]);
 
 		$user = $this->user;
-		$pasien = new Pasien;
+        $pasien = new Pasien;
 
         if(empty($request->column) && empty($request->order)) {
             $column = 'id';
@@ -52,6 +52,7 @@ class PasienController extends Controller
                 ->orderBy($column, $order)
                 ->paginate($request->limit);
 
+        $data['role'] = $user->roles->first()->name;
         $data['pasien'] = $pasien;
 
 		if (!$pasien) {
