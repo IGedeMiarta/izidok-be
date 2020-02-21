@@ -61,18 +61,6 @@ class KlinikController extends Controller
             //'foto_profile' => 'file|max:5000',
         ];
 
-        #cek email
-        $em = User::where('email', $request->email)->get();
-        if ($this->isUserExist($em)) {
-            return response()->json(['status' => false, 'message' => 'email is already in used!']);
-        }
-
-        #cek nomor_telp
-        $username = User::where('nomor_telp', $request->nomor_telp)->get();
-        if ($this->isUserExist($username)) {
-            return response()->json(['status' => false, 'message' => 'no handphone is already in used!']);
-        }
-
         $activation_url = Reference::where('key', Constant::VERIFY_EMAIL)->first();
 
         $isKlinik = false;
