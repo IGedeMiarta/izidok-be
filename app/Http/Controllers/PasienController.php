@@ -28,7 +28,7 @@ class PasienController extends Controller
 		$this->validate($request, [
             'nomor_rekam_medis' => 'string',
             'nama' => 'string',
-            'jenis_kelamin' => 'integer',
+            //'jenis_kelamin' => 'integer',
             'nomor_hp' => 'string'
 		]);
 
@@ -43,6 +43,15 @@ class PasienController extends Controller
             $order = $request->order;
         }
 
+        $man = "l k i";
+        $women = "p e r m u n";
+        $gender = $request->jenis_kelamin;
+        if (strpos($man, $gender) !== false) {
+            $gender = '1';
+        } elseif (strpos($women, $gender) !== false) {
+            $gender = '0';
+        }
+
         if ($request->nama_pasien) {
 	        $pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id')
 	        		->where('nama', 'like', "%{$request->nama_pasien}%")
@@ -53,7 +62,7 @@ class PasienController extends Controller
 	        $pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id')
 	                ->where('nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
 	                ->where('nama', 'like', "%{$request->nama_pasien}%")
-	                ->where('jenis_kelamin', 'like', "%{$request->jenis_kelamin}%")
+	                ->where('jenis_kelamin', 'like', "%{$gender}%")
 	                ->where('nomor_hp', 'like', "%{$request->nomor_hp}%")
 	                ->where('klinik_id', $user->klinik_id)
 	                ->orderBy($column, $order)
