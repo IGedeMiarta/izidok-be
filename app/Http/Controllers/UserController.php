@@ -125,8 +125,6 @@ class UserController extends Controller
         }
         if ($user->roles->first()->name !== Constant::OPERATOR) {
             if ($user->activation->status == 0) {
-                $request->userId = $user->id;
-                \saveAudits('user has not been activated',$request, null);
                 return response()->json([
                     'status' => false,
                     'message' => 'Please check your email to activate user...'
