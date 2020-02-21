@@ -44,7 +44,7 @@ class OperatorController extends Controller
     return response()->json([
       'success' => true,
       'message' => 'success',
-      'data' => $data
+      'data' => $data,
     ], 201);
   }
 
