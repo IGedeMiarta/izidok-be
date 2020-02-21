@@ -101,12 +101,13 @@ class OperatorController extends Controller
 
     //$act_url = url(env('APP_PREFIX', 'api/v1') . '/operator/check/' . $activation->token);*
     $current_user_email = User::select('email')->where('id', $request->user_id)->value('email');
+    $current_user_name = User::select('nama')->where('id', $request->user_id)->value('nama');
 
     $email_data = [
       'subject' => 'Operator Login Data',
       'from' => 'izidok.dev@gmail.com',
       'to' => [$current_user_email],
-      'name' => $user->nama,
+      'name' => $current_user_name,
       'phone' => $user->nomor_telp,
       'email' => $user->email,
       'password' => $request->password,
