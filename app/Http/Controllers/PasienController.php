@@ -43,14 +43,22 @@ class PasienController extends Controller
             $order = $request->order;
         }
 
-        $pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id')
-                ->where('nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
-                ->where('nama', 'like', "%{$request->nama}%")
-                ->where('jenis_kelamin', 'like', "%{$request->jenis_kelamin}%")
-                ->where('nomor_hp', 'like', "%{$request->nomor_hp}%")
-                ->where('klinik_id', $user->klinik_id)
-                ->orderBy($column, $order)
-                ->paginate($request->limit);
+        if ($request->nama_pasien) {
+	        $pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id')
+	        		->where('nama', 'like', "%{$request->nama_pasien}%")
+	                ->where('klinik_id', $user->klinik_id)
+					->orderBy($column, $order)
+					->get();
+        } else {
+	        $pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id')
+	                ->where('nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
+	                ->where('nama', 'like', "%{$request->nama_pasien}%")
+	                ->where('jenis_kelamin', 'like', "%{$request->jenis_kelamin}%")
+	                ->where('nomor_hp', 'like', "%{$request->nomor_hp}%")
+	                ->where('klinik_id', $user->klinik_id)
+	                ->orderBy($column, $order)
+	                ->paginate($request->limit);
+        }
 
         $data['role'] = $user->roles->first()->name;
         $data['pasien'] = $pasien;
