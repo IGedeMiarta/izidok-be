@@ -475,7 +475,7 @@ class UserController extends Controller
 
     public function verifyPhone(Request $request)
     {
-        $phone = User::where('nomor_telp', $request->nomor_telp)->orderBy('id', 'desc')>get();
+        $phone = User::where('nomor_telp', $request->nomor_telp)->orderBy('id', 'desc')->get();
         if ($this->isUserInvalid($phone) === true) {
             return response()->json(['status' => true, 'message' => 'phone number is valid']);
         } else {
