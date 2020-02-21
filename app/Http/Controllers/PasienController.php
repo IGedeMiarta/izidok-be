@@ -45,13 +45,13 @@ class PasienController extends Controller
 
         if ($request->nama_pasien) {
 	        $pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id')
-	        		->where('nama', 'like', "%{$request->nama}%")
+	        		->where('nama', 'like', "%{$request->nama_pasien}%")
 	                ->where('klinik_id', $user->klinik_id)
 	                ->orderBy($column, $order);
         } else {
 	        $pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id')
 	                ->where('nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
-	                ->where('nama', 'like', "%{$request->nama}%")
+	                ->where('nama', 'like', "%{$request->nama_pasien}%")
 	                ->where('jenis_kelamin', 'like', "%{$request->jenis_kelamin}%")
 	                ->where('nomor_hp', 'like', "%{$request->nomor_hp}%")
 	                ->where('klinik_id', $user->klinik_id)
