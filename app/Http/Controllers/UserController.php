@@ -127,7 +127,9 @@ class UserController extends Controller
             if ($user->activation->status == 0) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Please check your email to activate user...'
+                    'message' => 'Please check your email to activate user...',
+                    'user_id' => $user->id,
+                    'created_at' => $user->created_at,
                 ]);
             }
         }
