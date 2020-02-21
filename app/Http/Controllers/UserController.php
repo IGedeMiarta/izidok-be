@@ -464,26 +464,36 @@ class UserController extends Controller
 
     public function verifyEmail(Request $request)
     {
-        $this->validate($request, [
-            'email' => 'unique:users|email',
-        ]);
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Email is available...'
-        ], 201);
+        $email = User::where('email', $request->email)->get();
+        if ($this->isUserInvalid($email) === true) {
+            return response()->json(['status' => true, 'message' => 'email is valid']);
+        } else {
+            return response()->json(['status' => false, 'message' => 'email is already in use!']);
+        }
     }
 
     public function verifyPhone(Request $request)
     {
-        $this->validate($request, [
-            'nomor_telp' => 'unique:users|string',
-        ]);
+        $phone = User::where('nomor_telp', $request->nomor_telp)->get();
+        if ($this->isUserInvalid($phone) === true) {
+            return response()->json(['status' => true, 'message' => 'phone number is valid']);
+        } else {
+            return response()->json(['status' => false, 'message' => 'phone is already in use!']);
+        }
+    }
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Phone Number is available...'
-        ], 201);
+    public function isUserInvalid($users)
+    {
+        if ($users) {
+            foreach ($users as $item) {
+                // user not activated & activation expired
+                if ($item->activation->status === 0 && $item->activation->expired_at < date('Y-m-d H:i:s')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
     }
 
     public function createRoles()
