@@ -22,7 +22,6 @@ class DokterController extends Controller
   public function index(Request $request)
   {
     $user = $this->user;
-
     if ($user->hasRole(Constant::SUPER_ADMIN)) {
       $dokter = Dokter::paginate($request->limit);
       $data['dokter'] = $dokter;
@@ -34,7 +33,15 @@ class DokterController extends Controller
     }
 
     $dokter = Dokter::where('user_id', $user->id)->paginate();
-    $data['dokter'] = $dokter;
+
+    if (count($dokter) > 0) {
+      $data['dokter'] = $dokter;
+    } else {
+      $dokterId = Operator::where('user_id',$user->id)->first();
+      $dokter = Dokter::where('user_id', $dokterId->created_by)->paginate();
+      $data['dokter'] = $dokter;
+    }
+    
     return response()->json([
       'success' => true,
       'message' => 'success',
