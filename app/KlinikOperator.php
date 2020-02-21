@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class KlinikOperator extends Model 
+class KlinikOperator extends Model
 {
 
     protected $table = 'klinik_operator';
@@ -23,6 +23,11 @@ class KlinikOperator extends Model
     public function operator()
     {
         return $this->belongsTo('App\Operator', 'operator_id', 'id');
+    }
+
+    public function transKlinik()
+    {
+        return $this->hasMany('App\TransKlinik', 'klinik_operator_id', 'id');
     }
 
 }
