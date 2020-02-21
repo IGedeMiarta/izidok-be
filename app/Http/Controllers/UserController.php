@@ -118,7 +118,6 @@ class UserController extends Controller
         }
 
         if (!$user) {
-            \saveActivityLog('failed login, user not found',$request, null);
             return response()->json([
                 'status' => false,
                 'message' => 'User not found...'
@@ -126,7 +125,7 @@ class UserController extends Controller
         }
 
         if ($user->activation->status == 0) {
-            \saveActivityLog('user has not been activated',$request, null);
+            \saveAudits('user has not been activated',$request, null);
             return response()->json([
                 'status' => false,
                 'message' => 'Please check your email to activate user...'
@@ -154,7 +153,7 @@ class UserController extends Controller
             $user->save();
 
             $request->userId = $user->id;
-            \saveActivityLog('login',$request, null);
+            \saveAudits('login',$request, null);
 
             return response()->json([
                 'status' => true,
@@ -167,7 +166,8 @@ class UserController extends Controller
                 ]
             ], 201);
         } else {
-            \saveActivityLog('failed login',$request, null);
+            $request->userId = $user->id;
+            \saveAudits('failed login',$request, null);
             return response()->json([
                 'status' => false,
                 'message' => 'Login Gagal',
@@ -179,7 +179,7 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         if(!$request->bearerToken()){
-            \saveActivityLog('failed logout, user has not been logged in',$request, null);
+            \saveAudits('failed logout, user has not been logged in',$request, null);
             return response()->json([
                 'status' => false,
                 'message' => 'Logout gagal, user belum melakukan login!',
@@ -190,7 +190,7 @@ class UserController extends Controller
         $api_key = ApiKey::whereApiKey($api_key)->first();
 
         if ($api_key) {
-            \saveActivityLog('logout success',$request, null);
+            \saveAudits('logout success',$request, null);
             // $user->update([
             //     'api_token' => ''
             // ]);
@@ -208,7 +208,7 @@ class UserController extends Controller
                 ]
             ], 201);
         } else {
-            \saveActivityLog('failed logout, user not found',$request, null);
+            \saveAudits('failed logout, user not found',$request, null);
             return response()->json([
                 'status' => false,
                 'message' => 'Logout gagal, user tidak ditemukan',

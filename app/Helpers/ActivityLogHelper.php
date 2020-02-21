@@ -1,22 +1,28 @@
 <?php 
 
-use App\ActivityLog;
-use Jenssegers\Agent\Agent;
+use App\AuditsModel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 
-function saveActivityLog($activity, $request, $dta){
-    $agent = new Agent();
-    $userId = empty(Auth::user()) ? null : Auth::user()->id;
+function saveAudits($event, $request, $dta){
+    $userAgent = $request->server('HTTP_USER_AGENT');
+    if(preg_match("/login/i", $event)) {
+        $userId = $request->userId;
+    } else {
+        $userId = empty(Auth::user()) ? null : Auth::user()->id;
+    }
     $data = is_null($dta) ? null : json_encode($dta);
 
-    $log = new ActivityLog();
-    $log->activity = $activity;
-    $log->ip = $request->ip();
-    $log->user_id = ($activity == 'login' ? $request->userId : $userId);
-    $log->browser = $agent->browser();
-    $log->device = $agent->device();
-    $log->platform = $agent->platform();
-    $log->data = $data;
+    $log = new AuditsModel();
+    $log->user_id = $userId;
+    $log->event = $event;
+    $log->auditable_type = 'App\User';
+    $log->auditable_id = $userId;
+    $log->url = URL::current();
+    $log->ip_address = $request->ip();
+    $log->user_agent = $userAgent;
+    $log->created_at = date('Y-m-d H:i:s');
+    $log->updated_at = date('Y-m-d H:i:s');
     $log->save();
 
     return true;

@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ActivityLog extends Model 
+class AuditsModel extends Model 
 {
 
-    protected $table = 'activity_log';
+    protected $table = 'audits';
     public $timestamps = false;
 }
