@@ -48,7 +48,7 @@ class PasienController extends Controller
                 ->where('nama', 'like', "%{$request->nama}%")
                 ->where('jenis_kelamin', 'like', "%{$request->jenis_kelamin}%")
                 ->where('nomor_hp', 'like', "%{$request->nomor_hp}%")
-                ->where('created_by', $user->id)
+                ->where('klinik_id', $user->klinik_id)
                 ->orderBy($column, $order)
                 ->paginate($request->limit);
 

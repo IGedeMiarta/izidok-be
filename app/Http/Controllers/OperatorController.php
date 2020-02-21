@@ -77,6 +77,7 @@ class OperatorController extends Controller
     $user->password = Hash::make($request->password);
     $user->nama = $request->nama;
     $user->nomor_telp = $request->nomor_telp;
+    $user->is_first_login = 0;
     $user->klinik_id = $logged_user->klinik_id;
     $user->save();
     $user->assignRole(Constant::OPERATOR);
