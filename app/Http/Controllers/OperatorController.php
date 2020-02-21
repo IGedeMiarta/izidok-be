@@ -104,7 +104,7 @@ class OperatorController extends Controller
 
     $email_data = [
       'subject' => 'Operator Login Data',
-      'from' => 'posmaster@esindo.net',
+      'from' => 'izidok.dev@gmail.com',
       'to' => [$current_user_email],
       'name' => $user->nama,
       'phone' => $user->nomor_telp,
