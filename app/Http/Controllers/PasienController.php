@@ -349,8 +349,8 @@ class PasienController extends Controller
 		$pasien->jenis_kelamin = $request->input('jenis_kelamin');
 		$pasien->golongan_darah = $request->input('golongan_darah');
 		$pasien->alamat_rumah = $request->input('alamat_rumah');
-		$pasien->provinsi = $request->input('provinsi');
-		$pasien->kota = $request->input('kota');
+		$pasien->provinsi = $request->provinsi ? $request->input('provinsi') : null;
+		$pasien->kota = $request->kota ? $request->input('kota') : null;
 		//$pasien->kelurahan = $request->input('kelurahan');
 		//$pasien->kecamatan = $request->input('kecamatan');
 		$pasien->status_perkawinan = $request->input('status_perkawinan');
