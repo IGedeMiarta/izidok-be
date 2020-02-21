@@ -16,5 +16,6 @@ class HelperServiceProvider extends ServiceProvider
     {
         require base_path().'/app/Helpers/EmailHelper.php';
         require base_path().'/app/Helpers/UploadFileHelper.php';
+        require base_path().'/app/Helpers/ActivityLogHelper.php';
     }
 }

@@ -124,13 +124,12 @@ class UserController extends Controller
             ]);
         }
 
-        if ($user->roles->first()->name !== Constant::OPERATOR) {
-            if ($user->activation->status == 0) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Please check your email to activate user...'
-                ]);
-            }
+        if ($user->activation->status == 0) {
+            \saveAudits('user has not been activated',$request, null);
+            return response()->json([
+                'status' => false,
+                'message' => 'Please check your email to activate user...'
+            ]);
         }
 
         if (Hash::check($password, $user->password)) {
@@ -153,6 +152,9 @@ class UserController extends Controller
             $user->last_session = substr($token, 10,20);
             $user->save();
 
+            $request->userId = $user->id;
+            \saveAudits('login',$request, null);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Login Berhasil',
@@ -164,6 +166,8 @@ class UserController extends Controller
                 ]
             ], 201);
         } else {
+            $request->userId = $user->id;
+            \saveAudits('failed login',$request, null);
             return response()->json([
                 'status' => false,
                 'message' => 'Login Gagal',
@@ -175,6 +179,7 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         if(!$request->bearerToken()){
+            \saveAudits('failed logout, user has not been logged in',$request, null);
             return response()->json([
                 'status' => false,
                 'message' => 'Logout gagal, user belum melakukan login!',
@@ -185,6 +190,7 @@ class UserController extends Controller
         $api_key = ApiKey::whereApiKey($api_key)->first();
 
         if ($api_key) {
+            \saveAudits('logout',$request, null);
             // $user->update([
             //     'api_token' => ''
             // ]);
@@ -202,6 +208,7 @@ class UserController extends Controller
                 ]
             ], 201);
         } else {
+            \saveAudits('failed logout, user not found',$request, null);
             return response()->json([
                 'status' => false,
                 'message' => 'Logout gagal, user tidak ditemukan',

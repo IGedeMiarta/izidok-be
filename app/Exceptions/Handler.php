@@ -71,11 +71,11 @@ class Handler extends ExceptionHandler
         }
 
         if($exception instanceof HttpException){
-            if($exception->getStatusCode() === 69){
+            if($exception->getStatusCode() === 469){
                 return response()->json([
                     'status' => false,
                     'message' => 'Your account has been logged in another device!'
-                ], 69);
+                ], 469);
             }
         }
         
