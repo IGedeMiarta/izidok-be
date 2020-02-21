@@ -464,7 +464,8 @@ class UserController extends Controller
 
     public function verifyEmail(Request $request)
     {
-        $email = User::where('email', $request->email)->get();
+        $email = User::where('email', $request->email)->orderBy('id', 'desc')->get();
+        //dd($email);
         if ($this->isUserInvalid($email) === true) {
             return response()->json(['status' => true, 'message' => 'email is valid']);
         } else {
@@ -474,7 +475,7 @@ class UserController extends Controller
 
     public function verifyPhone(Request $request)
     {
-        $phone = User::where('nomor_telp', $request->nomor_telp)->get();
+        $phone = User::where('nomor_telp', $request->nomor_telp)->orderBy('id', 'desc')>get();
         if ($this->isUserInvalid($phone) === true) {
             return response()->json(['status' => true, 'message' => 'phone number is valid']);
         } else {
