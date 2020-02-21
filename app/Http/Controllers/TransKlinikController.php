@@ -120,6 +120,7 @@ class TransKlinikController extends Controller
     $trans_klinik->created_by = $request->user_id;
     $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id,$request->waktu_konsultasi);
     $trans_klinik->waktu_konsultasi = Carbon::now();
+    $trans_klinik->anamnesa = $request->anamnesis;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
     $trans_klinik->save();
 
