@@ -219,7 +219,14 @@ class PasienController extends Controller
 
 	public function show(Request $request)
 	{
-		$pasien = Pasien::find($request->id);
+		$pasien = Pasien::with([
+			'provinsi' => function($q) {
+				$q->select('id', 'provinsi_nama');
+			},
+			'kota' => function($q) {
+				$q->select('id', 'nama');
+			}
+		])->find($request->id);
 		if (empty($pasien)) {
 			return response()->json([
 				'status' => false,

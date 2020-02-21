@@ -32,4 +32,14 @@ class Pasien extends Model implements Auditable
         return $this->hasOne('App\RekamMedis', 'nomor_rekam_medis', 'nomor_rekam_medis');
     }
 
+    public function provinsi()
+    {
+        return $this->hasOne('App\Provinsi', 'id', 'provinsi');
+    }
+
+    public function kota()
+    {
+        return $this->hasOne('App\Kota', 'id', 'kota');
+    }
+
 }
