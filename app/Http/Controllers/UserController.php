@@ -382,13 +382,13 @@ class UserController extends Controller
             return redirect($url->value);
         }
 
-        if (strtotime(date('Y-m-d H:i:s')) > strtotime($activation->expired_at)) {
-            $url = Reference::where('key', Constant::ACTIVATION_EXPIRED)->first();
+        if ($activation->status == 1) {
+            $url = Reference::where('key', Constant::ALREADY_ACTIVATED)->first();
             return redirect($url->value);
         }
 
-        if ($activation->status == 1) {
-            $url = Reference::where('key', Constant::ALREADY_ACTIVATED)->first();
+        if (strtotime(date('Y-m-d H:i:s')) > strtotime($activation->expired_at)) {
+            $url = Reference::where('key', Constant::ACTIVATION_EXPIRED)->first();
             return redirect($url->value);
         }
 
