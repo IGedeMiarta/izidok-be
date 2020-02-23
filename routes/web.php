@@ -22,8 +22,10 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->get('/email/verify', 'UserController@verifyEmail');
     $router->get('/username/verify', 'UserController@verifyUsername');
     $router->get('/phone/verify', 'UserController@verifyPhone');
+
+    //spesialisasi
     $router->get('/spesialisasi', 'SpesialisasiController@index');
-    
+
     //provinsi kota
     $router->get('/province', ['uses' => 'ProvinsiKotaController@getProvince']);
     $router->get('/getcitybyprovince/{id}', ['uses' => 'ProvinsiKotaController@getCityByProvince']);
@@ -109,6 +111,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         });
 
         //pasien
+        $router->get('/identity/verify', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@verifyIdentity']);
         $router->get('/pasien/verify', ['middleware' => 'permission:create-pasien', 'uses' => 'PasienController@verifyPasien']);
         $router->get('/pasien', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@index']);
         // $router->get('/pasien/{date}/date', ['middleware' => 'permission:read-pasien', 'uses' => 'PasienController@getByDate']);
