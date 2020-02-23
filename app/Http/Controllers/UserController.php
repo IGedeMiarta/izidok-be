@@ -465,8 +465,7 @@ class UserController extends Controller
     public function verifyEmail(Request $request)
     {
         $email = User::where('email', $request->email)->orderBy('id', 'desc')->get();
-        //dd($email);
-        if ($this->isUserInvalid($email) === true) {
+        if ($this->isUserInvalid($email)) {
             return response()->json(['status' => true, 'message' => 'email is valid']);
         } else {
             return response()->json(['status' => false, 'message' => 'email is already in use!']);
@@ -476,7 +475,7 @@ class UserController extends Controller
     public function verifyPhone(Request $request)
     {
         $phone = User::where('nomor_telp', $request->nomor_telp)->orderBy('id', 'desc')->get();
-        if ($this->isUserInvalid($phone) === true) {
+        if ($this->isUserInvalid($phone)) {
             return response()->json(['status' => true, 'message' => 'phone number is valid']);
         } else {
             return response()->json(['status' => false, 'message' => 'phone is already in use!']);
@@ -487,8 +486,9 @@ class UserController extends Controller
     {
         if ($users) {
             foreach ($users as $item) {
-                // user not activated & activation expired
-                if ($item->activation->status === 0 && $item->activation->expired_at < date('Y-m-d H:i:s')) {
+                if (empty($item->activation)) {
+                    return false;
+                } elseif ($item->activation->status === 0 && $item->activation->expired_at < date('Y-m-d H:i:s')) {
                     return true;
                 } else {
                     return false;
