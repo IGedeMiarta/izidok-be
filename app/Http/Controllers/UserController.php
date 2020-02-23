@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -125,11 +126,21 @@ class UserController extends Controller
         }
         if ($user->roles->first()->name !== Constant::OPERATOR) {
             if ($user->activation->status == 0) {
+
+                // user belum aktivasi di bawah 10 menit
+                if(Carbon::now() < $user->activation->created_at->addMinutes(10)) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Please check your email to activate user...',
+                        'user_id' => $user->id,
+                        'created_at' => $user->activation->created_at,
+                    ]);
+                }
+
+                // user belum aktivasi lebih dari 10 menit
                 return response()->json([
                     'status' => false,
-                    'message' => 'Please check your email to activate user...',
-                    'user_id' => $user->id,
-                    'created_at' => $user->created_at,
+                    'message' => 'User not found...'
                 ]);
             }
         }
