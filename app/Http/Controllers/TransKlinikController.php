@@ -11,6 +11,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use DateTime;
 
 // use Carbon\Carbon;
 
@@ -105,7 +106,9 @@ class TransKlinikController extends Controller
 
     $pasien_id = $request->pasien_id;
     $klinik_id = $request->klinik_id;
-    $consultation_time = $request->waktu_konsultasi;
+    $consultation_time = new DateTime($request->waktu_konsultasi);
+    $consultation_time = $consultation_time->format('Y-m-d');
+
     if ($this->verifyConsultationDate($pasien_id, $klinik_id, $consultation_time)) {
         return response()->json(['status' => false, 'message' => 'Patient already registered']);
     }
