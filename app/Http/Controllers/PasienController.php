@@ -45,14 +45,18 @@ class PasienController extends Controller
 
         $man = "l k i";
         $women = "p e r m u n";
-        $gender = $request->jenis_kelamin;
-        if (!empty(strpos($man, $gender) !== false)) {
-            $gender = '1';
-        } elseif (!empty(strpos($women, $gender) !== false)) {
-            $gender = '0';
-        } else {
-            $gender = '';
-        }
+		$gender = $request->jenis_kelamin;
+
+		if(!empty($gender)) {
+			if (strpos($man, $gender) !== false) {
+				$gender = '1';
+			} elseif (strpos($women, $gender) !== false) {
+				$gender = '0';
+			}
+		}
+		else {
+			$gender = '';
+		}
 
         if ($request->nama_pasien) {
 	        $pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id')
