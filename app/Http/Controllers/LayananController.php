@@ -21,26 +21,28 @@ class LayananController extends Controller
 	public function index(Request $request)
 	{
 		$user = $this->user;
+        $layanan = new Layanan;
 
-		$layanan = new Layanan;
-		if (!$user->hasRole(Constant::SUPER_ADMIN)) {
+        if (!$user->hasRole(Constant::SUPER_ADMIN)) {
 			$layanan = $layanan->where('klinik_id', $user->klinik_id);
 		}
 
-		if ($request->kode_layanan == "0") {
-			$layanan = $layanan->where('kode_layanan', 'LIKE', '%0%');
-		} else if (!empty($request->kode_layanan)) {
-			$layanan = $layanan->where('kode_layanan', 'LIKE', '%{$request->kode_layanan}%');
-		}
+        if(empty($request->column) && empty($request->order)) {
+            $column = 'id';
+            $order = 'asc';
+        } else {
+            $column = $request->column;
+            $order = $request->order;
+        }
 
-		if ($request->nama_layanan == "0") {
-			$layanan = $layanan->where('nama_layanan', 'LIKE', '%0%');
-		}
-		if (!empty($request->nama_layanan)) {
-			$layanan = $layanan->where('nama_layanan', 'LIKE', "%{$request->nama_layanan}%");
-		}
+        $layanan = Layanan::select('id', 'kode_layanan', 'nama_layanan', 'tarif')
+            ->where('kode_layanan', 'like', "%{$request->kode_layanan}%")
+            ->where('nama_layanan', 'like', "%{$request->nama_layanan}%")
+            ->where('tarif', 'like', "%{$request->tarif}%")
+            ->where('klinik_id', $user->klinik_id)
+            ->orderBy($column, $order)
+            ->paginate($request->limit);
 
-		$layanan = 	$layanan->paginate($request->limit);
 		$data['layanan'] = $layanan;
 
 		if (!$layanan) {
