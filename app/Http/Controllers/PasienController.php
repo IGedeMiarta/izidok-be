@@ -43,19 +43,22 @@ class PasienController extends Controller
             $order = $request->order;
         }
 
-        $man = "l k i";
-        $women = "p e r m u n";
-		$gender = $request->jenis_kelamin;
+        $man = "laki-laki";
+        $women = "perempuan";
+		$gender = ''; // jika karakter yg di search kosong atau ada di "perempuan" dan "laki-laki"
 
-		if(!empty($gender)) {
-			if (strpos($man, $gender) !== false) {
-				$gender = '1';
-			} elseif (strpos($women, $gender) !== false) {
-				$gender = '0';
+		if(!empty($request->jenis_kelamin)) {
+			$male = $female = false;
+
+			if (strpos($man, $request->jenis_kelamin) !== false) {
+				$male = true;
+			} 
+			if (strpos($women, $request->jenis_kelamin) !== false) {
+				$female = true;
 			}
-		}
-		else {
-			$gender = '';
+
+			if(!$male) $gender = 0; // jika perempuan
+			elseif(!$female) $gender = 1; // jika laki2
 		}
 
 		$pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id')
