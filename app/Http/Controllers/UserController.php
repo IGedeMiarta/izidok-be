@@ -127,8 +127,16 @@ class UserController extends Controller
         if ($user->roles->first()->name !== Constant::OPERATOR) {
             if ($user->activation->status == 0) {
 
+                // email aktivasi sudah expired
+                if(Carbon::now() > $user->activation->expired_at) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Activation email was expired...'
+                    ]);
+                }
+
                 // user belum aktivasi di bawah 10 menit
-                if(Carbon::now() < $user->activation->created_at->addMinutes(10)) {
+                elseif(Carbon::now() < $user->activation->created_at->addMinutes(10)) {
                     return response()->json([
                         'status' => false,
                         'message' => 'Please check your email to activate user...',
