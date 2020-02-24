@@ -66,7 +66,7 @@ class AuthServiceProvider extends ServiceProvider
                                     ->where('logout_at', null)
                                     ->first();
 
-                if(empty($api_key)){
+                if(empty($api_key) || empty($api_key->user)){
                     abort(440);
                 }else{
                     $request->request->add(['user_id' => $api_key->user->id]);
