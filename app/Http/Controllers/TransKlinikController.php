@@ -151,7 +151,7 @@ class TransKlinikController extends Controller
 
   public function show($id)
   {
-    $trans_klinik = TransKlinik::with('pasien')->find($id);
+    $trans_klinik = TransKlinik::with('pasien')->with('examinationBy:id,nama')->find($id);
     if (!$trans_klinik) {
       return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
     } else {
