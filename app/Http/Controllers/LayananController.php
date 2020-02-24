@@ -139,7 +139,7 @@ class LayananController extends Controller
 
 	public function getByNama(Request $request)
 	{
-		$nama = $request->nama;
+		$nama = urldecode($request->nama);
 		$user = User::find($request->user_id);
 
 		$layanan = Layanan::where("klinik_id", $user->klinik_id)
