@@ -66,7 +66,7 @@ class PasienController extends Controller
 				->where('klinik_id', $user->klinik_id)
 				->orderBy($column, $order);
 			
-		if($request->paginate == 0) {
+		if($request->paginate === '0') {
 			$pasien = $pasien->get();
 		}
 		else {
