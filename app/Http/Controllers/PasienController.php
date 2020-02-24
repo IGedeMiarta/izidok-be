@@ -46,9 +46,9 @@ class PasienController extends Controller
         $man = "l k i";
         $women = "p e r m u n";
         $gender = $request->jenis_kelamin;
-        if (strpos($man, $gender) !== false) {
+        if (!empty(strpos($man, $gender) !== false)) {
             $gender = '1';
-        } elseif (strpos($women, $gender) !== false) {
+        } elseif (!empty(strpos($women, $gender) !== false)) {
             $gender = '0';
         }
 
