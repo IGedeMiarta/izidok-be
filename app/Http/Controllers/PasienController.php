@@ -52,7 +52,7 @@ class PasienController extends Controller
 
 			if (strpos($man, $request->jenis_kelamin) !== false) {
 				$male = true;
-			} 
+			}
 			if (strpos($women, $request->jenis_kelamin) !== false) {
 				$female = true;
 			}
@@ -68,7 +68,7 @@ class PasienController extends Controller
 				->where('nomor_hp', 'like', "%{$request->nomor_hp}%")
 				->where('klinik_id', $user->klinik_id)
 				->orderBy($column, $order);
-			
+
 		if($request->paginate === '0') {
 			$pasien = $pasien->get();
 		}
@@ -211,16 +211,18 @@ class PasienController extends Controller
 		$pasien->nomor_pasien = $n_pasien;
 		$nomor_pasien_rm = sprintf('%06d', $n_pasien);
 		$rekam_medis = $str_faskes . Constant::KATEGORI_UMUM . $klinik->kode_faskes . $nomor_pasien_rm;
-		$arr_rekam_medis = str_split($rekam_medis,4);
-        $str_rekam_medis = "";
 
-		foreach ($arr_rekam_medis as $rm) {
-			$str_rekam_medis .= $rm;
-			if($rm != end($arr_rekam_medis))
+        $arr_rekam_medis = str_split($rekam_medis,4);
+        $str_rekam_medis = "";
+        $arrayKeys = array_keys($arr_rekam_medis);
+        $lastArrayKey = array_pop($arrayKeys);
+		foreach ($arr_rekam_medis as $k => $v) {
+			$str_rekam_medis .= $v;
+			if($k != $lastArrayKey)
 			{
 				$str_rekam_medis .= "-";
 			}
-		}
+        }
 
 		$pasien->nomor_rekam_medis = $str_rekam_medis;
 		$pasien->klinik_id = $user->klinik_id;
