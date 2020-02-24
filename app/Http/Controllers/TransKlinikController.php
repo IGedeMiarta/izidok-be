@@ -106,8 +106,7 @@ class TransKlinikController extends Controller
 
     $pasien_id = $request->pasien_id;
     $klinik_id = $request->klinik_id;
-    $consultation_time = new DateTime($request->waktu_konsultasi);
-    $consultation_time = $consultation_time->format('Y-m-d');
+    $consultation_time = Carbon::today();
 
     if ($this->verifyConsultationDate($pasien_id, $klinik_id, $consultation_time)) {
         return response()->json(['status' => false, 'message' => 'Patient already registered']);
@@ -122,7 +121,7 @@ class TransKlinikController extends Controller
     $trans_klinik->klinik_id = $user->klinik_id;
     $trans_klinik->created_by = $request->user_id;
     $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id,$request->waktu_konsultasi);
-    $trans_klinik->waktu_konsultasi = Carbon::now();
+    $trans_klinik->waktu_konsultasi = $consultation_time;
     $trans_klinik->anamnesa = $request->anamnesis;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
     $trans_klinik->save();
