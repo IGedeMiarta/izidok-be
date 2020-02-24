@@ -113,9 +113,9 @@ class UserController extends Controller
         $username = $request->username;
         $password = $request->password;
 
-        $user = User::where('nomor_telp', $username)->with('roles')->first();
+        $user = User::where('nomor_telp', $username)->with('roles')->orderBy('id', 'desc')->first();
         if (!$user) {
-            $user = User::where('email', $username)->with('roles')->first();
+            $user = User::where('email', $username)->with('roles')->orderBy('id', 'desc')->first();
         }
 
         if (!$user) {
