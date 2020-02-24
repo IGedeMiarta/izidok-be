@@ -137,6 +137,29 @@ class LayananController extends Controller
 		}
 	}
 
+	public function getByNama(Request $request)
+	{
+		$nama = $request->nama;
+		$user = User::find($request->user_id);
+
+		$layanan = Layanan::where("klinik_id", $user->klinik_id)
+			->where("nama_layanan", $nama)
+			->get();
+
+		if (count($layanan) == 0) {
+			return response()->json([
+				'success' => false,
+				'message' => 'layanan is not exsist'
+			], 404);
+		} else {
+			return response()->json([
+				'success' => true,
+				'message' => 'success',
+				'data' => $layanan
+			], 200);
+		}
+	}
+
 	public function show(Request $request)
 	{
 		$layanan = Layanan::find($request->id);
