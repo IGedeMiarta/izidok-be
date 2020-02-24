@@ -50,6 +50,8 @@ class PasienController extends Controller
             $gender = '1';
         } elseif (!empty(strpos($women, $gender) !== false)) {
             $gender = '0';
+        } else {
+            $gender = '';
         }
 
         if ($request->nama_pasien) {
