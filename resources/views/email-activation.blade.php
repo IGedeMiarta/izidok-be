@@ -1,8 +1,6 @@
 <!-- [if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG></o:AllowPNG><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
-<!-- [if !mso]><!-->
-<!--<![endif]-->
-<!-- [if !mso]><!-->
-<!--<![endif]-->
+<!-- [if !mso]><!--><!--<![endif]-->
+<!-- [if !mso]><!--><!--<![endif]-->
 <!-- [if IE]><div class="ie-browser"><![endif]-->
 <table class="nl-container" style="table-layout: fixed; vertical-align: top; min-width: 320px; margin: 0 auto; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #b8cce2; width: 100%;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#B8CCE2">
 <tbody>
@@ -45,10 +43,10 @@
 <div style="border: 0px solid transparent; padding: 5px 0px 5px 20px;"><!--<![endif]--> <!-- [if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]-->
 <div align="center"><a href="https://api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png"><img class="fr-fic fr-dib" style="padding: 10px;" src="https://api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="50%" border="0" /></a></div>
 <!-- <div style="color:#058FE0;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
-												<div style="font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 12px; line-height: 1.2; color: #058FE0; mso-line-height-alt: 14px;">
-													<p style="font-size: 50px; line-height: 1.2; text-align: center; mso-line-height-alt: 60px; margin: 0;"><span style="font-size: 50px;"><strong>IZiDOK</strong></span></p>
-												</div>
-											</div> --> <!-- [if mso]></td></tr></table><![endif]--> <!-- [if (!mso)&(!IE)]><!--></div>
+                                                                <div style="font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 12px; line-height: 1.2; color: #058FE0; mso-line-height-alt: 14px;">
+                                                                    <p style="font-size: 50px; line-height: 1.2; text-align: center; mso-line-height-alt: 60px; margin: 0;"><span style="font-size: 50px;"><strong>IZiDOK</strong></span></p>
+                                                                </div>
+                                                            </div> --> <!-- [if mso]></td></tr></table><![endif]--> <!-- [if (!mso)&(!IE)]><!--></div>
 <!--<![endif]--></div>
 </div>
 <!-- [if (mso)|(IE)]></td></tr></table><![endif]--> <!-- [if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]--></div>
@@ -62,7 +60,7 @@
 <div style="border: 0px solid transparent; padding: 35px 35px 40px 35px;"><!--<![endif]--> <!-- [if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]-->
 <div style="color: #132f40; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 1.2; padding: 10px;">
 <div style="font-size: 12px; line-height: 1.2; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #132f40; mso-line-height-alt: 14px;">
-<p style="font-size: 22px; line-height: 1.2; mso-line-height-alt: 26px; margin: 0;"><span style="font-size: 22px;">Hai, <strong>{{@$name}}</strong>,</span></p>
+<p style="font-size: 22px; line-height: 1.2; mso-line-height-alt: 26px; margin: 0;"><span style="font-size: 22px;">Hai&nbsp;<strong>{{@$name}}</strong>,</span></p>
 </div>
 </div>
 <!-- [if mso]></td></tr></table><![endif]--> <!-- [if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 5px; padding-bottom: 30px; font-family: Arial, sans-serif"><![endif]-->
@@ -110,9 +108,7 @@
 </table>
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
-<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Terima Kasih,</span></p>
-<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
-<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
+<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Terima Kasih</span></p>
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Tim izidok</span></p>
 </div>
 </div>
@@ -128,8 +124,8 @@
 <div class="col num6" style="max-width: 320px; min-width: 300px; display: table-cell; vertical-align: top; width: 300px;">
 <div style="width: 100% !important;"><!-- [if (!mso)&(!IE)]><!-->
 <div style="border: 0px solid transparent; padding: 15px 0px 15px 25px;"><!--<![endif]--> <!-- [if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]--> <!-- <div style="color:#F8F8F8;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
-	<p style="font-size: 12px; line-height: 1.2; color: #F8F8F8; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; mso-line-height-alt: 14px; margin: 0;">https://www.izidok.co.id</p>
-	</div> --> <!-- [if mso]></td></tr></table><![endif]--> <!-- [if (!mso)&(!IE)]><!--></div>
+                    <p style="font-size: 12px; line-height: 1.2; color: #F8F8F8; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; mso-line-height-alt: 14px; margin: 0;">https://www.izidok.co.id</p>
+                    </div> --> <!-- [if mso]></td></tr></table><![endif]--> <!-- [if (!mso)&(!IE)]><!--></div>
 <!--<![endif]--></div>
 </div>
 <!-- [if (mso)|(IE)]></td></tr></table><![endif]--> <!-- [if (mso)|(IE)]></td><td align="center" width="300" style="background-color:#132f40;width:300px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->

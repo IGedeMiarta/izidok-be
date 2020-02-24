@@ -1,8 +1,6 @@
 <!-- [if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG></o:AllowPNG><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
-<!-- [if !mso]><!-->
-<!--<![endif]-->
-<!-- [if !mso]><!-->
-<!--<![endif]-->
+<!-- [if !mso]><!--><!--<![endif]-->
+<!-- [if !mso]><!--><!--<![endif]-->
 <!-- [if IE]><div class="ie-browser"><![endif]-->
 <table class="nl-container" style="table-layout: fixed; vertical-align: top; min-width: 320px; margin: 0 auto; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #b8cce2; width: 100%;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#B8CCE2">
 <tbody>
@@ -62,7 +60,7 @@
 <div style="border: 0px solid transparent; padding: 35px 35px 40px 35px;"><!--<![endif]--> <!-- [if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]-->
 <div style="color: #132f40; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 1.2; padding: 10px;">
 <div style="font-size: 12px; line-height: 1.2; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #132f40; mso-line-height-alt: 14px;">
-<p style="font-size: 22px; line-height: 1.2; mso-line-height-alt: 26px; margin: 0;"><span style="font-size: 22px;">Hai, <strong>{{@$doctor_name}}</strong>,</span></p>
+<p style="font-size: 22px; line-height: 1.2; mso-line-height-alt: 26px; margin: 0;"><span style="font-size: 22px;">Hai&nbsp;<strong>{{@$doctor_name}}</strong>,</span></p>
 </div>
 </div>
 <!-- [if mso]></td></tr></table><![endif]--> <!-- [if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 5px; padding-bottom: 30px; font-family: Arial, sans-serif"><![endif]-->
@@ -94,9 +92,7 @@
 </table>
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
-<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Terima Kasih,</span></p>
-<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
-<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
+<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Terima Kasih</span></p>
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Tim izidok </span></p>
 </div>
 </div>
