@@ -162,6 +162,13 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/pembayaran/{id}', ['uses' => 'PembayaranController@show']);
         $router->put('/pembayaran/{id}', ['uses' => 'PembayaranController@update']);
         $router->delete('/pembayaran/{id}', ['uses' => 'PembayaranController@delete']);
+
+        //paket
+        $router->get('/paket', ['uses' => 'PaketController@index']);
+        $router->get('/paket/{id}', ['uses' => 'PaketController@show']);
+
+        $router->get('/addson', ['uses' => 'PaketController@getAddson']);
+        $router->get('/addson/{id}', ['uses' => 'PaketController@showAddson']);
     });
 
     $router->get('/image', function (Request $request) {
