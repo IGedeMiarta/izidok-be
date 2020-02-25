@@ -25,13 +25,6 @@ class PasienController extends Controller
 
 	public function index(Request $request)
 	{
-		$this->validate($request, [
-            'nomor_rekam_medis' => 'string',
-            'nama' => 'string',
-            //'jenis_kelamin' => 'integer',
-            'nomor_hp' => 'string'
-		]);
-
 		$user = $this->user;
         $pasien = new Pasien;
 
