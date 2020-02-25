@@ -221,7 +221,9 @@ class TransKlinikController extends Controller
     {
         $exist = TransKlinik::where('pasien_id', $pasien_id)
             ->where('klinik_id', '=', $klinik_id)
-            ->where('waktu_konsultasi', '=', $consultation_time)->exists();
+            ->where('waktu_konsultasi', '=', $consultation_time)
+            ->where('status', '!=', Constant::TRX_BATAL)
+            ->exists();
 
         if ($exist) {
             return true;
