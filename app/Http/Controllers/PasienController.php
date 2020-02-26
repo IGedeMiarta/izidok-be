@@ -592,9 +592,8 @@ class PasienController extends Controller
 
     public function verifyIdentity(Request $request)
     {
-        $user_id = Auth::user()->id;
-        $user = User::find($user_id);
-        $identity = Pasien::where('nik', $request->nik)->where('klinik_id', $user->klinik_id)->exists();
+        $klinikId = Auth::user()->klinik_id;
+        $identity = Pasien::where('nik', $request->nik)->where('klinik_id', $klinikId)->exists();
 
         if ($identity) {
             return response()->json(['status' => false, 'message' => 'identity is already in use!!']);
