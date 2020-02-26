@@ -56,7 +56,6 @@ class Constant
 	const BULANAN = 'bulanan';
 	const TAHUNAN = 'tahunan';
 	const DATE_RANGE = 'date_range';
-
 	const SUM_PASIEN = 'pasien';
 	const SUM_RAWAT_JALAN = 'rawat_jalan';
 	const ANTREAN = 'antrean';

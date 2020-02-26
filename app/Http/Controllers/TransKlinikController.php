@@ -23,7 +23,6 @@ class TransKlinikController extends Controller
 	public function __construct(){
 		$this->user = Auth::user();
   }
-
   public function index(Request $request)
   {
 
