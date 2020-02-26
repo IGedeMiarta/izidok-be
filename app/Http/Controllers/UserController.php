@@ -11,6 +11,8 @@ use App\Activation;
 use App\Reference;
 use App\Constant;
 use App\Operator;
+use App\Klinik;
+use App\Layanan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
@@ -109,7 +111,6 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        // $email = $request->email;
         $username = $request->username;
         $password = $request->password;
 
@@ -149,15 +150,25 @@ class UserController extends Controller
             $token = base64_encode(str_random(40));
 
             #save into tb ApiKey
-            $api_key = new Apikey;
-            $api_key->user_id = $user->id;
-            $api_key->expired_at = date('Y-m-d H:m:s', strtotime('+7 days'));
-            $api_key->api_key = $token;
-            $api_key->save();
+            // $api_key = new Apikey;
+            // $api_key->user_id = $user->id;
+            // $api_key->expired_at = date('Y-m-d H:m:s', strtotime('+7 days'));
+            // $api_key->api_key = $token;
+            // $api_key->save();
 
             $first_login = $user->is_first_login;
             if ($first_login === 1) {
                 $first_login = true;
+                $op = Operator::where('created_by',$user->id)->exists();
+                $trf = Layanan::where('klinik_id',$user->klinik->id)->exists();
+
+                if (is_null($user->klinik->spesialisasi_id)) {
+                    $position = 'spesialisasi';
+                } elseif (!$op) {
+                    $position = 'operator';
+                } elseif (!$trf) {
+                    $position = 'tarif';
+                }
             } else {
                 $first_login = false;
             }
