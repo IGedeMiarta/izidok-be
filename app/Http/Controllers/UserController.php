@@ -155,7 +155,7 @@ class UserController extends Controller
             // $api_key->expired_at = date('Y-m-d H:m:s', strtotime('+7 days'));
             // $api_key->api_key = $token;
             // $api_key->save();
-
+            $position = '';
             $first_login = $user->is_first_login;
             if ($first_login === 1) {
                 $first_login = true;
@@ -186,7 +186,8 @@ class UserController extends Controller
                     'user' => $user,
                     'token' => $token,
                     'first_login' => $first_login,
-                    'klinik' => $user->klinik
+                    'klinik' => $user->klinik,
+                    'init_position' => $position
                 ]
             ], 201);
         } else {
