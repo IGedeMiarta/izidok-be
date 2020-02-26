@@ -169,6 +169,14 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
         $router->get('/addson', ['uses' => 'PaketController@getAddson']);
         $router->get('/addson/{id}', ['uses' => 'PaketController@showAddson']);
+
+        //payment gateway
+        $router->get('/paygate', ['uses' => 'PaygateController@index']);
+
+        //promo
+        $router->get('/promo', ['uses' => 'PromoController@index']);
+        $router->post('/promo', ['uses' => 'PromoController@getPromo']);
+
     });
 
     $router->get('/image', function (Request $request) {

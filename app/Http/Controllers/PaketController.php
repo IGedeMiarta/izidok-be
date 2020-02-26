@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Paket;
 use App\Addson;
 use App\Subscribe;
+use App\Paygate;
+use App\Billing;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -38,9 +40,22 @@ class PaketController extends Controller
                 'nama' => $p['nama'],
                 'limit' => $p['limit'],
                 'harga' => $p['harga'],
+                'harga_tahunan' => $p['harga'] * 10,
                 'desc' => $arrDesc
             ];
         }
+
+        $paygate = Paygate::all();
+
+        foreach ($paygate as $key => $p) {
+            $pg[] = [
+                'id' => $p->id,
+                'nama' => $p->nama,
+                'logo' => url('/paygate/'.$p->logo),
+            ];
+        }
+
+        $data['paygate'] = $pg;
 
         return response()->json([
             'success' => true,
@@ -67,6 +82,7 @@ class PaketController extends Controller
      */
     public function store(Request $request)
     {
+
     }
 
     /**
@@ -91,6 +107,7 @@ class PaketController extends Controller
             'nama' => $data->nama,
             'limit' => $data->limit,
             'harga' => $data->harga,
+            'harga_tahunan' => $data->harga * 10,
             'desc' => $arrDesc
         ];
 
