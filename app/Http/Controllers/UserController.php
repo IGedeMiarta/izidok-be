@@ -150,13 +150,15 @@ class UserController extends Controller
             $token = base64_encode(str_random(40));
 
             #save into tb ApiKey
-            // $api_key = new Apikey;
-            // $api_key->user_id = $user->id;
-            // $api_key->expired_at = date('Y-m-d H:m:s', strtotime('+7 days'));
-            // $api_key->api_key = $token;
-            // $api_key->save();
+            $api_key = new Apikey;
+            $api_key->user_id = $user->id;
+            $api_key->expired_at = date('Y-m-d H:m:s', strtotime('+7 days'));
+            $api_key->api_key = $token;
+            $api_key->save();
+
             $position = '';
             $first_login = $user->is_first_login;
+            
             if ($first_login === 1) {
                 $first_login = true;
                 $op = Operator::where('created_by',$user->id)->exists();
