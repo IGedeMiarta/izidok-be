@@ -140,7 +140,7 @@ class PasienController extends Controller
 		{
 			return response()->json([
 				'success' => false,
-				'message' => 'Data pasien telah terdaftar, silahkan cek ulang data anda!',
+				'message' => 'Data Pasien telah Terdaftar, Silahkan cek ulang data Anda!',
 				'data' => ''
 			], 400);
 		}
