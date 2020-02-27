@@ -189,14 +189,14 @@ class LayananController extends Controller
 		$this->validate($request, [
 			'kode_layanan' => [
                 'required', 'string',
-                Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
+                Rule::unique('layanan')->ignore($request->id)->where('klinik_id', $user->klinik_id),
             ],
 			'nama_layanan' => [
                 'required', 'string',
-                Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
+                Rule::unique('layanan')->ignore($request->id)->where('klinik_id', $user->klinik_id),
             ],
 			'tarif' => 'required|integer'
-		],  ['unique' => ':attribute tidak boleh sama']);
+		]);
 
 		$layanan = Layanan::find($request->id);
 		$user = $this->user;
