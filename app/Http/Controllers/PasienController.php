@@ -328,7 +328,8 @@ class PasienController extends Controller
 			}
 		}
 
-		$pasien->nama = $request->input('nama');
+        $pasien->nama = $request->input('nama');
+        $pasien->jenis_identitas = $request->input('jenis_identitas');
 		$pasien->nik = $request->input('nik');
 		$pasien->tempat_lahir = $request->input('tempat_lahir');
 		$pasien->tanggal_lahir = $request->input('tanggal_lahir');
