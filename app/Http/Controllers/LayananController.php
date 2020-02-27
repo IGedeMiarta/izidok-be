@@ -184,11 +184,24 @@ class LayananController extends Controller
 
 	public function update(Request $request)
 	{
+        $user = User::find($request->user_id);
+
+        $customMessages = [
+            'unique' => ':attribute sudah ada.',
+            'distinct' => ':attribute tidak boleh sama'
+        ];
+
 		$this->validate($request, [
-			'kode_layanan' => 'required|string',
-			'nama_layanan' => 'required|string',
+			'kode_layanan' => [
+                'required', 'string',
+                Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
+            ],
+			'nama_layanan' => [
+                'required', 'string',
+                Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
+            ],
 			'tarif' => 'required|integer'
-		]);
+		], $customMessages);
 
 		$layanan = Layanan::find($request->id);
 		$user = $this->user;
