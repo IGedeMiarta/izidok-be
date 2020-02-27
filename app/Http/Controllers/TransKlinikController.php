@@ -34,7 +34,7 @@ class TransKlinikController extends Controller
 		}
 
         if(empty($request->column) && empty($request->order)) {
-            $column = 'extend';
+            $column = 'id';
             $order = 'desc';
         } else {
             $column = $request->column;
@@ -61,11 +61,11 @@ class TransKlinikController extends Controller
 
         if(empty($request->waktu_konsultasi)) {
             $consultation_time = Carbon::today();
-        } else {
+        } /*else {
             $consultation_time = $request->waktu_konsultasi;
-        }
+        }*/
 
-        $consultation_date = [$consultation_time, date('Y-m-d', strtotime('-1 day', strtotime($consultation_time)))];
+        //$consultation_date = [$consultation_time, date('Y-m-d', strtotime('-1 day', strtotime($consultation_time)))];
         $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI];
 
         $trans_klinik = TransKlinik::select('id', DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"), 'nomor_antrian', 'status', 'extend', 'pasien_id')
@@ -75,7 +75,8 @@ class TransKlinikController extends Controller
                     $query->where('jenis_kelamin', 'like', "%{$gender}%");
                     $query->where('nomor_hp', 'like', "%{$request->nomor_hp}%");
                 })
-                ->whereIn('waktu_konsultasi', $consultation_date)
+                //->whereIn('waktu_konsultasi', $consultation_date)
+                ->where('waktu_konsultasi', $consultation_time)
 				->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
 				->where('status', 'like', "%{$request->status}%")
                 ->where('klinik_id', $user->klinik_id)
