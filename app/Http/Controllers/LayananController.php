@@ -126,7 +126,7 @@ class LayananController extends Controller
 		if (count($layanan) == 0) {
 			return response()->json([
 				'success' => false,
-				'message' => 'layanan is not exsist'
+				'message' => 'layanan is not exist'
 			], 404);
 		} else {
 			return response()->json([
@@ -149,7 +149,7 @@ class LayananController extends Controller
 		if (count($layanan) == 0) {
 			return response()->json([
 				'success' => false,
-				'message' => 'layanan is not exsist'
+				'message' => 'layanan is not exist'
 			], 404);
 		} else {
 			return response()->json([
