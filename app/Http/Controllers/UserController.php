@@ -158,7 +158,7 @@ class UserController extends Controller
 
             $position = '';
             $first_login = $user->is_first_login;
-            
+
             if ($first_login === 1) {
                 $first_login = true;
                 $op = Operator::where('created_by',$user->id)->exists();
@@ -247,7 +247,7 @@ class UserController extends Controller
     public function forgot(Request $request)
     {
         $email = $request->input('email');
-        $user = User::where('email', '=', $email)->first();
+        $user = User::where('email', '=', $email)->orderBy('id', 'desc')->first();
 
         if (empty($user)) {
             return response()->json([
@@ -321,7 +321,7 @@ class UserController extends Controller
     public function check_forgot($token)
     {
         // echo $token;
-        $forgot_password = ForgotPassword::where('token', $token)->first();
+        $forgot_password = ForgotPassword::where('token', $token)->orderBy('id', 'desc')->first();
 
         if (empty($forgot_password)) {
             $key = Constant::FORGOT_INVALID;
