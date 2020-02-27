@@ -75,7 +75,7 @@ class LayananController extends Controller
 				Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
 			],
 			'arr.*.tarif' => 'required|integer'
-		],['unique' => 'Nama atau kode layanan tidak boleh sama']);
+		], ['unique' => ':attribute tidak boleh sama']);
 
 		$arr_layanan = $request->arr;
 		$result = array();
@@ -186,11 +186,6 @@ class LayananController extends Controller
 	{
         $user = User::find($request->user_id);
 
-        $customMessages = [
-            'unique' => ':attribute sudah ada.',
-            'distinct' => ':attribute tidak boleh sama'
-        ];
-
 		$this->validate($request, [
 			'kode_layanan' => [
                 'required', 'string',
@@ -201,7 +196,7 @@ class LayananController extends Controller
                 Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
             ],
 			'tarif' => 'required|integer'
-		], $customMessages);
+		],  ['unique' => ':attribute tidak boleh sama']);
 
 		$layanan = Layanan::find($request->id);
 		$user = $this->user;
