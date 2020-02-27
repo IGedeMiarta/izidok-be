@@ -168,6 +168,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/paket', ['uses' => 'PaketController@index']);
         $router->get('/paket/{id}', ['uses' => 'PaketController@show']);
 
+        //adds-on
         $router->get('/addson', ['uses' => 'PaketController@getAddson']);
         $router->get('/addson/{id}', ['uses' => 'PaketController@showAddson']);
 
@@ -178,6 +179,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/promo', ['uses' => 'PromoController@index']);
         $router->post('/promo', ['uses' => 'PromoController@getPromo']);
 
+        //subscribe
+        $router->post('/subscribe', ['uses' => 'PaygateController@store']);
     });
 
     $router->get('/image', function (Request $request) {

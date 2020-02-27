@@ -6,7 +6,7 @@ use App\Paket;
 use App\Addson;
 use App\Subscribe;
 use App\Paygate;
-use App\Billing;
+use App\Invoice;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -51,6 +51,7 @@ class PaketController extends Controller
             $pg[] = [
                 'id' => $p->id,
                 'nama' => $p->nama,
+                'biaya_admin' => $p->biaya_admin,
                 'logo' => url('/paygate/'.$p->logo),
             ];
         }

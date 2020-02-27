@@ -53,7 +53,9 @@ class PromoController extends Controller
                 $message = 'Kode Promo sudah kadaluarsa.';
             } else {
                 $bill = Billing::where('promo_id',$promo->id)
-                    ->where('klinik_id',$klinikId)->exists();
+                    ->where('klinik_id',$klinikId)
+                    ->where('status','!=',3)
+                    ->exists();
                 if ($bill) {
                     $status = false;
                     $message = 'Kode Promo sudah digunakan.';
