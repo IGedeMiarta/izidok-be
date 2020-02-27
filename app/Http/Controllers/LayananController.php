@@ -68,11 +68,13 @@ class LayananController extends Controller
 			'arr' => 'required|array',
 			'arr.*.kode_layanan' => [
 				'required','string',
-				Rule::unique('layanan')->where('klinik_id', $user->klinik_id)->where('deleted_at', null)
+                Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
+                    ->where('deleted_at', null)
 			],
 			'arr.*.nama_layanan' => [
 				'required','string',
-				Rule::unique('layanan')->where('klinik_id', $user->klinik_id)->where('deleted_at', null)
+                Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
+                    ->where('deleted_at', null)
 			],
 			'arr.*.tarif' => 'required|integer'
 		], ['unique' => ':attribute tidak boleh sama']);
@@ -189,11 +191,15 @@ class LayananController extends Controller
 		$this->validate($request, [
 			'kode_layanan' => [
                 'required', 'string',
-                Rule::unique('layanan')->ignore($request->id)->where('klinik_id', $user->klinik_id),
+                Rule::unique('layanan')->ignore($request->id)
+                    ->where('klinik_id', $user->klinik_id)
+                    ->where('deleted_at', null),
             ],
 			'nama_layanan' => [
                 'required', 'string',
-                Rule::unique('layanan')->ignore($request->id)->where('klinik_id', $user->klinik_id),
+                Rule::unique('layanan')->ignore($request->id)
+                    ->where('klinik_id', $user->klinik_id)
+                    ->where('deleted_at', null),
             ],
 			'tarif' => 'required|integer'
 		]);
