@@ -57,18 +57,6 @@ class OperatorController extends Controller
       'password' => 'required|confirmed|min:6',
     ]);
 
-     #cek email
-     $email = User::where('email', $request->email)->exists();
-     if ($email) {
-         return response()->json(['status' => false, 'message' => 'email is already in used!']);
-     }
-
-     #cek nomor_telp
-     $nomor_telp = User::where('nomor_telp', $request->nomor_telp)->exists();
-     if ($nomor_telp) {
-         return response()->json(['status' => false, 'message' => 'no handphone is already in used!']);
-     }
-
     $logged_user = $this->user;
 
     $user = new User();
