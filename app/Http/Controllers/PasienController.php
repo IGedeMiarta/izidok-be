@@ -54,7 +54,7 @@ class PasienController extends Controller
 			elseif(!$female) $gender = 1; // jika laki2
 		}
 
-		$pasien = Pasien::select('id', DB::raw("CONCAT(nama,' (',DATE_FORMAT(tanggal_lahir, '%d-%m-%Y'),')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id')
+		$pasien = Pasien::select('id', DB::raw("CONCAT(nama,' (',DATE_FORMAT(tanggal_lahir, '%d-%m-%Y'),')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id', 'tensi_sistole', 'tensi_diastole', 'nadi', 'suhu', 'tinggi_badan', 'berat_badan')
 				->where('nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
 				->where('nama', 'like', "%{$request->nama_pasien}%")
 				->where('jenis_kelamin', 'like', "%{$gender}%")
