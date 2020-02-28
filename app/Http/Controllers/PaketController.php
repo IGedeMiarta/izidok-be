@@ -149,7 +149,7 @@ class PaketController extends Controller
         $data['detail'] = DB::table('billing as b')
             ->select('pl.id','pl.channelId','pl.serviceCode','pl.currency','pl.transactionNo','pl.transactionAmount','pl.transactionDate','pl.transactionExpire','pl.description','pl.customerAccount','pl.customerName',
                 DB::raw('case when b.status = 0 then "MENUNGGU PEMBAYARAN" else "LUNAS" end as status_billing'),
-                'b.pg_id','p.nama as paket','a.nama as addson','b.amount_real','b.amount_disc')
+                'b.pg_id','p.nama as paket','p.harga as harga_paket','a.nama as addson','a.harga as harga_addson','b.amount_real','b.amount_disc')
             ->join('paygate_log as pl','b.no_invoice','=','pl.transactionNo')
             ->leftJoin('paket as p','b.paket_id','=','p.id')
             ->leftJoin('addson as a','b.addson_id','=','a.id')

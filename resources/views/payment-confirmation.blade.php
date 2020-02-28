@@ -68,7 +68,7 @@
 </div>
 <div style="color: #555555; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 1.5; padding: 5px 10px 30px 10px;">
 <div style="font-size: 12px; line-height: 1.5; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #555555; mso-line-height-alt: 18px;">
-<p style="font-size: 14px; line-height: 1.5; mso-line-height-alt: 21px; margin: 0;">Pembelian berhasil dilakukan pada tanggal, {@$waktu pembelian}.</p>
+<p style="font-size: 14px; line-height: 1.5; mso-line-height-alt: 21px; margin: 0;">Pembelian berhasil dilakukan pada tanggal, {{$data['detail']->transactionExpire}}.</p>
 <table style="width: 103.427%;">
 <tbody>
 <tr>
@@ -76,7 +76,7 @@
 <td style="width: 56.5882%;">Batas Waktu Pembayaran</td>
 </tr>
 <tr>
-<td style="width: 44.4118%;">{{$data['detail']->transactionAmount}}</td>
+<td style="width: 44.4118%;">{{number_format($data['detail']->transactionAmount,0,',','.')}},-</td>
 <td style="width: 56.5882%;">{{$data['detail']->transactionExpire}}</td>
 </tr>
 <tr>
@@ -105,14 +105,49 @@
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">Langkah-langkah pembayaran {{$data['paygate']->nama}}:</p>
 @foreach($data['tutorial'] as $t)
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">{{$t->tipe}}</p>
-@foreach($t->desc as $key => $d)
 <ol>
-<li style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">{{$d->($key+1)}}</li>
+@foreach($t->desc as $key => $d)
+<li style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">{{$d}}</li>
+@endforeach
 </ol>
 @endforeach
-@endforeach
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
-<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
+<hr>
+<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><b>Detail Pemesanan:</b></p>
+<?php
+	$total = $data['detail']->harga_paket+(is_null($data['detail']->addson) ? $data['detail']->harga_addson : 0)+$data['paygate']->biaya_admin;
+?>
+<table style="width: 100%;">
+	<tbody>
+		<tr>
+			<td style="width: 237px;" colspan="2">No. Tagihan: {{$data['detail']->transactionNo}}</td>
+		</tr>
+		<tr>
+			<td style="width: 237px;">Paket {{$data['detail']->paket}}</td>
+			<td style="width: 279px;">Rp{{$data['detail']->harga_paket}}</td>
+		</tr>
+		@if(!is_null($data['detail']->addson))
+		<tr>
+			<td style="width: 237px;">Paket {{$data['detail']->addson}}</td>
+			<td style="width: 279px;">Rp{{$data['detail']->harga_addson}}</td>
+		</tr>
+		@endif
+		<tr>
+			<td style="width: 237px;">admin</td>
+			<td style="width: 279px;">Rp{{$data['paygate']->biaya_admin}}</td>
+		</tr>
+	</tbody>
+</table>
+<hr>
+<table style="width: 100%;">
+	<tbody>
+		<tr>
+			<td style="width: 237px;">Total Pembayaran</td>
+			<td style="width: 279px;">Rp{{$total}}</td>
+		</tr>
+	</tbody>
+</table>
+<hr>
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Terima Kasih</span></p>
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Tim izidok</span></p>
 </div>
