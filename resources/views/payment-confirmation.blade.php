@@ -76,16 +76,16 @@
 <td style="width: 56.5882%;">Batas Waktu Pembayaran</td>
 </tr>
 <tr>
-<td style="width: 44.4118%;">{{@$detail->transactionAmount}}</td>
-<td style="width: 56.5882%;">{{@$detail->expired_pay}}</td>
+<td style="width: 44.4118%;">{{$data['detail']['transactionAmount']}}</td>
+<td style="width: 56.5882%;">{{$data['detail']['expired_pay']}}</td>
 </tr>
 <tr>
 <td style="width: 44.4118%;">Metode Pembayaran</td>
 <td style="width: 56.5882%;">Kode Pembayaran/No. Virtual Account</td>
 </tr>
 <tr>
-<td style="width: 44.4118%;">{{@$paygate->nama}}</td>
-<td style="width: 56.5882%;">{{@$detail->customerAccount}}</td>
+<td style="width: 44.4118%;">{{$data['paygate']['nama']}}</td>
+<td style="width: 56.5882%;">{{$data['detail']['customerAccount']}}</td>
 </tr>
 </tbody>
 </table>
@@ -94,7 +94,7 @@
 <table style="width: 161px; border: 1px solid;">
 <tbody>
 <tr>
-<td style="width: 163px;">{{@$detail->status_billing}}</td>
+<td style="width: 163px;">{{$data['detail']['status_billing']}}</td>
 </tr>
 </tbody>
 </table>
