@@ -25,9 +25,11 @@ class OperatorController extends Controller
     $operator = new Operator;
 
     if (!$user->hasRole(Constant::SUPER_ADMIN)) {
-      $operator = $operator->wherehas('user', function ($data) use ($user) {
-        $data->where('users.klinik_id', $user->klinik_id);
-      });
+        $operator = $operator->select('id', 'nama', 'user_id')
+            ->withAndWhereHas('user', function ($data) use ($user) {
+                $data->select('id', 'nama', 'email', 'nomor_telp');
+                $data->where('users.klinik_id', $user->klinik_id);
+        });
     }
 
     $operator = $operator->paginate($request->limit);
@@ -241,9 +243,9 @@ class OperatorController extends Controller
   {
     $this->validate($request, [
       'nama' => 'required|string',
+      'email' => 'required|email',
       'nomor_telp' => 'required|string',
-      'tanggal_lahir' => 'required|date',
-      'jenis_kelamin' => 'required|string',
+
     ]);
 
     $operator = Operator::find($request->id);
