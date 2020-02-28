@@ -12,5 +12,10 @@ class PaygateLog extends Model
 
     use SoftDeletes;
 
+    protected $fillable = [
+		'channelId','serviceCode','currency','transactionNo','transactionAmount',
+		'transactionDate','transactionExpire','description','customerAccount',
+		'customerName','authCode','rc','created_by'
+	];
     protected $dates = ['deleted_at'];
 }

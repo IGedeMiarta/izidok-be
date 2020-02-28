@@ -78,6 +78,8 @@ class PaygateController extends Controller
                 $bill->created_by = $user->id;
                 $bill->created_at = $now;
                 $bill->save();
+
+                //send email
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
@@ -88,7 +90,7 @@ class PaygateController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'success',
-                'data' => '',
+                'data' => ['billing_id' => $bill->id],
             ], 200);
         } else {
             # code...
@@ -135,11 +137,9 @@ class PaygateController extends Controller
         $response = json_decode(curl_exec($ch), true);
         curl_close($ch);
 
-        $insPayLog = new PaygateLog();
-        $insPayLog->request = json_encode($req);
-        $insPayLog->response = json_encode($response);
-        $insPayLog->created_by = $user->id;
-        $insPayLog->save();
+        $req['rc'] = $response['insertStatus'];
+        $req['created_by'] = $user->id;
+        PaygateLog::create($req);
 
         return $response;
     }
