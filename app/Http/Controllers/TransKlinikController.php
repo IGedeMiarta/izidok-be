@@ -70,7 +70,7 @@ class TransKlinikController extends Controller
 
         $trans_klinik = TransKlinik::select('id', DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"), 'nomor_antrian', 'status', 'extend', 'pasien_id')
                 ->withAndWhereHas('pasien', function($query) use ($request, $gender) {
-                    $query->select('id', 'nama', 'jenis_kelamin', 'nomor_hp');
+                    $query->select('id', 'nama', 'jenis_kelamin', 'nomor_hp', 'tensi_sistole', 'tensi_diastole', 'nadi', 'suhu', 'tinggi_badan', 'berat_badan');
                     $query->where('nama', 'like', "%{$request->nama_pasien}%");
                     $query->where('jenis_kelamin', 'like', "%{$gender}%");
                     $query->where('nomor_hp', 'like', "%{$request->nomor_hp}%");
