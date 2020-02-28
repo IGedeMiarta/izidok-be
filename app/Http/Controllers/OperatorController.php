@@ -245,15 +245,14 @@ class OperatorController extends Controller
       'nama' => 'required|string',
       'email' => 'required|email',
       'nomor_telp' => 'required|string',
-
     ]);
 
     $operator = Operator::find($request->id);
     $user = $this->user;
 
     if ($user->cant('updateOrDelete', $operator)) {
-			abort(403);
-		}
+        abort(403);
+    }
 
     if (empty($operator)) {
       return response()->json([
@@ -264,18 +263,20 @@ class OperatorController extends Controller
     } else {
       $user = User::find($operator->user_id);
       $user->nama = $request->nama;
+      $user->email = $request->email;
       $user->nomor_telp = $request->nomor_telp;
       $user->save();
       $operator->nama = $request->nama;
-      $operator->tanggal_lahir = $request->tanggal_lahir;
-      $operator->jenis_kelamin = $request->jenis_kelamin;
       $operator->save();
+
+      $data['operator'] = $operator;
+      $data['user'] = $user;
+
       return response()->json([
         'status' => true,
-        'data' => $operator,
+        'data' => $data,
         'message' => 'success'
       ]);
-      // print_r($user);
     }
   }
 
