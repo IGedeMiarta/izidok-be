@@ -168,6 +168,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         //paket
         $router->get('/paket', ['uses' => 'PaketController@index']);
         $router->get('/paket/{id}', ['uses' => 'PaketController@show']);
+        $router->get('/detailpembayaran/{id}', ['uses' => 'PaketController@detailPembayaran']);
 
         //adds-on
         $router->get('/addson', ['uses' => 'PaketController@getAddson']);
@@ -175,6 +176,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
         //payment gateway
         $router->get('/paygate', ['uses' => 'PaygateController@index']);
+        $router->get('/paygate/{id}', ['uses' => 'PaygateController@show']);
 
         //promo
         $router->get('/promo', ['uses' => 'PromoController@index']);

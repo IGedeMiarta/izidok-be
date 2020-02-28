@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Paygate;
 use App\Billing;
 use App\PaygateLog;
+use App\Constant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Http\Controllers\PaketController;
 
 class PaygateController extends Controller
 {
@@ -37,6 +39,43 @@ class PaygateController extends Controller
             'success' => true,
             'message' => 'success',
             'data' => $data,
+        ], 200);
+    }
+
+    public function show($id)
+    {
+        $user = Auth::user();
+        $pktCtrl = new PaketController();
+        $dtlPmbyrn = $pktCtrl->detailPembayaran($id)->getData();
+
+        $email_data = [
+            'subject' => 'Pembayaran izidok',
+            'to' => [$user->email],
+            'from' => 'izidok.dev@gmail.com',
+            'data' => (array) $dtlPmbyrn->data
+        ];
+
+        if (\sendEmail($email_data, Constant::PAYMENT_CONFIRMATION)) {
+            return response()->json([
+                'status' => true,
+                'message' => 'email konfirmasi pembayaran sudah dibuat',
+                'data' => $user->email
+            ]);
+        }
+        dd('asdasdd');
+        //bates
+        $data = Paygate::find($id);
+        $paygate = [
+            'id' => $data->id,
+            'nama' => $data->nama,
+            'biaya_admin' => $data->biaya_admin,
+            'logo' => url('/paygate/'.$data->logo),
+        ];
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $paygate,
         ], 200);
     }
 
@@ -79,7 +118,23 @@ class PaygateController extends Controller
                 $bill->created_at = $now;
                 $bill->save();
 
-                //send email
+                $pktCtrl = new PaketController();
+                $dtlPmbyrn = $pktCtrl->detailPembayaran($id)->getData();
+
+                $email_data = [
+                    'subject' => 'Pembayaran izidok',
+                    'to' => [$user->email],
+                    'from' => 'izidok.dev@gmail.com',
+                    'data' => (array) $dtlPmbyrn->data
+                ];
+
+                if (\sendEmail($email_data, Constant::PAYMENT_CONFIRMATION)) {
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'email konfirmasi pembayaran sudah dibuat',
+                        'data' => $user->email
+                    ]);
+                }
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,

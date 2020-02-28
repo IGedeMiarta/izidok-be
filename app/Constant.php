@@ -78,4 +78,6 @@ class Constant
 	const BELUM_LUNAS = 'BELUM LUNAS';
 	const LUNAS = 'LUNAS';
 
+	#subscribe
+	const PAYMENT_CONFIRMATION = 'payment-confirmation';
 }

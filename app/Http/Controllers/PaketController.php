@@ -6,9 +6,14 @@ use App\Paket;
 use App\Addson;
 use App\Subscribe;
 use App\Paygate;
-use App\Invoice;
+use App\PaygateTutorial;
+use App\Billing;
+use App\Dokter;
+use App\Operator;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use DB;
 
 class PaketController extends Controller
 {
@@ -137,6 +142,72 @@ class PaketController extends Controller
             'message' => 'success',
             'data' => $paket,
         ], 200);
+    }
+
+    public function detailPembayaran($id)
+    {
+        $data['detail'] = DB::table('billing as b')
+            ->select('pl.id','pl.channelId','pl.serviceCode','pl.currency','pl.transactionNo','pl.transactionAmount','pl.transactionDate','pl.transactionExpire','pl.description','pl.customerAccount','pl.customerName',
+                DB::raw('case when b.status = 0 then "MENUNGGU PEMBAYARAN" else "LUNAS" end as status_billing'),
+                'b.pg_id','p.nama as paket','a.nama as addson','b.amount_real','b.amount_disc')
+            ->join('paygate_log as pl','b.no_invoice','=','pl.transactionNo')
+            ->leftJoin('paket as p','b.paket_id','=','p.id')
+            ->leftJoin('addson as a','b.addson_id','=','a.id')
+            ->where('b.id',$id)->first();
+
+        if (!is_null($data['detail'])) {
+            $pgTutor = PaygateTutorial::where('pg_id',$data['detail']->pg_id)->get();
+
+            foreach ($pgTutor as $p) {
+                $arrDesc = [];
+                $desc = explode(';', $p['description']);
+
+                for ($i=0; $i < count($desc); $i++) { 
+                    $arrDesc[$i+1] = $desc[$i];
+                }
+                $data['tutorial'][] = [
+                    'id' => $p['id'],
+                    'tipe' => $p['tipe'],
+                    'desc' => $arrDesc,
+                ];
+            }
+
+            $pg = Paygate::find($data['detail']->pg_id);
+            $data['paygate'] = [
+                'id' => $pg->id,
+                'nama' => $pg->nama,
+                'biaya_admin' => $pg->biaya_admin,
+                'logo' => url('/paygate/'.$pg->logo),
+            ];
+
+            $user = Auth::user();
+            $dktr = Dokter::where('user_id', $user->id)->first();
+
+            if (!is_null($dktr)) {
+                $dokter = User::find($dktr->created_by);
+            } else {
+                $dokterId = Operator::where('user_id',$user->id)->first();
+                $dokter = User::find($dokterId->created_by);
+            }
+
+            $data['dokter'] = [
+                'nama' => $dokter->nama,
+                'nomor_telp' => $dokter->nomor_telp,
+                'email' => $dokter->email,
+            ];
+
+            return response()->json([
+                'success' => true,
+                'message' => 'success',
+                'data' => $data,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'data not found',
+                'data' => null,
+            ], 200);
+        }
     }
 
     /**
