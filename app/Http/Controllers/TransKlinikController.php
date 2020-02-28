@@ -86,20 +86,21 @@ class TransKlinikController extends Controller
         //         ->paginate($request->limit);
 
         $trans_klinik = TransKlinik::select([
-            'trans_klinik.id', 
-            DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"), 
-            'nomor_antrian', 
-            'status', 
-            'extend', 
+            'trans_klinik.id',
+            DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"),
+            'nomor_antrian',
+            'status',
+            'extend',
             'anamnesa',
+            'pasien.id',
             'pasien.nama',
             'pasien.jenis_kelamin',
-            'pasien.nomor_hp', 
-            'tensi_sistole', 
-            'tensi_diastole', 
-            'nadi', 
-            'suhu', 
-            'tinggi_badan', 
+            'pasien.nomor_hp',
+            'tensi_sistole',
+            'tensi_diastole',
+            'nadi',
+            'suhu',
+            'tinggi_badan',
             'berat_badan'
           ])
           ->join('pasien', 'pasien.id', '=', 'trans_klinik.pasien_id')
