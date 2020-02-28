@@ -92,7 +92,7 @@ class TransKlinikController extends Controller
             'status',
             'extend',
             'anamnesa',
-            'pasien.id',
+            'pasien.id as pasien_id',
             'pasien.nama',
             'pasien.jenis_kelamin',
             'pasien.nomor_hp',
