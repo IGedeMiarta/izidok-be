@@ -76,16 +76,16 @@
 <td style="width: 56.5882%;">Batas Waktu Pembayaran</td>
 </tr>
 <tr>
-<td style="width: 44.4118%;">{{$data['detail']['transactionAmount']}}</td>
-<td style="width: 56.5882%;">{{$data['detail']['expired_pay']}}</td>
+<td style="width: 44.4118%;">{{$data['detail']->transactionAmount}}</td>
+<td style="width: 56.5882%;">{{$data['detail']->transactionExpire}}</td>
 </tr>
 <tr>
 <td style="width: 44.4118%;">Metode Pembayaran</td>
 <td style="width: 56.5882%;">Kode Pembayaran/No. Virtual Account</td>
 </tr>
 <tr>
-<td style="width: 44.4118%;">{{$data['paygate']['nama']}}</td>
-<td style="width: 56.5882%;">{{$data['detail']['customerAccount']}}</td>
+<td style="width: 44.4118%;">{{$data['paygate']->nama}}</td>
+<td style="width: 56.5882%;">{{$data['detail']->customerAccount}}</td>
 </tr>
 </tbody>
 </table>
@@ -94,7 +94,7 @@
 <table style="width: 161px; border: 1px solid;">
 <tbody>
 <tr>
-<td style="width: 163px;">{{$data['detail']['status_billing']}}</td>
+<td style="width: 163px;">{{$data['detail']->status_billing}}</td>
 </tr>
 </tbody>
 </table>
@@ -102,8 +102,15 @@
 </div>
 <div style="color: #555555; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 1.2; padding: 10px;">
 <div style="font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 12px; line-height: 1.2; color: #555555; mso-line-height-alt: 14px;">
-<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">Langkah-langkah pembayaran BCA Virtual Account:</p>
-<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
+<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">Langkah-langkah pembayaran {{$data['paygate']->nama}}:</p>
+@foreach($data['tutorial'] as $t)
+<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">{{$t->tipe}}</p>
+@foreach($t->desc as $key => $d)
+<ol>
+<li style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">{{$d->($key+1)}}</li>
+</ol>
+@endforeach
+@endforeach
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
 <p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Terima Kasih</span></p>
