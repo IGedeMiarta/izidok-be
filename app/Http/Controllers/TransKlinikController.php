@@ -59,6 +59,7 @@ class TransKlinikController extends Controller
 			elseif(!$female) $gender = 1; // jika laki2
         }
 
+        $consultation_time = $request->waktu_konsultasi;
         if(empty($request->waktu_konsultasi)) {
             $consultation_time = Carbon::today();
         } /*else {
@@ -68,21 +69,51 @@ class TransKlinikController extends Controller
         //$consultation_date = [$consultation_time, date('Y-m-d', strtotime('-1 day', strtotime($consultation_time)))];
         $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI];
 
-        $trans_klinik = TransKlinik::select('id', DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"), 'nomor_antrian', 'status', 'extend', 'pasien_id')
-                ->withAndWhereHas('pasien', function($query) use ($request, $gender) {
-                    $query->select('id', 'nama', 'jenis_kelamin', 'nomor_hp');
-                    $query->where('nama', 'like', "%{$request->nama_pasien}%");
-                    $query->where('jenis_kelamin', 'like', "%{$gender}%");
-                    $query->where('nomor_hp', 'like', "%{$request->nomor_hp}%");
-                })
-                //->whereIn('waktu_konsultasi', $consultation_date)
-                ->where('waktu_konsultasi', $consultation_time)
-				->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
-				->where('status', 'like', "%{$request->status}%")
-                ->where('klinik_id', $user->klinik_id)
-                ->whereIn('status', $status)
-				->orderBy($column, $order)
-                ->paginate($request->limit);
+        // $trans_klinik = TransKlinik::select('id', DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"), 'nomor_antrian', 'status', 'extend', 'pasien_id')
+        //         ->withAndWhereHas('pasien', function($query) use ($request, $gender) {
+        //             $query->select('id', 'nama', 'jenis_kelamin', 'nomor_hp');
+        //             $query->where('nama', 'like', "%{$request->nama_pasien}%");
+        //             $query->where('jenis_kelamin', 'like', "%{$gender}%");
+        //             $query->where('nomor_hp', 'like', "%{$request->nomor_hp}%")
+        //             ->orderBy('nama', 'desc');
+        //         })
+        //         //->whereIn('waktu_konsultasi', $consultation_date)
+        //         ->where('waktu_konsultasi', $consultation_time)
+				// ->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
+				// ->where('status', 'like', "%{$request->status}%")
+        //         ->where('klinik_id', $user->klinik_id)
+        //         ->whereIn('status', $status)
+				// ->orderBy($column, $order)
+        //         ->paginate($request->limit);
+
+        $trans_klinik = TransKlinik::select([
+            'trans_klinik.id', 
+            DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"), 
+            'nomor_antrian', 
+            'status', 
+            'extend', 
+            'anamnesa',
+            'pasien.nama',
+            'pasien.jenis_kelamin',
+            'pasien.nomor_hp', 
+            'tensi_sistole', 
+            'tensi_diastole', 
+            'nadi', 
+            'suhu', 
+            'tinggi_badan', 
+            'berat_badan'
+          ])
+          ->join('pasien', 'pasien.id', '=', 'trans_klinik.pasien_id')
+          ->where('waktu_konsultasi', $consultation_time)
+          ->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
+          ->where('status', 'like', "%{$request->status}%")
+          ->where('trans_klinik.klinik_id', $user->klinik_id)
+          ->whereIn('status', $status)
+          ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
+          ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
+          ->where('pasien.nomor_hp', 'like', "%{$request->nomor_hp}%")
+          ->orderBy($column, $order)
+          ->paginate($request->limit);
 
         $data['role'] = $user->roles->first()->name;
 		$data['trans_klinik'] = $trans_klinik;
