@@ -89,7 +89,6 @@
 </tr>
 </tbody>
 </table>
-<p>&nbsp;</p>
 <p style="font-size: 14px; line-height: 1.5; mso-line-height-alt: 21px; margin: 0;">Status Pembayaran</p>
 <table style="width: 161px; border: 1px solid;">
 <tbody>
@@ -148,8 +147,8 @@
 	</tbody>
 </table>
 <hr>
-<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Terima Kasih</span></p>
-<p style="font-size: 14px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;"><span style="color: #333333; font-size: 14px;">Tim izidok</span></p>
+<p>&nbsp;</p>
+<p style="font-size: 12px; line-height: 1.2; mso-line-height-alt: 17px; margin: 0;">Email dibuat secara otomatis. Mohon untuk tidak mengirimkan balasan ke email ini.</p>
 </div>
 </div>
 <!-- [if mso]></td></tr></table><![endif]--> <!-- [if (!mso)&(!IE)]><!--></div>
