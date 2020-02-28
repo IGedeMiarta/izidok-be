@@ -456,7 +456,6 @@ class UserController extends Controller
             ]);
         }
 
-
         $user = $activation->user;
 
         $data['user'] = $user;
@@ -474,6 +473,42 @@ class UserController extends Controller
         ];
 
         if (\sendEmail($email_data, Constant::ACTIVATION_EMAIL_TEMPLATE)) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Email has been re-send successfully...',
+                'data' => $data
+            ]);
+        }
+
+        return response()->json([
+            'status' => false,
+            'message' => 'There is something wrong...'
+        ]);
+    }
+
+    public function sendEmailOperator($user_id)
+    {
+        $operator = Operator::with('user')
+            ->where('user_id', $user_id)
+            ->orderBy('created_at')
+            ->first();
+
+        $doctor = User::select(['nama','email'])->where('id', $operator->created_by)->first();
+
+        $data['operator'] = $operator;
+
+        $email_data = [
+            'subject' => 'Operator Login Data',
+            'from' => 'izidok.dev@gmail.com',
+            'to' => [$doctor->email],
+            'doctor_name' => $doctor->nama,
+            'name' => $operator->nama,
+            'phone' => $operator->user->nomor_telp,
+            'email' => $operator->user->email,
+            'password' => 'Sesuai dengan yang di input',
+        ];
+
+        if (\sendEmail($email_data, Constant::OPERATOR_EMAIL_TEMPLATE)) {
             return response()->json([
                 'status' => true,
                 'message' => 'Email has been re-send successfully...',
