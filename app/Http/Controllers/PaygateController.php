@@ -60,7 +60,7 @@ class PaygateController extends Controller
         } elseif ($request->pg_id == 2) {
             $res = $this->bcaVa($dataPg);
         } else {
-            $res = $this->permataVa();
+            $res = $this->permataVa($dataPg);
         }
 
         if ($res['insertStatus'] == '00') {
@@ -78,6 +78,8 @@ class PaygateController extends Controller
                 $bill->created_by = $user->id;
                 $bill->created_at = $now;
                 $bill->save();
+
+                //send email
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
@@ -88,7 +90,7 @@ class PaygateController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'success',
-                'data' => '',
+                'data' => ['billing_id' => $bill->id],
             ], 200);
         } else {
             # code...
@@ -98,7 +100,6 @@ class PaygateController extends Controller
     public function bcaVa($data){
         $user = Auth::user();
         $pg = Paygate::find(2);
-        $jmlChar = strlen($pg->company_code) + strlen($user->nomor_telp);
 
         if (strlen($user->nomor_telp) > 11) {
             $ca = substr($user->nomor_telp, -11);
@@ -135,20 +136,56 @@ class PaygateController extends Controller
         $response = json_decode(curl_exec($ch), true);
         curl_close($ch);
 
-        $insPayLog = new PaygateLog();
-        $insPayLog->request = json_encode($req);
-        $insPayLog->response = json_encode($response);
-        $insPayLog->created_by = $user->id;
-        $insPayLog->save();
+        $req['rc'] = $response['insertStatus'];
+        $req['created_by'] = $user->id;
+        PaygateLog::create($req);
 
         return $response;
     }
 
     public function permataVa($data){
+        $user = Auth::user();
+        $pg = Paygate::find(3);
+
+        if (strlen($user->nomor_telp) > 10) {
+            $ca = substr($user->nomor_telp, -10);
+        } else {
+            $ca = $user->nomor_telp;
+            for ($i=strlen($user->nomor_telp); $i < 10; $i++) { 
+                $ca = '0'.$ca;
+            }
+        }
         
-    }
+        $custAcc = $pg->company_code.$ca;
 
-    public function sendPg($data){
+        $req = [
+            'channelId' => $pg->channel_id,
+            'serviceCode' => '1011',
+            'currency' => 'IDR',
+            'transactionNo' => $data['no_invoice'],
+            'transactionAmount' => $data['amount'],
+            'transactionDate' => $data['trans_date'],
+            'transactionExpire' => $data['expired_pay'],
+            'description' => $data['desc'],
+            'customerAccount' => $custAcc,
+            'customerName' => $user->nama,
+            'authCode' => hash("sha256",$data['no_invoice'].$data['amount'].$pg->channel_id.$pg->secretkey)
+        ];
 
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($req));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_POST,1);
+        $response = json_decode(curl_exec($ch), true);
+        curl_close($ch);
+
+        $req['rc'] = $response['insertStatus'];
+        $req['created_by'] = $user->id;
+        PaygateLog::create($req);
+
+        return $response;
     }
 }
