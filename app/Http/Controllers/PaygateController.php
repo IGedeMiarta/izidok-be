@@ -44,26 +44,6 @@ class PaygateController extends Controller
 
     public function show($id)
     {
-        $user = Auth::user();
-        $pktCtrl = new PaketController();
-        $dtlPmbyrn = $pktCtrl->detailPembayaran($id)->getData();
-
-        $email_data = [
-            'subject' => 'Pembayaran izidok',
-            'to' => [$user->email],
-            'from' => 'izidok.dev@gmail.com',
-            'data' => (array) $dtlPmbyrn->data
-        ];
-
-        if (\sendEmail($email_data, Constant::PAYMENT_CONFIRMATION)) {
-            return response()->json([
-                'status' => true,
-                'message' => 'email konfirmasi pembayaran sudah dibuat',
-                'data' => $user->email
-            ]);
-        }
-        dd('asdasdd');
-        //bates
         $data = Paygate::find($id);
         $paygate = [
             'id' => $data->id,
