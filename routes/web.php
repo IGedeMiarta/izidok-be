@@ -45,7 +45,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     //operator
     $router->get('/operator/check/{token}', 'OperatorController@check_activation');
     $router->post('/operator/activation', 'OperatorController@activation');
-    $router->get('/email/resendopr/{user_id}', 'UserController@sendEmailOperator');
+    $router->get('/email/resend/operator/{user_id}', 'UserController@sendEmailOperator');
 
     $router->post('/logout', 'UserController@logout');
 
