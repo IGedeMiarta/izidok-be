@@ -154,10 +154,11 @@ class TransKlinikController extends Controller
     $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id, $consultation_time);
     $trans_klinik->anamnesa = $request->anamnesis;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
+    //dd($request->pasien_id);
     $trans_klinik->save();
 
     #update pasien
-    $pasien = Pasien::find($request->pasien_id)->first();
+    $pasien = Pasien::find($request->pasien_id);
     if ($pasien) {
       $pasien->tinggi_badan = $request->tinggi_badan;
       $pasien->berat_badan = $request->berat_badan;
