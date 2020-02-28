@@ -68,7 +68,7 @@ class TransKlinikController extends Controller
         //$consultation_date = [$consultation_time, date('Y-m-d', strtotime('-1 day', strtotime($consultation_time)))];
         $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI];
 
-        $trans_klinik = TransKlinik::select('id', DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"), 'nomor_antrian', 'status', 'extend', 'pasien_id')
+        $trans_klinik = TransKlinik::select('id', DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"), 'nomor_antrian', 'status', 'extend', 'pasien_id', 'anamnesa')
                 ->withAndWhereHas('pasien', function($query) use ($request, $gender) {
                     $query->select('id', 'nama', 'jenis_kelamin', 'nomor_hp', 'tensi_sistole', 'tensi_diastole', 'nadi', 'suhu', 'tinggi_badan', 'berat_badan');
                     $query->where('nama', 'like', "%{$request->nama_pasien}%");
