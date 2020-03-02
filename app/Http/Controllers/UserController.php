@@ -12,6 +12,7 @@ use App\Reference;
 use App\Constant;
 use App\Operator;
 use App\Klinik;
+use App\Dokter;
 use App\Layanan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -59,28 +60,38 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'nama' => 'required|string',
-            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
-            'email' => 'required|email',
-            'alamat' => 'string',
+            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
+            'jenis_kelamin' => 'required|integer',
         ]);
 
         $user = User::find($request->id);
         if (!$user) {
-            return response()->json(['status' => false]);
-        } else {
-            if ($user->email !== $request->email) {
-                $this->validate($request, [
-                    'email' => 'required|unique:users|email',
-                ]);
-            }
-
-            $user->email = $request->email;
-            $user->nama = $request->nama;
-            $user->nomor_telp = $request->nomor_telp;
-            $user->alamat = $request->alamat;
-            $user->save();
-            return response()->json(['status' => true, 'data' => $user]);
+            return response()->json(['status' => false, 'message' => 'User not found...'], 422);
         }
+
+        $user->nama = $request->nama;
+        $user->nomor_telp = $request->nomor_telp;
+        $user->jenis_kelamin = $request->jenis_kelamin;
+        $user->save();
+
+        $klinik = Klinik::find($user->klinik_id);
+        $klinik->nama_pic = $request->nama;
+        $klinik->nama_klinik = $request->nama;
+        $klinik->nomor_telp = $request->nomor_telp;
+        $klinik->nomor_ijin = $request->nomor_ijin;
+        $klinik->provinsi = $request->provinsi;
+        $klinik->kota = $request->kota;
+        $klinik->alamat = $request->alamat;
+        $klinik->save();
+
+        $dokter = Dokter::where('user_id', $request->id)->first();
+        $dokter->nama = $request->nama;
+        $dokter->save();
+
+        $data['user'] = $user;
+        $data['klinik'] = $klinik;
+
+        return response()->json(['status' => true, 'data' => $data]);
     }
 
     public function uploadFotoProfile (Request $request){
