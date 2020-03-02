@@ -177,7 +177,6 @@ class PasienController extends Controller
 		$pasien->tinggi_badan = $request->input('tinggi_badan');
 		$pasien->berat_badan = $request->input('berat_badan');
 		$pasien->user_id = $request->user_id;
-
 		$str_faskes = "";
 		if ($klinik->tipe_faskes == Constant::TIPE_KLINIK) {
 			$str_faskes = Constant::TIPE_FASKES_KLINIK;
@@ -525,7 +524,6 @@ class PasienController extends Controller
 			'tanggal_lahir' => $request->tanggal_lahir,
 			'nomor_hp' => $request->nomor_hp
 		);
-
 		$pasien = Pasien::where($conditions);
 		$is_exist = $pasien->count();
 

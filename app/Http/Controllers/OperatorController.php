@@ -18,7 +18,7 @@ class OperatorController extends Controller
 	public function __construct(){
 		$this->user = Auth::user();
   }
-
+  
   public function index(Request $request)
   {
     $user = $this->user;
@@ -294,7 +294,7 @@ class OperatorController extends Controller
     if ($user->cant('updateOrDelete', $operator)) {
 			abort(403);
     }
-
+    
     if (empty($operator)) {
       return response()->json([
         'status' => false,

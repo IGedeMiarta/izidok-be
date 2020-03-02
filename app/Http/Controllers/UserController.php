@@ -92,7 +92,6 @@ class UserController extends Controller
         if(!$user){
             return response()->json(['status' => false, 'message' => 'user not found...']);
         }
-
         $res = uploadToCloud('foto_profile', $request->foto_profile);
         $user->foto_profile = $res['url'];
 

@@ -48,7 +48,7 @@ function uploadToCloud($prefix, $file)
         $file->cleanDirectory(storage_path('tmp'));
     }
 
-    $data['url'] = $url;
+    $data['url'] = $url .'/'. $filename ;
     $data['uploaded_name'] = $filename;
 
     return $data;
