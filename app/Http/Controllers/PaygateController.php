@@ -249,37 +249,6 @@ class PaygateController extends Controller
             'transactionType' => 'VOID INSERT',
         ];
 
-        $data = [
-            'pg' => $pg,
-            'pl' => $pl,
-            'paket' => $pkt,
-            'addson' => is_null($adds) ? null : $adds,
-            'user' => is_null(Auth::user()) ? 'sistem' : 'pengguna',
-            'now' => date('Y-m-d H:i:s'),
-        ];
-        // dd($data);
-
-        $email_data = [
-            'subject' => 'Pembatalan Pembayaran izidok',
-            'to' => [$user->email],
-            'from' => 'izidok.dev@gmail.com',
-            'data' => $data
-        ];
-
-        if (\sendEmail($email_data, Constant::CANCEL_SUBSCRIBE)) {
-            return response()->json([
-                'success' => true,
-                'message' => 'success',
-                'data' => $response,
-            ], 200);
-        }else{
-            return response()->json([
-                'success' => false,
-                'message' => 'email not sent',
-                'data' => $response,
-            ], 200);
-        }
-
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->url_void);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($req));
@@ -298,16 +267,12 @@ class PaygateController extends Controller
             $pl->update();
 
             $data = [
-                'pg' => $pg->nama,
-                'pg_logo' => url('/paygate/'.$pg->logo),
-                'biaya_admin' => $pg->biaya_admin,
-                'ammount' => $pl->transactionAmount,
-                'expired' => $pl->transactionExpire,
-                'account' => $pl->customerAccount,
-                'no_trans' => $pl->transactionNo,
-                'paket' => $pkt->nama,
-                'addson' => is_null($adds) ? null : $adds->nama,
+                'pg' => $pg,
+                'pl' => $pl,
+                'paket' => $pkt,
+                'addson' => is_null($adds) ? null : $adds,
                 'user' => is_null(Auth::user()) ? 'sistem' : 'pengguna',
+                'now' => date('Y-m-d H:i:s'),
             ];
 
             $email_data = [
