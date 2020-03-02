@@ -18,7 +18,7 @@ class OperatorController extends Controller
 	public function __construct(){
 		$this->user = Auth::user();
   }
-  
+
   public function index(Request $request)
   {
     $user = $this->user;
@@ -101,7 +101,7 @@ class OperatorController extends Controller
       'name' => $request->nama,
       'phone' => $user->nomor_telp,
       'email' => $user->email,
-      'password' => $request->password,
+      //'password' => $request->password,
     ];
 
     if (\sendEmail($email_data, Constant::OPERATOR_EMAIL_TEMPLATE)) {
@@ -294,7 +294,7 @@ class OperatorController extends Controller
     if ($user->cant('updateOrDelete', $operator)) {
 			abort(403);
     }
-    
+
     if (empty($operator)) {
       return response()->json([
         'status' => false,
