@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
@@ -8,7 +8,7 @@ use App\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class PembayaranController extends Controller 
+class PembayaranController extends Controller
 {
 
   public $user;
@@ -16,64 +16,72 @@ class PembayaranController extends Controller
 	public function __construct(){
 		$this->user = Auth::user();
   }
-  
-  public function index(Request $request)
-  {
-    $user = $this->user;
 
-    $this->validate($request, [
-      'from' => 'required|date_format:Y-m-d',
-      'to' => 'required|date_format:Y-m-d',
-    ]);
+    public function index(Request $request)
+    {
+        $user = $this->user;
+        $pembayaran = new Pembayaran();
 
-    $from = $request->from;
-    $to = $request->to;
-
-    $pembayaran = new Pembayaran;
-
-		if (!$user->hasRole(Constant::SUPER_ADMIN)) {
-      $pembayaran = $pembayaran->where('klinik_id', $user->klinik_id);
-    } 
-    
-    #filter by date
-		$pembayaran = $pembayaran->whereBetween('created_at',  [$from, $to])
-              ->orWhereDate('created_at', $from);
-    
-    #filter by nama pasien & no. rekam medis
-    if (!empty($request->nama_pasien)) {
-			$pembayaran = Pembayaran::whereHas('transklinik', function($transklinik) use ($request){
-        $transklinik->whereHas('pasien', function($pasien) use ($request){
-          $pasien->where('nama', 'LIKE', "%{$request->nama_pasien}%");
-        });
-      });
-    }
-    
-		if (!empty($request->no_rekam_medis)) {
-      $pembayaran = Pembayaran::whereHas('transklinik', function($transklinik) use ($request){
-        $transklinik->whereHas('pasien', function($pasien) use ($request){
-          $pasien->where('nomor_rekam_medis', 'LIKE', "%{$request->no_rekam_medis}%");
-        });
-      });
+        if (!$user->hasRole(Constant::SUPER_ADMIN)) {
+			$pembayaran = $pembayaran->where('klinik_id', $user->klinik_id);
 		}
 
-    #get data pasien and dokter
-    $pembayaran = $pembayaran->with(['transklinik.pasien', 'createdBy', 'detail']);
-    if($request->sort){
-      $this->validate($request, [
-        'sort' => 'in:asc,desc',
-      ]);
-      $pembayaran = $pembayaran->orderBy('status', $request->sort);
-    }
+        if(empty($request->column) && empty($request->order)) {
+            $column = 'status';
+            $order = 'asc';
+        } else {
+            $column = $request->column;
+            $order = $request->order;
+        }
 
-    $pembayaran = $pembayaran->paginate($request->limit);
-		$data['pembayaran'] = $pembayaran;
+        $man = "laki-laki";
+        $women = "perempuan";
+		$gender = ''; // jika karakter yg di search kosong atau ada di "perempuan" dan "laki-laki"
+
+		if(!empty($request->jenis_kelamin)) {
+			$male = $female = false;
+
+			if (strpos($man, $request->jenis_kelamin) !== false) {
+				$male = true;
+			}
+			if (strpos($women, $request->jenis_kelamin) !== false) {
+				$female = true;
+			}
+
+			if(!$male) $gender = 0; // jika perempuan
+			elseif(!$female) $gender = 1; // jika laki2
+        }
+
+        $pembayaran = Pembayaran::select([
+            'pembayaran.id',
+            'pasien.nomor_rekam_medis',
+            'pasien.nama',
+            'pasien.jenis_kelamin',
+            'pembayaran.status',
+          ])
+          ->leftJoin('trans_klinik', 'pembayaran.transklinik_id', '=', 'trans_klinik.id')
+          ->leftJoin('pasien', 'trans_klinik.pasien_id', '=', 'pasien.id')
+          ->where('pasien.nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}")
+          ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
+          ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
+          ->where('pembayaran.status', 'like', "{$request->status_pembayaran}%")
+          ->where('pembayaran.klinik_id', $user->klinik_id)
+          ->orderBy($column, $order)
+          ->paginate($request->limit);
+
+		if (!$pembayaran) {
+			return response()->json([
+				'success' => false,
+				'message' => 'failed, you dont have role to see this',
+			], 201);
+		}
 
 		return response()->json([
 			'success' => true,
 			'message' => 'success',
-			'data' => $data
+			'data' => $pembayaran
 		], 201);
-  }
+    }
 
   public function store(Request $request)
   {
@@ -89,7 +97,7 @@ class PembayaranController extends Controller
       'detail_pembayaran[*].tarif' => 'required|integer',
       'detail_pembayaran[*].quantity' => 'required|integer'
     ]);
-    
+
 
     $pembayaran = new Pembayaran();
     $pembayaran->transklinik_id = $request->transklinik_id;
@@ -114,7 +122,7 @@ class PembayaranController extends Controller
 			$detail->save();
 			array_push($result, $detail);
     }
-    
+
     $data['pembayaran'] = $pembayaran;
     $data['detail'] = $result;
 
@@ -171,14 +179,14 @@ class PembayaranController extends Controller
   public function delete($id)
   {
     $pembayaran = Pembayaran::find($id);
-    
+
     if (empty($pembayaran)) {
       return response()->json([
         'status' => false,
         'message' => 'pembayaran not found'
       ]);
-    } 
-    
+    }
+
     $pembayaran->delete();
     return response()->json([
       'status' => true,
@@ -210,7 +218,7 @@ class PembayaranController extends Controller
 			$detail->save();
 			array_push($result, $detail);
     }
-    
+
     $data['detail'] = $result;
 
     return response()->json([
@@ -220,5 +228,5 @@ class PembayaranController extends Controller
     ], 201);
 
   }
-  
+
 }
