@@ -11,6 +11,8 @@ use App\Activation;
 use App\Reference;
 use App\Constant;
 use App\Operator;
+use App\Klinik;
+use App\Layanan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
@@ -108,7 +110,6 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        // $email = $request->email;
         $username = $request->username;
         $password = $request->password;
 
@@ -154,9 +155,21 @@ class UserController extends Controller
             $api_key->api_key = $token;
             $api_key->save();
 
+            $position = '';
             $first_login = $user->is_first_login;
+
             if ($first_login === 1) {
                 $first_login = true;
+                $op = Operator::where('created_by',$user->id)->exists();
+                $trf = Layanan::where('klinik_id',$user->klinik->id)->exists();
+
+                if (is_null($user->klinik->spesialisasi_id)) {
+                    $position = 'spesialisasi';
+                } elseif (!$op) {
+                    $position = 'operator';
+                } elseif (!$trf) {
+                    $position = 'tarif';
+                }
             } else {
                 $first_login = false;
             }
@@ -174,7 +187,8 @@ class UserController extends Controller
                     'user' => $user,
                     'token' => $token,
                     'first_login' => $first_login,
-                    'klinik' => $user->klinik
+                    'klinik' => $user->klinik,
+                    'init_position' => $position
                 ]
             ], 201);
         } else {
@@ -232,7 +246,7 @@ class UserController extends Controller
     public function forgot(Request $request)
     {
         $email = $request->input('email');
-        $user = User::where('email', '=', $email)->first();
+        $user = User::where('email', '=', $email)->orderBy('id', 'desc')->first();
 
         if (empty($user)) {
             return response()->json([
@@ -306,7 +320,7 @@ class UserController extends Controller
     public function check_forgot($token)
     {
         // echo $token;
-        $forgot_password = ForgotPassword::where('token', $token)->first();
+        $forgot_password = ForgotPassword::where('token', $token)->orderBy('id', 'desc')->first();
 
         if (empty($forgot_password)) {
             $key = Constant::FORGOT_INVALID;
@@ -441,7 +455,6 @@ class UserController extends Controller
             ]);
         }
 
-
         $user = $activation->user;
 
         $data['user'] = $user;
@@ -459,6 +472,42 @@ class UserController extends Controller
         ];
 
         if (\sendEmail($email_data, Constant::ACTIVATION_EMAIL_TEMPLATE)) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Email has been re-send successfully...',
+                'data' => $data
+            ]);
+        }
+
+        return response()->json([
+            'status' => false,
+            'message' => 'There is something wrong...'
+        ]);
+    }
+
+    public function sendEmailOperator($user_id)
+    {
+        $operator = Operator::with('user')
+            ->where('user_id', $user_id)
+            ->orderBy('created_at')
+            ->first();
+
+        $doctor = User::select(['nama','email'])->where('id', $operator->created_by)->first();
+
+        $data['operator'] = $operator;
+
+        $email_data = [
+            'subject' => 'Operator Login Data',
+            'from' => 'izidok.dev@gmail.com',
+            'to' => [$doctor->email],
+            'doctor_name' => $doctor->nama,
+            'name' => $operator->nama,
+            'phone' => $operator->user->nomor_telp,
+            'email' => $operator->user->email,
+            'password' => 'Sesuai dengan yang di input',
+        ];
+
+        if (\sendEmail($email_data, Constant::OPERATOR_EMAIL_TEMPLATE)) {
             return response()->json([
                 'status' => true,
                 'message' => 'Email has been re-send successfully...',

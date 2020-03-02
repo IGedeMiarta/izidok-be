@@ -22,54 +22,116 @@ class TransKlinikController extends Controller
 
 	public function __construct(){
 		$this->user = Auth::user();
-  }
-  public function index(Request $request)
-  {
-
-    $this->validate($request, [
-      'status' => 'required|string',
-      'from' => 'required|date_format:Y-m-d',
-      'to' => 'required|date_format:Y-m-d',
-      'nama_pasien' => 'string',
-      'no_rekam_medis' => 'string',
-    ]);
-
-    $status = $request->status;
-    $from = $request->from;
-    $to = $request->to;
-
-    $user = $this->user;
-
-    $trans_klinik = TransKlinik::with(['pasien', 'examinationBy'])
-      ->where('status', $status)
-      ->whereBetween(DB::raw('date(waktu_konsultasi)'),
-                    [$from, $to]);
-
-    if (!$user->hasRole(Constant::SUPER_ADMIN)) {
-      $trans_klinik = $trans_klinik->where('created_by', $user->id);
     }
 
-    if(!empty($request->nama_pasien)){
-      $trans_klinik = $trans_klinik->whereHas('pasien', function($data) use ($request){
-        $data->where('nama', 'LIKE', "%{$request->nama_pasien}%");
-      });
-    }
+    public function index(Request $request)
+	{
+		$user = $this->user;
+        $trans_klinik = new TransKlinik();
 
-    if(!empty($request->no_rekam_medis)){
-      $trans_klinik = $trans_klinik->whereHas('pasien', function($data) use ($request){
-        $data->where('nomor_rekam_medis', 'LIKE', "%{$request->no_rekam_medis}%");
-      });
-    }
+        if (!$user->hasRole(Constant::SUPER_ADMIN)) {
+			$trans_klinik = $trans_klinik->where('klinik_id', $user->klinik_id);
+		}
 
-    $trans_klinik = $trans_klinik->paginate($request->limit);
-    $data['trans_klinik'] = $trans_klinik;
+        if(empty($request->column) && empty($request->order)) {
+            $column = 'id';
+            $order = 'desc';
+        } else {
+            $column = $request->column;
+            $order = $request->order;
+        }
 
-    if (!$trans_klinik) {
-      return response()->json(['status' => false]);
-    } else {
-      return response()->json(['status' => true, 'data' => $trans_klinik]);
-    }
-  }
+        $man = "laki-laki";
+        $women = "perempuan";
+		$gender = ''; // jika karakter yg di search kosong atau ada di "perempuan" dan "laki-laki"
+
+		if(!empty($request->jenis_kelamin)) {
+			$male = $female = false;
+
+			if (strpos($man, $request->jenis_kelamin) !== false) {
+				$male = true;
+			}
+			if (strpos($women, $request->jenis_kelamin) !== false) {
+				$female = true;
+			}
+
+			if(!$male) $gender = 0; // jika perempuan
+			elseif(!$female) $gender = 1; // jika laki2
+        }
+
+        $consultation_time = $request->waktu_konsultasi;
+        if(empty($request->waktu_konsultasi)) {
+            $consultation_time = Carbon::today();
+        } /*else {
+            $consultation_time = $request->waktu_konsultasi;
+        }*/
+
+        //$consultation_date = [$consultation_time, date('Y-m-d', strtotime('-1 day', strtotime($consultation_time)))];
+        $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI];
+
+        // $trans_klinik = TransKlinik::select('id', DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"), 'nomor_antrian', 'status', 'extend', 'pasien_id', 'anamnesa')
+        //         ->withAndWhereHas('pasien', function($query) use ($request, $gender) {
+        //             $query->select('id', 'nama', 'jenis_kelamin', 'nomor_hp', 'tensi_sistole', 'tensi_diastole', 'nadi', 'suhu', 'tinggi_badan', 'berat_badan');
+        //             $query->where('nama', 'like', "%{$request->nama_pasien}%");
+        //             $query->where('jenis_kelamin', 'like', "%{$gender}%");
+        //             $query->where('nomor_hp', 'like', "%{$request->nomor_hp}%");
+        //         })
+        //         //->whereIn('waktu_konsultasi', $consultation_date)
+        //         ->where('waktu_konsultasi', $consultation_time)
+				// ->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
+				// ->where('status', 'like', "%{$request->status}%")
+        //         ->where('klinik_id', $user->klinik_id)
+        //         ->whereIn('status', $status)
+				// ->orderBy($column, $order)
+        //         ->paginate($request->limit);
+
+        $trans_klinik = TransKlinik::select([
+            'trans_klinik.id',
+            DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"),
+            'nomor_antrian',
+            'status',
+            'extend',
+            'anamnesa',
+            'pasien.id as pasien_id',
+            'pasien.nama',
+            'pasien.jenis_kelamin',
+            'pasien.nomor_hp',
+            'tensi_sistole',
+            'tensi_diastole',
+            'nadi',
+            'suhu',
+            'tinggi_badan',
+            'berat_badan'
+          ])
+          ->join('pasien', 'pasien.id', '=', 'trans_klinik.pasien_id')
+          ->where('waktu_konsultasi', $consultation_time)
+          ->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
+          ->where('status', 'like', "%{$request->status}%")
+          ->where('trans_klinik.klinik_id', $user->klinik_id)
+          ->whereIn('status', $status)
+          ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
+          ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
+          ->where('pasien.nomor_hp', 'like', "%{$request->nomor_hp}%")
+          ->orderBy($column, $order)
+          ->paginate($request->limit);
+
+        $data['role'] = $user->roles->first()->name;
+		$data['trans_klinik'] = $trans_klinik;
+
+		if (!$trans_klinik) {
+			return response()->json([
+				'success' => false,
+				'message' => 'failed, you dont have role to see this',
+				'data' => $data
+			], 201);
+		}
+
+		return response()->json([
+			'success' => true,
+			'message' => 'success',
+			'data' => $data
+		], 201);
+	}
 
   public function store(Request $request)
   {
@@ -123,10 +185,11 @@ class TransKlinikController extends Controller
     $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id, $consultation_time);
     $trans_klinik->anamnesa = $request->anamnesis;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
+    //dd($request->pasien_id);
     $trans_klinik->save();
 
     #update pasien
-    $pasien = Pasien::find($request->pasien_id)->first();
+    $pasien = Pasien::find($request->pasien_id);
     if ($pasien) {
       $pasien->tinggi_badan = $request->tinggi_badan;
       $pasien->berat_badan = $request->berat_badan;
@@ -150,7 +213,7 @@ class TransKlinikController extends Controller
 
   public function show($id)
   {
-    $trans_klinik = TransKlinik::with('pasien')->with('examinationBy:id,nama')->find($id);
+    $trans_klinik = TransKlinik::with(['pasien', 'examinationBy:id,nama'])->find($id);
     if (!$trans_klinik) {
       return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
     } else {
@@ -186,7 +249,6 @@ class TransKlinikController extends Controller
   {
     $trans_klinik = TransKlinik::find($id);
     $user = $this->user;
-
 		if ($user->cant('updateOrDelete', $trans_klinik)) {
 			abort(403);
 		}
@@ -229,5 +291,27 @@ class TransKlinikController extends Controller
         }
 
         return false;
+    }
+
+    public function moveQueue()
+    {
+        $klinikId = Auth::user()->klinik_id;
+        $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI];
+
+        $queue = TransKlinik::where('klinik_id', $klinikId)
+            ->where('waktu_konsultasi', '=', Carbon::today())
+            ->whereIn('status', $status)
+            ->get();
+
+        foreach ($queue as $value) {
+            $value->extend = 1;
+            $value->save();
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'queue data successfully moved',
+            'data' => $queue,
+        ]);
     }
 }

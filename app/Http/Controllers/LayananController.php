@@ -68,14 +68,16 @@ class LayananController extends Controller
 			'arr' => 'required|array',
 			'arr.*.kode_layanan' => [
 				'required','string',
-				Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
+                Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
+                    ->where('deleted_at', null)
 			],
 			'arr.*.nama_layanan' => [
 				'required','string',
-				Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
+                Rule::unique('layanan')->where('klinik_id', $user->klinik_id)
+                    ->where('deleted_at', null)
 			],
 			'arr.*.tarif' => 'required|integer'
-		],['unique' => 'Nama atau kode layanan tidak boleh sama']);
+		], ['unique' => ':attribute tidak boleh sama']);
 
 		$arr_layanan = $request->arr;
 		$result = array();
@@ -126,7 +128,7 @@ class LayananController extends Controller
 		if (count($layanan) == 0) {
 			return response()->json([
 				'success' => false,
-				'message' => 'layanan is not exsist'
+				'message' => 'layanan is not exist'
 			], 404);
 		} else {
 			return response()->json([
@@ -149,7 +151,7 @@ class LayananController extends Controller
 		if (count($layanan) == 0) {
 			return response()->json([
 				'success' => false,
-				'message' => 'layanan is not exsist'
+				'message' => 'layanan is not exist'
 			], 404);
 		} else {
 			return response()->json([
@@ -184,9 +186,21 @@ class LayananController extends Controller
 
 	public function update(Request $request)
 	{
+        $user = User::find($request->user_id);
+
 		$this->validate($request, [
-			'kode_layanan' => 'required|string',
-			'nama_layanan' => 'required|string',
+			'kode_layanan' => [
+                'required', 'string',
+                Rule::unique('layanan')->ignore($request->id)
+                    ->where('klinik_id', $user->klinik_id)
+                    ->where('deleted_at', null),
+            ],
+			'nama_layanan' => [
+                'required', 'string',
+                Rule::unique('layanan')->ignore($request->id)
+                    ->where('klinik_id', $user->klinik_id)
+                    ->where('deleted_at', null),
+            ],
 			'tarif' => 'required|integer'
 		]);
 		$user = User::find($request->user_id);

@@ -45,6 +45,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     //operator
     $router->get('/operator/check/{token}', 'OperatorController@check_activation');
     $router->post('/operator/activation', 'OperatorController@activation');
+    $router->get('/email/resend/operator/{user_id}', 'UserController@sendEmailOperator');
 
     $router->post('/logout', 'UserController@logout');
 
@@ -107,8 +108,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->get('/layanan/{id}', 'LayananController@show');
             $router->put('/layanan/{id}', 'LayananController@update');
             $router->delete('/layanan/{id}', 'LayananController@delete');
-            $router->get('/layanan/{kode}/kode', 'LayananController@getByKode');
-            $router->get('/layanan/{nama}/nama', 'LayananController@getByNama');
+            $router->get('/layanan/kode/{kode}', 'LayananController@getByKode');
+            $router->get('/layanan/nama/{nama}', 'LayananController@getByNama');
         });
 
         //pasien
@@ -124,6 +125,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
         //transaksi klinik
         $router->get('/transaksi', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@index']);
+        $router->get('/transaksi/queue', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@moveQueue']);
         $router->post('/transaksi', ['middleware' => 'permission:create-transklinik', 'uses' => 'TransKlinikController@store']);
         $router->get('/transaksi/{id}', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@show']);
         $router->put('/transaksi/{id}', ['middleware' => 'permission:update-transklinik', 'uses' => 'TransKlinikController@update']);
@@ -162,6 +164,26 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/pembayaran/{id}', ['uses' => 'PembayaranController@show']);
         $router->put('/pembayaran/{id}', ['uses' => 'PembayaranController@update']);
         $router->delete('/pembayaran/{id}', ['uses' => 'PembayaranController@delete']);
+
+        //paket
+        $router->get('/paket', ['uses' => 'PaketController@index']);
+        $router->get('/paket/{id}', ['uses' => 'PaketController@show']);
+        $router->get('/detailpembayaran/{id}', ['uses' => 'PaketController@detailPembayaran']);
+
+        //adds-on
+        $router->get('/addson', ['uses' => 'PaketController@getAddson']);
+        $router->get('/addson/{id}', ['uses' => 'PaketController@showAddson']);
+
+        //payment gateway
+        $router->get('/paygate', ['uses' => 'PaygateController@index']);
+        $router->get('/paygate/{id}', ['uses' => 'PaygateController@show']);
+
+        //promo
+        $router->get('/promo', ['uses' => 'PromoController@index']);
+        $router->post('/promo', ['uses' => 'PromoController@getPromo']);
+
+        //subscribe
+        $router->post('/subscribe', ['uses' => 'PaygateController@store']);
     });
 
     $router->get('/image', function (Request $request) {

@@ -54,7 +54,7 @@ class PasienController extends Controller
 			elseif(!$female) $gender = 1; // jika laki2
 		}
 
-		$pasien = Pasien::select('id', DB::raw("concat(nama,' (',tanggal_lahir,')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id')
+		$pasien = Pasien::select('id', DB::raw("CONCAT(nama,' (',DATE_FORMAT(tanggal_lahir, '%d-%m-%Y'),')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id', 'tensi_sistole', 'tensi_diastole', 'nadi', 'suhu', 'tinggi_badan', 'berat_badan')
 				->where('nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
 				->where('nama', 'like', "%{$request->nama_pasien}%")
 				->where('jenis_kelamin', 'like', "%{$gender}%")
@@ -140,7 +140,7 @@ class PasienController extends Controller
 		{
 			return response()->json([
 				'success' => false,
-				'message' => 'Data pasien telah terdaftar, silahkan cek ulang data anda!',
+				'message' => 'Data Pasien telah Terdaftar, Silahkan cek ulang data Anda!',
 				'data' => ''
 			], 400);
 		}
@@ -288,35 +288,10 @@ class PasienController extends Controller
 	{
 		$this->validate($request, [
             'nama' => 'required|string',
-            'jenis_identitas' => 'string',
-			'nik' => 'string',
-			'tempat_lahir' => 'string',
-			'tanggal_lahir' => 'required|date_format:Y-m-d',
-			'jenis_kelamin' => 'required|integer',
-			'golongan_darah' => 'string',
-			'alamat_rumah' => 'required|string',
-			//'rt' => 'string',
-			//'rw' => 'string',
-			//'kelurahan' => 'string',
-            //'kecamatan' => 'string',
-            'provinsi' => 'integer',
-            'kota' =>  'integer',
-			'status_perkawinan' => 'string',
-			//'pekerjaan' => 'string',
-			'nomor_hp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|max:30',
-			//'nama_penjamin' => 'string',
-			//'nomor_polis_asuransi' => 'string',
-			//'nomor_member_asuransi' => 'string',
-			'email' => 'string',
-			'nama_penanggung_jawab' => 'string',
-			'tensi_sistole' => 'integer',
-			'tensi_diastole' => 'integer',
-			'nadi' => 'integer',
-			'suhu' => 'integer',
-			'respirasi' => 'integer',
-			'tinggi_badan' => 'integer',
-			'berat_badan' => 'integer',
-			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15'
+            'tanggal_lahir' => 'required|date_format:Y-m-d',
+            'jenis_kelamin' => 'required|integer',
+            'alamat_rumah' => 'required|string',
+            'nomor_hp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|max:30',
 		]);
 
 		$pasien = Pasien::find($request->id);
@@ -352,7 +327,8 @@ class PasienController extends Controller
 			}
 		}
 
-		$pasien->nama = $request->input('nama');
+        $pasien->nama = $request->input('nama');
+        $pasien->jenis_identitas = $request->input('jenis_identitas');
 		$pasien->nik = $request->input('nik');
 		$pasien->tempat_lahir = $request->input('tempat_lahir');
 		$pasien->tanggal_lahir = $request->input('tanggal_lahir');
@@ -590,9 +566,8 @@ class PasienController extends Controller
 
     public function verifyIdentity(Request $request)
     {
-        $user_id = Auth::user()->id;
-        $user = User::find($user_id);
-        $identity = Pasien::where('nik', $request->nik)->where('klinik_id', $user->klinik_id)->exists();
+        $klinikId = Auth::user()->klinik_id;
+        $identity = Pasien::where('nik', $request->nik)->where('klinik_id', $klinikId)->exists();
 
         if ($identity) {
             return response()->json(['status' => false, 'message' => 'identity is already in use!!']);

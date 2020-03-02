@@ -25,9 +25,11 @@ class OperatorController extends Controller
     $operator = new Operator;
 
     if (!$user->hasRole(Constant::SUPER_ADMIN)) {
-      $operator = $operator->wherehas('user', function ($data) use ($user) {
-        $data->where('users.klinik_id', $user->klinik_id);
-      });
+        $operator = $operator->select('id', 'nama', 'user_id')
+            ->withAndWhereHas('user', function ($data) use ($user) {
+                $data->select('id', 'nama', 'email', 'nomor_telp');
+                $data->where('users.klinik_id', $user->klinik_id);
+        });
     }
 
     $operator = $operator->paginate($request->limit);
@@ -56,18 +58,6 @@ class OperatorController extends Controller
       'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
       'password' => 'required|confirmed|min:6',
     ]);
-
-     #cek email
-     $email = User::where('email', $request->email)->exists();
-     if ($email) {
-         return response()->json(['status' => false, 'message' => 'email is already in used!']);
-     }
-
-     #cek nomor_telp
-     $nomor_telp = User::where('nomor_telp', $request->nomor_telp)->exists();
-     if ($nomor_telp) {
-         return response()->json(['status' => false, 'message' => 'no handphone is already in used!']);
-     }
 
     $logged_user = $this->user;
 
@@ -253,17 +243,16 @@ class OperatorController extends Controller
   {
     $this->validate($request, [
       'nama' => 'required|string',
+      'email' => 'required|email',
       'nomor_telp' => 'required|string',
-      'tanggal_lahir' => 'required|date',
-      'jenis_kelamin' => 'required|string',
     ]);
 
     $operator = Operator::find($request->id);
     $user = $this->user;
 
     if ($user->cant('updateOrDelete', $operator)) {
-			abort(403);
-		}
+        abort(403);
+    }
 
     if (empty($operator)) {
       return response()->json([
@@ -274,18 +263,20 @@ class OperatorController extends Controller
     } else {
       $user = User::find($operator->user_id);
       $user->nama = $request->nama;
+      $user->email = $request->email;
       $user->nomor_telp = $request->nomor_telp;
       $user->save();
       $operator->nama = $request->nama;
-      $operator->tanggal_lahir = $request->tanggal_lahir;
-      $operator->jenis_kelamin = $request->jenis_kelamin;
       $operator->save();
+
+      $data['operator'] = $operator;
+      $data['user'] = $user;
+
       return response()->json([
         'status' => true,
-        'data' => $operator,
+        'data' => $data,
         'message' => 'success'
       ]);
-      // print_r($user);
     }
   }
 
