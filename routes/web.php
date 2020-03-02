@@ -184,6 +184,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         //subscribe
         $router->post('/subscribe', ['uses' => 'PaygateController@store']);
     });
+    //subscribe
+    $router->delete('/cancelsubscribe/{id}', ['uses' => 'PaygateController@cancel']);
 
     $router->get('/image', function (Request $request) {
         $file = Storage::cloud()->get($request->path);

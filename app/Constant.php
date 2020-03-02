@@ -79,4 +79,5 @@ class Constant
 
 	#subscribe
 	const PAYMENT_CONFIRMATION = 'payment-confirmation';
+	const CANCEL_SUBSCRIBE = 'cancel-subscribe';
 }
