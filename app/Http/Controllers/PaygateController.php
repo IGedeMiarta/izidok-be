@@ -6,6 +6,9 @@ use App\Paygate;
 use App\Billing;
 use App\PaygateLog;
 use App\Constant;
+use App\Paket;
+use App\Addson;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\PaketController;
@@ -13,7 +16,8 @@ use App\Http\Controllers\PaketController;
 class PaygateController extends Controller
 {
     public function __construct(){
-        $this->url = 'https://simpg.sprintasia.net/PaymentRegister';
+        $this->url_ins = 'https://simpg.sprintasia.net/PaymentRegister';
+        $this->url_void = 'https://simpg.sprintasia.net/PostAuth';
     }
     /**
      * Display a listing of the resource.
@@ -89,6 +93,7 @@ class PaygateController extends Controller
                 $bill->pg_id = $request->pg_id;
                 $bill->promo_id = $request->promo_id;
                 $bill->paket_id = $request->paket_id;
+                $bill->paket_bln = $request->paket_bln;
                 $bill->addson_id = $request->addson_id;
                 $bill->no_invoice = $noInvoice;
                 $bill->expired_pay = $expPay;
@@ -128,7 +133,11 @@ class PaygateController extends Controller
                 'data' => ['billing_id' => $bill->id],
             ], 200);
         } else {
-            # code...
+            return response()->json([
+                'success' => false,
+                'message' => 'failed',
+                'data' => $res,
+            ], 200);
         }
     }
 
@@ -162,7 +171,7 @@ class PaygateController extends Controller
         ];
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->url);
+        curl_setopt($ch, CURLOPT_URL, $this->url_ins);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($req));
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -208,7 +217,7 @@ class PaygateController extends Controller
         ];
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->url);
+        curl_setopt($ch, CURLOPT_URL, $this->url_ins);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($req));
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -222,5 +231,118 @@ class PaygateController extends Controller
         PaygateLog::create($req);
 
         return $response;
+    }
+
+    public function cancel($id){
+        $pl = PaygateLog::find($id);
+        $user = User::find($pl->created_by);
+        $bil = Billing::where('no_invoice',$pl->transactionNo)->first();
+        $pg = Paygate::find($bil->pg_id);
+        $pkt = Paket::find($bil->paket_id);
+        $adds = !is_null($bil->addson_id) ? Addson::find($bil->addson_id) : null;
+
+        $req = [
+            'channelId' => $pl->channelId,
+            'serviceCode' => $pl->serviceCode,
+            'transactionNo' => $pl->transactionNo,
+            'transactionAmount' => $pl->transactionAmount,
+            'transactionType' => 'VOID INSERT',
+        ];
+
+        $data = [
+            'pg' => $pg,
+            'pl' => $pl,
+            'paket' => $pkt,
+            'addson' => is_null($adds) ? null : $adds,
+            'user' => is_null(Auth::user()) ? 'sistem' : 'pengguna',
+            'now' => date('Y-m-d H:i:s'),
+        ];
+        // dd($data);
+
+        $email_data = [
+            'subject' => 'Pembatalan Pembayaran izidok',
+            'to' => [$user->email],
+            'from' => 'izidok.dev@gmail.com',
+            'data' => $data
+        ];
+
+        if (\sendEmail($email_data, Constant::CANCEL_SUBSCRIBE)) {
+            return response()->json([
+                'success' => true,
+                'message' => 'success',
+                'data' => $response,
+            ], 200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'email not sent',
+                'data' => $response,
+            ], 200);
+        }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->url_void);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($req));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_POST,1);
+        $response = json_decode(curl_exec($ch), true);
+        curl_close($ch);
+
+        if ($response['transactionStatus'] == '00') {
+            $pl->cancel_by = is_null(Auth::user()) ? 0 : Auth::user()->id;
+            $pl->cancel_date = date('Y-m-d H:i:s');
+            $pl->cancel_response = json_encode($response);
+            $pl->cancel_rc = $response['transactionStatus'];
+            $pl->update();
+
+            $data = [
+                'pg' => $pg->nama,
+                'pg_logo' => url('/paygate/'.$pg->logo),
+                'biaya_admin' => $pg->biaya_admin,
+                'ammount' => $pl->transactionAmount,
+                'expired' => $pl->transactionExpire,
+                'account' => $pl->customerAccount,
+                'no_trans' => $pl->transactionNo,
+                'paket' => $pkt->nama,
+                'addson' => is_null($adds) ? null : $adds->nama,
+                'user' => is_null(Auth::user()) ? 'sistem' : 'pengguna',
+            ];
+
+            $email_data = [
+                'subject' => 'Pembatalan Pembayaran izidok',
+                'to' => [$user->email],
+                'from' => 'izidok.dev@gmail.com',
+                'data' => $data
+            ];
+
+            if (\sendEmail($email_data, Constant::CANCEL_SUBSCRIBE)) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'success',
+                    'data' => $response,
+                ], 200);
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'message' => 'email not sent',
+                    'data' => $response,
+                ], 200);
+            }
+        } else {
+            $pl->cancel_by = is_null(Auth::user()) ? 0 : Auth::user()->id;
+            $pl->cancel_date = date('Y-m-d H:i:s');
+            $pl->cancel_response = json_encode($response);
+            $pl->cancel_rc = $response['transactionStatus'];
+            $pl->update();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'failed',
+                'data' => $response,
+            ], 200);
+        }
+        
     }
 }
