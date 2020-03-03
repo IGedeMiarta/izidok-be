@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Hash;
 
 class OperatorController extends Controller
 {
-  public $user;
+    public $user;
 
 	public function __construct(){
 		$this->user = Auth::user();
-  }
+    }
 
   public function index(Request $request)
   {

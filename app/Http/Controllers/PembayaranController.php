@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class PembayaranController extends Controller
 {
+    public $user;
 
-  public $user;
-
-	public function __construct(){
+    public function __construct()
+    {
 		$this->user = Auth::user();
-  }
+    }
 
     public function index(Request $request)
     {

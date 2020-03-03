@@ -14,8 +14,6 @@ use App\Klinik;
 use Carbon\Carbon;
 use DB;
 
-use function Symfony\Component\VarDumper\Dumper\esc;
-
 class PasienController extends Controller
 {
 	public $user;

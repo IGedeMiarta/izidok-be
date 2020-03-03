@@ -13,8 +13,8 @@ class LayananController extends Controller
 {
 	public $user;
 
-	public function __construct()
-	{
+    public function __construct()
+    {
 		$this->user = Auth::user();
 	}
 
@@ -206,9 +206,7 @@ class LayananController extends Controller
 		$user = User::find($request->user_id);
 
 		$cek_layanan_klinik = Layanan::where('klinik_id',$user->klinik_id)->where("id",$request->id)->get();
-		// dd($cek_layanan_klinik);
-		if(count($cek_layanan_klinik) == 0)
-		{
+		if(count($cek_layanan_klinik) == 0) {
 			return response()->json([
 					'status' => false,
 					'message' => "Tidak ada layanan dengan id ".$request->id." di klinik anda" ,

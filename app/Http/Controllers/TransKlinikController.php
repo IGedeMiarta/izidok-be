@@ -19,10 +19,10 @@ use DateTime;
 
 class TransKlinikController extends Controller
 {
+    public $user;
 
-  public $user;
-
-	public function __construct(){
+    public function __construct()
+    {
 		$this->user = Auth::user();
     }
 
@@ -178,7 +178,6 @@ class TransKlinikController extends Controller
     $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id, $consultation_time);
     $trans_klinik->anamnesa = $request->anamnesis;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
-    //dd($request->pasien_id);
     $trans_klinik->save();
 
     #update pasien
