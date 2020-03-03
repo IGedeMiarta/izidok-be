@@ -20,50 +20,74 @@ class RekamMedisController extends Controller
 {
     public $user;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->user = Auth::user();
     }
 
     public function index(Request $request)
     {
-        $user = User::find($request->user_id);
-        $rekam_medis = new RekamMedis;
+        $user = $this->user;
+        $rekam_medis = new RekamMedis();
 
         if (!$user->hasRole(Constant::SUPER_ADMIN)) {
-            $rekam_medis = $rekam_medis->where('created_by', $user->id);
+			$rekam_medis = $rekam_medis->where('created_by', $user->id);
         }
 
-        if ($request->pasien_id) {
-            $data = $this->getRekamMedisByPasien($request);
-            return response()->json([
-                'success' => true,
-                'message' => 'success',
-                'data' => $data
-            ], 201);
+        if(empty($request->column) && empty($request->order)) {
+            $column = 'id';
+            $order = 'asc';
+        } else {
+            $column = $request->column;
+            $order = $request->order;
         }
 
-        if ($request->tanggal_lahir) {
-            return $this->getRekamMedisByTanggalLahir($request);
+        $man = "laki-laki";
+        $women = "perempuan";
+		$gender = ''; // jika karakter yg di search kosong atau ada di "perempuan" dan "laki-laki"
+
+		if(!empty($request->jenis_kelamin)) {
+			$male = $female = false;
+
+			if (strpos($man, $request->jenis_kelamin) !== false) {
+				$male = true;
+			}
+			if (strpos($women, $request->jenis_kelamin) !== false) {
+				$female = true;
+			}
+
+			if(!$male) $gender = 0; // jika perempuan
+			elseif(!$female) $gender = 1; // jika laki2
         }
 
-        $rekam_medis = $rekam_medis->with(['transKlinik.pasien', 'transKlinik.examinationBy'])
-            ->paginate($request->limit);
+        $rekam_medis = RekamMedis::select([
+            'rekam_medis.id',
+            'rekam_medis.nomor_rekam_medis',
+            'pasien.nama',
+            'pasien.jenis_kelamin',
+            'pasien.nomor_hp'
+          ])
+          ->leftJoin('trans_klinik', 'rekam_medis.transklinik_id', '=', 'trans_klinik.id')
+          ->leftJoin('pasien', 'trans_klinik.pasien_id', '=', 'pasien.id')
+          ->where('pasien.nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}")
+          ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
+          ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
+          ->where('pasien.nomor_hp', 'like', "%{$request->nomor_hp}%")
+          ->where('rekam_medis.created_by', $user->id)
+          ->orderBy($column, $order)
+          ->paginate($request->limit);
 
         if (!$rekam_medis) {
-            return response()->json([
-                'success' => false,
-                'message' => 'failed, no data available...',
-                'data' => $data
-            ], 201);
-        }
+			return response()->json([
+				'success' => false,
+				'message' => 'failed, you dont have role to see this',
+			], 201);
+		}
 
-        $data['rekam_medis'] = $rekam_medis;
-        return response()->json([
-            'success' => true,
-            'message' => 'success',
-            'data' => $data
-        ], 201);
+		return response()->json([
+			'success' => true,
+			'message' => 'success',
+			'data' => $rekam_medis
+		], 201);
     }
 
     private function getRekamMedisByTanggalLahir(Request $request)
@@ -88,7 +112,7 @@ class RekamMedisController extends Controller
             ], 404);
         }
     }
-    
+
     private function getRekamMedisByPasien($request)
     {
         $rekam_medis = RekamMedis::whereHas('transKlinik', function ($data) use ($request) {
