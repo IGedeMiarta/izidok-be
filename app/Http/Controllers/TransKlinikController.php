@@ -138,7 +138,7 @@ class TransKlinikController extends Controller
     $this->validate($request, [
       'pasien_id' => 'required|integer',
       'klinik_id' => 'required|integer',
-      'examination_by' => 'required|integer',
+      //'examination_by' => 'required|integer',
       'nomor_rekam_medis' => 'required|string',
 
       'nama_lengkap' => 'required|string',
@@ -158,8 +158,8 @@ class TransKlinikController extends Controller
       return response()->json(['status' => false, 'message' => 'Klinik not found...'], 422);
 
     #dokter exist?
-    if (!User::find($request->examination_by))
-      return response()->json(['status' => false, 'message' => 'Dokter not found...'], 422);
+    /*if (!User::find($request->examination_by))
+      return response()->json(['status' => false, 'message' => 'Dokter not found...'], 422);*/
 
     #pasien exist?
     if (!Pasien::find($request->pasien_id))
@@ -177,7 +177,8 @@ class TransKlinikController extends Controller
   	$user = User::find($request->user_id);
 
     $trans_klinik = new TransKlinik;
-    $trans_klinik->examination_by = $request->examination_by;
+    //$trans_klinik->examination_by = $request->examination_by;
+    $trans_klinik->examination_by = $user->id;
     $trans_klinik->pasien_id = $request->pasien_id;
     $trans_klinik->klinik_id = $user->klinik_id;
     $trans_klinik->created_by = $request->user_id;
