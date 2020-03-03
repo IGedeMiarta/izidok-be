@@ -9,10 +9,12 @@ use App\Pasien;
 use App\Constant;
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use App\TransKlinik;
+use App\Spesialisasi;
 use App\Klinik;
 use Carbon\Carbon;
 use DB;
+
+use function Symfony\Component\VarDumper\Dumper\esc;
 
 class PasienController extends Controller
 {
@@ -177,45 +179,57 @@ class PasienController extends Controller
 		$pasien->tinggi_badan = $request->input('tinggi_badan');
 		$pasien->berat_badan = $request->input('berat_badan');
 		$pasien->user_id = $request->user_id;
-		$str_faskes = "";
+
+        $jenis_faskes = "";
 		if ($klinik->tipe_faskes == Constant::TIPE_KLINIK) {
-			$str_faskes = Constant::TIPE_FASKES_KLINIK;
+			$jenis_faskes = Constant::TIPE_FASKES_KLINIK;
 		} else if ($klinik->tipe_faskes == Constant::DOKTER_PRAKTIK) {
-			$str_faskes = Constant::TIPE_FASKES_DOKTER_PRAKTIK;
-		}
+			$jenis_faskes = Constant::TIPE_FASKES_DOKTER_PRAKTIK;
+        }
+
+        $spesialisasi = Spesialisasi::select('id', 'nama')->where('id', $klinik->spesialisasi_id)->value('nama');
+        $gigi = 'gigi';
+        $spesialis = 'spesialis';
+        $pos_gigi = stripos($spesialisasi, $gigi);
+        $pos_spesialis = stripos($spesialisasi, $spesialis);
+        $kategori_dokter = "";
+        if ($pos_gigi !== false && $pos_spesialis !== false) {
+            $kategori_dokter = 40;
+        } else if ($pos_spesialis !== false) {
+            $kategori_dokter = 30;
+        } else if ($pos_gigi !== false) {
+            $kategori_dokter = 20;
+        } else {
+            $kategori_dokter = 10;
+        }
 
 		$last_pasien = Pasien::withTrashed()
-			->where('klinik_id',$user->klinik_id)
+			->where('klinik_id', $user->klinik_id)
 			->orderBy('created_at','desc')
-			->first();
-
+            ->first();
 		$n_pasien = 0;
-
-		if(empty($last_pasien) || empty($last_pasien->nomor_pasien))
-		{
+		if(empty($last_pasien) || empty($last_pasien->nomor_pasien)) {
 			$n_pasien = 1;
-		}
-		else
-		{
+	    } else {
 			$n_pasien = $last_pasien->nomor_pasien + 1;
         }
 
-		$pasien->nomor_pasien = $n_pasien;
-		$nomor_pasien_rm = sprintf('%06d', $n_pasien);
-		$rekam_medis = $str_faskes . Constant::KATEGORI_UMUM . $klinik->kode_faskes . $nomor_pasien_rm;
-
-        $arr_rekam_medis = str_split($rekam_medis,4);
-        $str_rekam_medis = "";
+        $nomor_dokter = sprintf('%07d', $klinik->kode_faskes);
+        $nomor_pasien = sprintf('%07d', $n_pasien);
+        $rekam_medis = $jenis_faskes . $kategori_dokter . $nomor_dokter . $nomor_pasien;
+        $arr_rekam_medis = str_split($rekam_medis, 4);
         $arrayKeys = array_keys($arr_rekam_medis);
         $lastArrayKey = array_pop($arrayKeys);
+        $str_rekam_medis = "";
+
 		foreach ($arr_rekam_medis as $k => $v) {
 			$str_rekam_medis .= $v;
-			if($k != $lastArrayKey)
-			{
+			if($k != $lastArrayKey) {
 				$str_rekam_medis .= "-";
 			}
         }
 
+        $pasien->nomor_pasien = $n_pasien;
 		$pasien->nomor_rekam_medis = $str_rekam_medis;
 		$pasien->klinik_id = $user->klinik_id;
 		$pasien->created_by = $request->user_id;

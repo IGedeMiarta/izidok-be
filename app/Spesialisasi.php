@@ -13,4 +13,9 @@ class Spesialisasi extends Model
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+
+    public function klinik()
+    {
+        return $this->hasOne(Klinik::class, 'spesialisasi_id');
+    }
 }
