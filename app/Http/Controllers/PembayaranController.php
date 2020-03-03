@@ -52,6 +52,7 @@ class PembayaranController extends Controller
 			elseif(!$female) $gender = 1; // jika laki2
         }
 
+        $status = [Constant::BELUM_LUNAS, Constant::LUNAS];
         $pembayaran = Pembayaran::select([
             'pembayaran.id',
             'pasien.nomor_rekam_medis',
@@ -64,7 +65,7 @@ class PembayaranController extends Controller
           ->where('pasien.nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}")
           ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
           ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
-          ->where('pembayaran.status', 'like', "{$request->status_pembayaran}%")
+          ->whereIn('pembayaran.status', $status)
           ->where('pembayaran.klinik_id', $user->klinik_id)
           ->orderBy($column, $order)
           ->paginate($request->limit);
