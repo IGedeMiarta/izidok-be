@@ -78,7 +78,7 @@ class TransKlinikController extends Controller
             'extend',
             'anamnesa',
             'pasien.id as pasien_id',
-            'pasien.nama',
+            DB::raw("CONCAT(pasien.nama,' (',DATE_FORMAT(pasien.tanggal_lahir, '%d-%m-%Y'),')') as nama"),
             'pasien.jenis_kelamin',
             'pasien.nomor_hp',
             'tensi_sistole',
