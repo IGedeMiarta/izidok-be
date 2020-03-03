@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\TransKlinik;
 use App\Constant;
+use App\Dokter;
+use App\Operator;
 use App\Pasien;
 use App\Klinik;
 use App\User;
@@ -174,11 +176,18 @@ class TransKlinikController extends Controller
     }
 
     #transaksi
-  	$user = User::find($request->user_id);
+    $user = User::find($request->user_id);
+    $dokter = Dokter::where('user_id', $user->id)->first();
+    if (!empty($dokter)) {
+      $data = $dokter->id;
+    } else {
+      $dokterId = Operator::where('user_id', $user->id)->first();
+      $dokter = Dokter::where('user_id', $dokterId->created_by)->first();
+      $data = $dokter->id;
+    }
 
     $trans_klinik = new TransKlinik;
-    //$trans_klinik->examination_by = $request->examination_by;
-    $trans_klinik->examination_by = $user->id;
+    $trans_klinik->examination_by = $data;
     $trans_klinik->pasien_id = $request->pasien_id;
     $trans_klinik->klinik_id = $user->klinik_id;
     $trans_klinik->created_by = $request->user_id;
