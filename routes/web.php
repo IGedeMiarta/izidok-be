@@ -49,6 +49,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
     $router->post('/logout', 'UserController@logout');
 
+    $router->post('/pay/flag', 'PayFlagController@store');
+
     $router->group(['middleware' => ['auth','singdev']], function () use ($router) {
         //user
         $router->put('/user/{id}', 'UserController@update');
