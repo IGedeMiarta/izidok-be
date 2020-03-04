@@ -160,7 +160,8 @@ class TransKlinikController extends Controller
 
     #transaksi
     $user = User::find($request->user_id);
-    if (!empty($user)) {
+    $dokter = Dokter::where('user_id', $user->id)->first();
+    if (!empty($dokter)) {
       $data = $user->id;
     } else {
       $userId = Operator::where('user_id', $user->id)->first();
