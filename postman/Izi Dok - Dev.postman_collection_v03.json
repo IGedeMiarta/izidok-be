@@ -1,0 +1,2385 @@
+{
+	"info": {
+		"_postman_id": "11771fb0-0ae5-43c1-bebc-e5693874f332",
+		"name": "Izi Dok - Dev",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "user - add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "helmy",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "helmysmp@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "beraksi123",
+									"type": "text"
+								},
+								{
+									"key": "nama",
+									"value": "Helmy Satria Martha Putra",
+									"type": "text"
+								},
+								{
+									"key": "nomor_telp",
+									"value": "089817110",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/user",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "josssekali",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "josssekali",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/login",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "MjBrMXZKU1ViR0l0RXNuSEtnUVJPb0FYWDRWTzIyVDJNaFYxNm54RA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/logout",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "helmysmp@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/forgot",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"forgot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "password",
+									"value": "lalala",
+									"type": "text"
+								},
+								{
+									"key": "konfirm_password",
+									"value": "lalala",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "UllLaEhBOFpmRmpFeDlWRU9iV0daalNGTlAwUTVlc20zODAyZlZZaA==",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/reset",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reset"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Klinik",
+			"item": [
+				{
+					"name": "klinik - add",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "tipe_faskes",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "nama_klinik",
+									"value": "Klinik Sehat",
+									"type": "text"
+								},
+								{
+									"key": "nama_pic",
+									"value": "helmy",
+									"type": "text"
+								},
+								{
+									"key": "nomor_telp",
+									"value": "081212371",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "rezpa.snk@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "josssekali",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "josssekali",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "josssekali",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/klinik",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"klinik"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "klinik - list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "VFhTMkR3bjV6MEEya3hBdlk0ZHkySk1TUGN4WTVwSE00a3BnWDBpdQ==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/klinik",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"klinik"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "klinik - get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "VFhTMkR3bjV6MEEya3hBdlk0ZHkySk1TUGN4WTVwSE00a3BnWDBpdQ==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/klinik/1",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"klinik",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "klinik - update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "VFhTMkR3bjV6MEEya3hBdlk0ZHkySk1TUGN4WTVwSE00a3BnWDBpdQ==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nama_klinik",
+									"value": "Klinik Joss",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/klinik/1",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"klinik",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "klinik - delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/klinik/4",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"klinik",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Layanan",
+			"item": [
+				{
+					"name": "layanan - add",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "arr[0][kode_layanan]",
+									"value": "TR01",
+									"type": "text"
+								},
+								{
+									"key": "arr[0][nama_layanan]",
+									"value": "Layanan 1",
+									"type": "text"
+								},
+								{
+									"key": "arr[0][tarif]",
+									"value": "100000",
+									"type": "text"
+								},
+								{
+									"key": "arr[0][klinik_id]",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "arr[1][kode_layanan]",
+									"value": "TR02",
+									"type": "text"
+								},
+								{
+									"key": "arr[1][nama_layanan]",
+									"value": "Layanan 2",
+									"type": "text"
+								},
+								{
+									"key": "arr[1][tarif]",
+									"value": "150000",
+									"type": "text"
+								},
+								{
+									"key": "arr[1][klinik_id]",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/layanan",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"layanan"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "layanan - list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/layanan",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"layanan"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "layanan - get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/layanan/1",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"layanan",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "layanan - delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/layanan/2",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"layanan",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "layanan - update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "kode_layanan",
+									"value": "TR02-UPDT",
+									"type": "text"
+								},
+								{
+									"key": "nama_layanan",
+									"value": "Layanan 2 UPDT",
+									"type": "text"
+								},
+								{
+									"key": "tarif",
+									"value": "100000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/layanan/2",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"layanan",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Operator",
+			"item": [
+				{
+					"name": "operator - add",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nama",
+									"value": "satria",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "helmysmp@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/operator",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"operator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "operator - activation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "satria",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "satria",
+									"type": "text"
+								},
+								{
+									"key": "konfirm_password",
+									"value": "satria",
+									"type": "text"
+								},
+								{
+									"key": "tanggal_lahir",
+									"value": "1993-01-01",
+									"type": "text"
+								},
+								{
+									"key": "jenis_kelamin",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "telepon",
+									"value": "08123123232",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "eTFEbDg4TzQzS0tYTU94QzhFUW5KRDBod1E4WVox",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/operator/activation",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"operator",
+								"activation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "operator - update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nama",
+									"value": "update",
+									"type": "text"
+								},
+								{
+									"key": "tanggal_lahir",
+									"value": "1980-01-01",
+									"type": "text"
+								},
+								{
+									"key": "jenis_kelamin",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "nomor_telp",
+									"value": "08123123232",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/operator/1",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"operator",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "operator - list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/operator",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"operator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "operator - get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/operator/3",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"operator",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "operator - delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/operator/2",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"operator",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Dokter",
+			"item": [
+				{
+					"name": "dokter - add",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "anjeng",
+									"type": "text"
+								},
+								{
+									"key": "nama",
+									"value": "anjeng",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "rezpa.snk@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "anjeng123",
+									"type": "text"
+								},
+								{
+									"key": "nomor_telp",
+									"value": "0912318927",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/dokter",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dokter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "dokter - delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/dokter/1",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dokter",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "dokter - update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nama",
+									"value": "woke",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/dokter/1",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dokter",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "dokter - list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/dokter",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dokter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "dokter - list Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/dokter/1",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dokter",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Pasien",
+			"item": [
+				{
+					"name": "pasien - add",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nama",
+									"value": "pasien gila",
+									"type": "text"
+								},
+								{
+									"key": "nik",
+									"value": "12323123",
+									"type": "text"
+								},
+								{
+									"key": "tempat_lahir",
+									"value": "wates",
+									"type": "text"
+								},
+								{
+									"key": "tanggal_lahir",
+									"value": "1999-01-01",
+									"type": "text"
+								},
+								{
+									"key": "jenis_kelamin",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "golongan_darah",
+									"value": "O",
+									"type": "text"
+								},
+								{
+									"key": "alamat_rumah",
+									"value": "antah berantah",
+									"type": "text"
+								},
+								{
+									"key": "rt",
+									"value": "01",
+									"type": "text"
+								},
+								{
+									"key": "rw",
+									"value": "02",
+									"type": "text"
+								},
+								{
+									"key": "kelurahan",
+									"value": "kaliurang",
+									"type": "text"
+								},
+								{
+									"key": "kecamatan",
+									"value": "banjar",
+									"type": "text"
+								},
+								{
+									"key": "status_perkawinan",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "pekerjaan",
+									"value": "tester makanan",
+									"type": "text"
+								},
+								{
+									"key": "nomor_hp",
+									"value": "08129323928",
+									"type": "text"
+								},
+								{
+									"key": "nama_penjamin",
+									"value": "orang lain",
+									"type": "text"
+								},
+								{
+									"key": "nomor_polis",
+									"value": "28282828",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "joss@joss.com",
+									"type": "text"
+								},
+								{
+									"key": "nama_penanggung_jawab",
+									"value": "emak",
+									"type": "text"
+								},
+								{
+									"key": "tensi_sistole",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "tensi_diastole",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "nadi",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "suhu",
+									"value": "28",
+									"type": "text"
+								},
+								{
+									"key": "respirasi",
+									"value": "90",
+									"type": "text"
+								},
+								{
+									"key": "tinggi_badan",
+									"value": "170",
+									"type": "text"
+								},
+								{
+									"key": "berat_badan",
+									"value": "60",
+									"type": "text"
+								},
+								{
+									"key": "nomor_rekam_medis",
+									"value": "123213123",
+									"type": "text"
+								},
+								{
+									"key": "klinik_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/pasien",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pasien"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pasien - add Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nama",
+									"value": "pasien gila",
+									"type": "text"
+								},
+								{
+									"key": "nik",
+									"value": "12323123",
+									"type": "text"
+								},
+								{
+									"key": "tempat_lahir",
+									"value": "wates",
+									"type": "text"
+								},
+								{
+									"key": "tanggal_lahir",
+									"value": "1999-01-01",
+									"type": "text"
+								},
+								{
+									"key": "jenis_kelamin",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "golongan_darah",
+									"value": "O",
+									"type": "text"
+								},
+								{
+									"key": "alamat_rumah",
+									"value": "antah berantah",
+									"type": "text"
+								},
+								{
+									"key": "rt",
+									"value": "01",
+									"type": "text"
+								},
+								{
+									"key": "rw",
+									"value": "02",
+									"type": "text"
+								},
+								{
+									"key": "kelurahan",
+									"value": "kaliurang",
+									"type": "text"
+								},
+								{
+									"key": "kecamatan",
+									"value": "banjar",
+									"type": "text"
+								},
+								{
+									"key": "status_perkawinan",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "pekerjaan",
+									"value": "tester makanan",
+									"type": "text"
+								},
+								{
+									"key": "nomor_hp",
+									"value": "08129323928",
+									"type": "text"
+								},
+								{
+									"key": "nama_penjamin",
+									"value": "orang lain",
+									"type": "text"
+								},
+								{
+									"key": "nomor_polis",
+									"value": "28282828",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "joss@joss.com",
+									"type": "text"
+								},
+								{
+									"key": "nama_penanggung_jawab",
+									"value": "emak",
+									"type": "text"
+								},
+								{
+									"key": "tensi_sistole",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "tensi_diastole",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "nadi",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "suhu",
+									"value": "28",
+									"type": "text"
+								},
+								{
+									"key": "respirasi",
+									"value": "90",
+									"type": "text"
+								},
+								{
+									"key": "tinggi_badan",
+									"value": "170",
+									"type": "text"
+								},
+								{
+									"key": "berat_badan",
+									"value": "60",
+									"type": "text"
+								},
+								{
+									"key": "nomor_rekam_medis",
+									"value": "123213123",
+									"type": "text"
+								},
+								{
+									"key": "klinik_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/pasien",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pasien"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pasien - update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nama",
+									"value": "pasien gila update",
+									"type": "text"
+								},
+								{
+									"key": "nik",
+									"value": "12323123",
+									"type": "text"
+								},
+								{
+									"key": "tempat_lahir",
+									"value": "wates",
+									"type": "text"
+								},
+								{
+									"key": "tanggal_lahir",
+									"value": "1999-01-01",
+									"type": "text"
+								},
+								{
+									"key": "jenis_kelamin",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "golongan_darah",
+									"value": "O",
+									"type": "text"
+								},
+								{
+									"key": "alamat_rumah",
+									"value": "antah berantah",
+									"type": "text"
+								},
+								{
+									"key": "rt",
+									"value": "01",
+									"type": "text"
+								},
+								{
+									"key": "rw",
+									"value": "02",
+									"type": "text"
+								},
+								{
+									"key": "kelurahan",
+									"value": "kaliurang",
+									"type": "text"
+								},
+								{
+									"key": "kecamatan",
+									"value": "banjar",
+									"type": "text"
+								},
+								{
+									"key": "status_perkawinan",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "pekerjaan",
+									"value": "tester makanan",
+									"type": "text"
+								},
+								{
+									"key": "nomor_hp",
+									"value": "08129323928",
+									"type": "text"
+								},
+								{
+									"key": "nama_penjamin",
+									"value": "orang lain",
+									"type": "text"
+								},
+								{
+									"key": "nomor_polis",
+									"value": "28282828",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "joss@joss.com",
+									"type": "text"
+								},
+								{
+									"key": "nama_penanggung_jawab",
+									"value": "emak",
+									"type": "text"
+								},
+								{
+									"key": "tensi_sistole",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "tensi_diastole",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "nadi",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "suhu",
+									"value": "28",
+									"type": "text"
+								},
+								{
+									"key": "respirasi",
+									"value": "90",
+									"type": "text"
+								},
+								{
+									"key": "tinggi_badan",
+									"value": "170",
+									"type": "text"
+								},
+								{
+									"key": "berat_badan",
+									"value": "60",
+									"type": "text"
+								},
+								{
+									"key": "nomor_rekam_medis",
+									"value": "123213123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/pasien/1",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pasien",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pasien - get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/pasien/1",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pasien",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pasien - delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NGptb2VGV0duNlozZFhHRGV6djFmc3pXdGJpNElmbHdubUNrV0JxeA==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/pasien/2",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pasien",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pasien - ocr",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NlZvTHJ5Q1cyUUtqWTAzZ1d5Z25OSldoeG04R0dPVmppMGZmdllHVQ==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/rezpaditya/Desktop/kpt_contoh.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/pasien/ocr",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pasien",
+								"ocr"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Transaksi Klinik",
+			"item": [
+				{
+					"name": "transaksi - add",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NlZvTHJ5Q1cyUUtqWTAzZ1d5Z25OSldoeG04R0dPVmppMGZmdllHVQ==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "pasien_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "klinik_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "dokter_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "operator_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "nomor_rekam_medis",
+									"value": "123213123",
+									"type": "text"
+								},
+								{
+									"key": "nama_lengkap",
+									"value": "pasien gila update",
+									"type": "text"
+								},
+								{
+									"key": "nik",
+									"value": "12323123",
+									"type": "text"
+								},
+								{
+									"key": "jenis_kelamin",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "nomor_telp",
+									"value": "08129323928",
+									"type": "text"
+								},
+								{
+									"key": "waktu_konsultasi",
+									"value": "2019-12-05",
+									"type": "text"
+								},
+								{
+									"key": "tinggi_badan",
+									"value": "170",
+									"type": "text"
+								},
+								{
+									"key": "berat_badan",
+									"value": "60",
+									"type": "text"
+								},
+								{
+									"key": "suhu",
+									"value": "28",
+									"type": "text"
+								},
+								{
+									"key": "sistole",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "diastole",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "nadi",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "respirasi",
+									"value": "90",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/transaksi",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transaksi"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transaksi - delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NlZvTHJ5Q1cyUUtqWTAzZ1d5Z25OSldoeG04R0dPVmppMGZmdllHVQ==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/transaksi/1",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transaksi",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transaksi - get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NlZvTHJ5Q1cyUUtqWTAzZ1d5Z25OSldoeG04R0dPVmppMGZmdllHVQ==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/transaksi/1",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transaksi",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transaksi - list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NlZvTHJ5Q1cyUUtqWTAzZ1d5Z25OSldoeG04R0dPVmppMGZmdllHVQ==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/transaksi",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transaksi"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transaksi - update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NlZvTHJ5Q1cyUUtqWTAzZ1d5Z25OSldoeG04R0dPVmppMGZmdllHVQ==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "status",
+									"value": "REKAM_MEDIS",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/transaksi/1",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transaksi",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Rekam Medis",
+			"item": [
+				{
+					"name": "rekam medis - add",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NlZvTHJ5Q1cyUUtqWTAzZ1d5Z25OSldoeG04R0dPVmppMGZmdllHVQ==",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "transklinik_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "pemeriksaan_is_draw",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "pemeriksaan_text",
+									"value": "<p>ini text</p>",
+									"type": "text"
+								},
+								{
+									"key": "pasien_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "organ_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "next_konsultasi",
+									"value": "14",
+									"type": "text"
+								},
+								{
+									"key": "diagnosa_is_draw",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "diagnosa_draw",
+									"value": "data_image_base64",
+									"type": "text"
+								},
+								{
+									"key": "anamnesa_is_draw",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "anamnesa_draw",
+									"value": "data_image_base64",
+									"type": "text"
+								},
+								{
+									"key": "kode_penyakit",
+									"value": "object kode penyakit",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://149.129.239.15/api/v1/rekam_medis",
+							"protocol": "http",
+							"host": [
+								"149",
+								"129",
+								"239",
+								"15"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rekam_medis"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
