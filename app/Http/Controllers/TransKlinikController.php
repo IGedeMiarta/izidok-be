@@ -166,7 +166,7 @@ class TransKlinikController extends Controller
       $data = $dokter->id;
     } else {
       $dokterId = Operator::where('user_id', $user->id)->first();
-      $dokter = Dokter::where('user_id', $dokterId->created_by)->first();
+      $dokter = User::where('id', $dokterId->created_by)->first();
       $data = $dokter->id;
     }
 
