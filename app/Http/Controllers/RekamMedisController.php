@@ -10,6 +10,9 @@ use App\Pasien;
 use App\Anamnesa;
 use App\Constant;
 use App\Diagnosa;
+use App\Pembayaran;
+use App\DetailPembayaran;
+use App\Layanan;
 use App\PemeriksaanFisik;
 use App\PemeriksaanPenunjang;
 use App\TataLaksana;
@@ -153,8 +156,6 @@ class RekamMedisController extends Controller
          * 4. redirect
          */
 
-        // return $request;
-
         #update transaksi klinik
         $trans_klinik = TransKlinik::find($request->transklinik_id);
         $trans_klinik->durasi_konsultasi = $request->next_konsultasi;
@@ -188,7 +189,6 @@ class RekamMedisController extends Controller
         $diagnosa->draw_path = \uploadToCloud('diagnosa', $request->diagnosa_draw)['url'];
         $diagnosa->created_by = $request->user_id;
         $diagnosa->save();
-
 
         #insert pemeriksaan_fisik
         $pemeriksaan_fisik = new PemeriksaanFisik();
@@ -227,6 +227,30 @@ class RekamMedisController extends Controller
         $rekam_medis->transklinik_id = $trans_klinik->id;
         $rekam_medis->created_by = $request->user_id;
         $status = $rekam_medis->save();
+
+        #insert pembayaran
+        $pembayaran = new Pembayaran();
+        $pembayaran->transklinik_id = $request->transklinik_id;
+        $pembayaran->klinik_id = $trans_klinik->klinik_id;
+        $pembayaran->status = Constant::BELUM_LUNAS;
+        $pembayaran->created_by = $request->user_id;
+        $pembayaran->save();
+
+        $layanan = Layanan::select('kode_layanan', 'nama_layanan', 'tarif')
+            ->where('created_by', $request->user_id)
+            ->limit(2)
+            ->get();
+
+        $detail_pembayaran = new DetailPembayaran();
+        foreach ($layanan as $item) {
+            $detail_pembayaran->pembayaran_id = $pembayaran->id;
+            $detail_pembayaran->kode_layanan = $item->kode_layanan;
+            $detail_pembayaran->nama_layanan = $item->nama_layanan;
+            $detail_pembayaran->tarif = $item->tarif;
+            $detail_pembayaran->quantity = 1;
+            $detail_pembayaran->created_by = $request->user_id;
+			$detail_pembayaran->save();
+        }
 
         $data['rekam_medis'] = $rekam_medis;
 
