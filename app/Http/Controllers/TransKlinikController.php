@@ -72,6 +72,7 @@ class TransKlinikController extends Controller
 
         $trans_klinik = TransKlinik::select([
             'trans_klinik.id',
+            'trans_klinik.examination_by',
             DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"),
             'nomor_antrian',
             'status',
