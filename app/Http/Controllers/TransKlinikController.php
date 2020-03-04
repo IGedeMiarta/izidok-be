@@ -72,7 +72,6 @@ class TransKlinikController extends Controller
 
         $trans_klinik = TransKlinik::select([
             'trans_klinik.id',
-            'trans_klinik.examination_by',
             DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"),
             'nomor_antrian',
             'status',
@@ -161,9 +160,8 @@ class TransKlinikController extends Controller
 
     #transaksi
     $user = User::find($request->user_id);
-    $dokter = Dokter::where('user_id', $user->id)->first();
-    if (!empty($dokter)) {
-      $data = $dokter->id;
+    if (!empty($user)) {
+      $data = $user->id;
     } else {
       $dokterId = Operator::where('user_id', $user->id)->first();
       $dokter = User::where('id', $dokterId->created_by)->first();
