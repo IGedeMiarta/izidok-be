@@ -241,8 +241,8 @@ class RekamMedisController extends Controller
             ->limit(2)
             ->get();
 
-        $detail_pembayaran = new DetailPembayaran();
         foreach ($layanan as $item) {
+            $detail_pembayaran = new DetailPembayaran();
             $detail_pembayaran->pembayaran_id = $pembayaran->id;
             $detail_pembayaran->kode_layanan = $item->kode_layanan;
             $detail_pembayaran->nama_layanan = $item->nama_layanan;
