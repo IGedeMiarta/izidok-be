@@ -331,7 +331,7 @@ class RekamMedisController extends Controller
                 ]);
             }
 
-            $res = uploadToCloud('pemeriksaan_penunjang', $item);
+            $res = \uploadToCloud('pemeriksaan_penunjang', $item);
 
             $data['name'] = $key;
             $data['url'] = $res['url'];
