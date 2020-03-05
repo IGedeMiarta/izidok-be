@@ -143,7 +143,18 @@ class RekamMedisController extends Controller
 
         $data['rekam_medis'] = $rekam_medis;
 
-        return $data;
+        if (count($rekam_medis) > 0) {
+            return response()->json([
+                'success' => true,
+                'message' => 'success',
+                'data' => $data
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data not found'
+            ], 404);
+        }
     }
 
     public function store(Request $request)
