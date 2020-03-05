@@ -128,8 +128,7 @@ class RekamMedisController extends Controller
         ->where('created_by', $this->user->id)
         ->with('diagnosa')
         //->with(['transKlinik.pasien', 'transKlinik.examinationBy'])
-        ->limit(4)
-        ->get();
+        ->paginate(4);
 
         foreach ($rekam_medis as $rm) {
             $item['id'] = $rm->diagnosa->id;
