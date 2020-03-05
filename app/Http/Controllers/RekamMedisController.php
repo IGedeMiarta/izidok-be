@@ -65,6 +65,7 @@ class RekamMedisController extends Controller
 
         $rekam_medis = RekamMedis::select([
             'rekam_medis.id',
+            'pasien.id as pasien_id',
             'rekam_medis.nomor_rekam_medis',
             DB::raw("CONCAT(pasien.nama,' (',DATE_FORMAT(pasien.tanggal_lahir, '%d-%m-%Y'),')') as nama"),
             'pasien.jenis_kelamin',
