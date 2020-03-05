@@ -50,7 +50,7 @@ return [
             'charset' => env('DB_CHARSET', 'utf8mb4'),
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
             'prefix' => env('DB_PREFIX', ''),
-            'strict' => env('DB_STRICT_MODE', true),
+            'strict' => env('DB_STRICT_MODE', false),
             'engine' => env('DB_ENGINE', null),
             // 'timezone' => env('DB_TIMEZONE', '+00:00'),
         ],
