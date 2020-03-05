@@ -137,6 +137,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->get('/rekam_medis', 'RekamMedisController@index');
             $router->post('/rekam_medis', 'RekamMedisController@store');
             $router->get('/rekam_medis/{id}', 'RekamMedisController@show');
+            $router->get('/rekam_medis/pasien/{pasien_id}', 'RekamMedisController@getRekamMedisByPasien');
         });
 
         //organ
@@ -165,6 +166,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/pembayaran/{id}', ['uses' => 'PembayaranController@show']);
         $router->put('/pembayaran/{id}', ['uses' => 'PembayaranController@update']);
         $router->delete('/pembayaran/{id}', ['uses' => 'PembayaranController@delete']);
+        $router->get('/pembayaran/struk/{id}', ['uses' => 'PembayaranController@receipt']);
 
         //paket
         $router->get('/paket', ['uses' => 'PaketController@index']);
