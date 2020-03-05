@@ -12,6 +12,7 @@ use App\Constant;
 use App\Diagnosa;
 use App\Pembayaran;
 use App\DetailPembayaran;
+use App\KodePenyakit;
 use App\Layanan;
 use App\PemeriksaanFisik;
 use App\PemeriksaanPenunjang;
@@ -118,13 +119,26 @@ class RekamMedisController extends Controller
         }
     }
 
-    private function getRekamMedisByPasien($request)
+    public function getRekamMedisByPasien(Request $request)
     {
         $rekam_medis = RekamMedis::whereHas('transKlinik', function ($data) use ($request) {
             $data->where('pasien_id', $request->pasien_id);
         })
         ->where('created_by', $this->user->id)
-        ->with(['transKlinik.pasien', 'transKlinik.examinationBy'])->paginate($request->limit);
+        ->with('diagnosa')
+        //->with(['transKlinik.pasien', 'transKlinik.examinationBy'])
+        ->limit(4)
+        ->get();
+
+        foreach ($rekam_medis as $rm) {
+            $item['id'] = $rm->diagnosa->id;
+            $item['kode_penyakit'] = KodePenyakit::select('id', 'kode', 'description')->find(substr($rm->diagnosa->kode_penyakit_id, 1, 1));
+            $item['notes'] = $rm->diagnosa->notes;
+            $item['is_draw'] = $rm->diagnosa->is_draw;
+            $item['draw_path'] = $rm->diagnosa->draw_path;
+            $item['created_by'] =$rm->diagnosa->created_by;
+            $rm->diagnosa_result = (object) $item;
+        }
 
         $data['rekam_medis'] = $rekam_medis;
 
