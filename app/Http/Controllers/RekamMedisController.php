@@ -187,6 +187,7 @@ class RekamMedisController extends Controller
         #update transaksi klinik
         $trans_klinik = TransKlinik::find($request->transklinik_id);
         $trans_klinik->durasi_konsultasi = $request->next_konsultasi;
+        $trans_klinik->tgl_next_konsultasi = date('Y-m-d', strtotime($request->tgl_next_konsultasi));
         $trans_klinik->save();
 
         #get data pasien, insert anamnesa
