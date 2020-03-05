@@ -18,6 +18,7 @@ use App\PemeriksaanPenunjang;
 use App\TataLaksana;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class RekamMedisController extends Controller
 {
@@ -65,7 +66,7 @@ class RekamMedisController extends Controller
         $rekam_medis = RekamMedis::select([
             'rekam_medis.id',
             'rekam_medis.nomor_rekam_medis',
-            'pasien.nama',
+            DB::raw("CONCAT(pasien.nama,' (',DATE_FORMAT(pasien.tanggal_lahir, '%d-%m-%Y'),')') as nama"),
             'pasien.jenis_kelamin',
             'pasien.nomor_hp'
           ])
