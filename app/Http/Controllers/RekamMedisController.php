@@ -79,6 +79,7 @@ class RekamMedisController extends Controller
           ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
           ->where('pasien.nomor_hp', 'like', "%{$request->nomor_hp}%")
           ->where('rekam_medis.created_by', $user->id)
+          ->groupBy('pasien.id')
           ->orderBy($column, $order)
           ->paginate($request->limit);
 

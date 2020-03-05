@@ -208,19 +208,58 @@ class PembayaranController extends Controller
     $detail_pembayaran = $request->detail_pembayaran;
 		$result = array();
 
-		foreach ($detail_pembayaran as $item) {
-      $detail = new DetailPembayaran();
-      $detail->pembayaran_id = $request->pembayaran_id;
-			$detail->kode_layanan = $item['kode_layanan'];
-			$detail->nama_layanan = $item['nama_layanan'];
-			$detail->tarif = $item['tarif'];
-			$detail->quantity = $item['quantity'];
-			$detail->created_by = $request->user_id;
-			$detail->save();
-			array_push($result, $detail);
+    $oldDetail = DetailPembayaran::where('pembayaran_id',$request->pembayaran_id)->get();
+
+    if (count($oldDetail) > count($detail_pembayaran)) {
+      foreach ($oldDetail as $key => $od) {
+        if (!empty($detail_pembayaran[$key])) {
+            $dtlUpdate = DetailPembayaran::where('id',$oldDetail[$key]->id)->first();
+            $dtlUpdate->kode_layanan = $detail_pembayaran[$key]['kode_layanan'];
+            $dtlUpdate->nama_layanan = $detail_pembayaran[$key]['nama_layanan'];
+            $dtlUpdate->tarif = $detail_pembayaran[$key]['tarif'];
+            $dtlUpdate->quantity = $detail_pembayaran[$key]['quantity'];
+            $dtlUpdate->subtotal_tarif = intval($detail_pembayaran[$key]['tarif'])*intval($detail_pembayaran[$key]['quantity']);
+            $dtlUpdate->updated_by = $request->user_id;
+            $dtlUpdate->updated_at = date('Y-m-d H:i:s');
+            $dtlUpdate->update();
+        }else{
+            DetailPembayaran::where('id',$od->id)->delete();
+        }
+      }
+    }else{
+  		foreach ($detail_pembayaran as $key => $item) {
+        if (!empty($oldDetail[$key])) {
+          $oldDtl = DetailPembayaran::where('id',$oldDetail[$key]->id)->first();
+          $oldDtl->kode_layanan = $item['kode_layanan'];
+          $oldDtl->nama_layanan = $item['nama_layanan'];
+          $oldDtl->tarif = $item['tarif'];
+          $oldDtl->quantity = $item['quantity'];
+          $oldDtl->subtotal_tarif = intval($item['tarif'])*intval($item['quantity']);
+          $oldDtl->updated_by = $request->user_id;
+          $oldDtl->updated_at = date('Y-m-d H:i:s');
+          $oldDtl->update();
+          array_push($result, $detail);
+        }else{
+          $detail = new DetailPembayaran();
+          $detail->pembayaran_id = $request->pembayaran_id;
+    			$detail->kode_layanan = $item['kode_layanan'];
+    			$detail->nama_layanan = $item['nama_layanan'];
+    			$detail->tarif = $item['tarif'];
+    			$detail->quantity = $item['quantity'];
+    			$detail->created_by = $request->user_id;
+    			$detail->save();
+    			array_push($result, $detail);
+        }
+      }
     }
 
     $data['detail'] = $result;
+
+    $pembayaran = Pembayaran::find($request->pembayaran_id);
+    $pembayaran->total = $request->total;
+    $pembayaran->total_net = $request->total_net;
+    $pembayaran->updated_at = date('Y-m-d H:i:s');
+    $pembayaran->update();
 
     return response()->json([
       'status' => true,
