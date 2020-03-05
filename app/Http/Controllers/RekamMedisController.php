@@ -125,14 +125,15 @@ class RekamMedisController extends Controller
         $rekam_medis = RekamMedis::whereHas('transKlinik', function ($data) use ($request) {
             $data->where('pasien_id', $request->pasien_id);
         })
-        ->where('created_by', $this->user->id)
+        ->with('pemeriksaan_fisik')
         ->with('diagnosa')
-        //->with(['transKlinik.pasien', 'transKlinik.examinationBy'])
+        ->where('created_by', $this->user->id)
         ->paginate(4);
 
         foreach ($rekam_medis as $rm) {
             $item['id'] = $rm->diagnosa->id;
-            $item['kode_penyakit'] = KodePenyakit::select('id', 'kode', 'description')->find(substr($rm->diagnosa->kode_penyakit_id, 1, 1));
+            $disease_code = KodePenyakit::select('id', 'kode', 'description')->find(substr($rm->diagnosa->kode_penyakit_id, 1, 1));
+            $item['kode_penyakit'] = str_limit($disease_code->description, 27);
             $item['notes'] = $rm->diagnosa->notes;
             $item['is_draw'] = $rm->diagnosa->is_draw;
             $item['draw_path'] = $rm->diagnosa->draw_path;
