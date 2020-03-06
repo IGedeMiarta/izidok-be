@@ -272,10 +272,12 @@ class TransKlinikController extends Controller
 
     public function verifyConsultationDate($pasien_id, $klinik_id, $consultation_time)
     {
+        $status = [Constant::TRX_BATAL, Constant::TRX_SELESAI];
+
         $exist = TransKlinik::where('pasien_id', $pasien_id)
             ->where('klinik_id', '=', $klinik_id)
             ->where('waktu_konsultasi', '=', $consultation_time)
-            ->where('status', '!=', Constant::TRX_BATAL)
+            ->whereNotIn('status', $status)
             ->exists();
 
         if ($exist) {
