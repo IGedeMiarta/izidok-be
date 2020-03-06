@@ -16,42 +16,35 @@ class DashboardController extends Controller
 {
 	public function getPasien(Request $request)
 	{
-		$this->validate($request, [
-			'type' => 'required|string',
-			'from' => 'required|date_format:Y-m-d',
-			'to' => 'required|date_format:Y-m-d',
-		]);
+		$user = User::find($request->user_id);
+        $trans_klinik = new TransKlinik();
 
-		$user_id = $request->user_id;
-		$type = $request->type;
-		$from = null;
-		$to = null;
+        if (!$user->hasRole(Constant::SUPER_ADMIN)) {
+			$trans_klinik = $trans_klinik->where('klinik_id', $user->klinik_id);
+        }
 
-		if ($type === Constant::DATE_RANGE) {
-			$from = $request->from;
-			$to = $request->to;
+        $consultation_time = Carbon::today();
+        $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI, Constant::TRX_SELESAI];
 
-			$result = $this->pasienRangeDate($user_id, $from, $to);
-			return response()->json(['status' => true, 'data' => $result]);
+        $trans_klinik = TransKlinik::where('trans_klinik.klinik_id', $user->klinik_id)
+          ->where('waktu_konsultasi', $consultation_time)
+          ->whereIn('status', $status)
+          ->count();
+
+		$data['today_patient'] = $trans_klinik;
+
+		if (!$trans_klinik) {
+			return response()->json([
+				'success' => false,
+				'message' => 'failed, you dont have role to see this',
+				'data' => $data
+			], 201);
 		}
-
-		if ($type === Constant::MIGGUAN) {
-			$result =  $this->pasienWeekly($user_id);
-
-			return response()->json(['status' => true, 'data' => $result]);
-		}
-
-		if ($type === Constant::BULANAN) {
-			$result = $this->pasienMonthly($user_id);
-			return response()->json(['status' => true, 'data' => $result]);
-		}
-
-		if ($type === Constant::TAHUNAN) {
-			$result = $this->pasienAnnual($user_id);
-			return response()->json(['status' => true, 'data' => $result]);
-		}
-
-		return response()->json(['status' => false, 'message' => 'something went wrong...'], 422);
+		return response()->json([
+			'success' => true,
+			'message' => 'success',
+			'data' => $data
+		], 201);
 	}
 
 	private function pasienRangeDate($user_id, $from, $to)
@@ -152,7 +145,7 @@ class DashboardController extends Controller
 			->where('created_by', $request->user_id)
 			->where('status', Constant::LUNAS)
 			->get();
-		
+
 		$total = 0;
 		foreach ($pembayaran as $item) {
 			$total += $item->detail->sum('tarif');
@@ -194,7 +187,7 @@ class DashboardController extends Controller
 		$from = $request->from;
 		$to = $request->to;
 
-		#sum pasien 
+		#sum pasien
 		if ($type === Constant::SUM_PASIEN) {
 			return $this->pasienTotal($user_id, $from, $to);
 		}
