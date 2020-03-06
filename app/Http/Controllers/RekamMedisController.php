@@ -187,9 +187,9 @@ class RekamMedisController extends Controller
          */
 
         #update transaksi klinik
-        $date_from = date('Y-m-d');   
+        $date_from = date('Y-m-d');
         $date_from = strtotime($date_from);
-        $date_to = date('Y-m-d', strtotime(date('Y-m-d')."+".$request->next_konsultasi." days"));  
+        $date_to = date('Y-m-d', strtotime(date('Y-m-d')."+".$request->next_konsultasi." days"));
         $date_to = strtotime($date_to);
         $days = 0;
         for ($i=$date_from; $i<$date_to; $i+=86400) {
@@ -312,7 +312,7 @@ class RekamMedisController extends Controller
     public function show(Request $request)
     {
         $rekam_medis = RekamMedis::where('id', $request->id)
-            ->with(['anamnesa', 'diagnosa', 'pemeriksaan_fisik', 'pemeriksaan_penunjang', 'tatalaksana'])
+            ->with(['transklinik:id,tgl_next_konsultasi', 'anamnesa', 'diagnosa', 'pemeriksaan_fisik', 'pemeriksaan_penunjang', 'tatalaksana'])
             ->first();
         if (empty($rekam_medis)) {
             return response()->json([
