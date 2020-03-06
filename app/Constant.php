@@ -75,7 +75,10 @@ class Constant
 	#status pembayaran
 	const DRAFT = 'DRAFT';
 	const BELUM_LUNAS = 'BELUM LUNAS';
-	const LUNAS = 'LUNAS';
+    const LUNAS = 'LUNAS';
+
+    #pembayaran
+    const EMAIL_RECEIPT = 'email-receipt';
 
 	#subscribe
 	const PAYMENT_CONFIRMATION = 'payment-confirmation';

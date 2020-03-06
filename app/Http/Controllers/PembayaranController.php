@@ -328,12 +328,37 @@ class PembayaranController extends Controller
 
         $data['pembayaran'] = $pembayaran;
         $data['detail_pembayaran'] = $detail_pembayaran;
-        //return $data;
 
-        return view('receipt', [
-            'pembayaran'=>$pembayaran,
-            'detail_pembayaran' => $detail_pembayaran
-        ]);
+        if(empty($request->email)) {
+            return view('receipt', [
+                'pembayaran' => $pembayaran,
+                'detail_pembayaran' => $detail_pembayaran
+            ]);
+        } else {
+            $email = $request->email;
+            $nama_dokter = $pembayaran->pluck('nama_dokter')->first();
+            $nama_pasien = $pembayaran->pluck('nama_pasien')->first();
+            $tanggal = date("dmY", strtotime($pembayaran->pluck('created_time')->first()));
+            $jam = date("H:i:s", strtotime($pembayaran->pluck('created_time')->first()));
+
+            $email_data = [
+                'subject' => 'Struk/INVOICE_dr'.$nama_dokter.'_'.$nama_pasien.'_'.$tanggal,
+                'to' => [$email],
+                'from' => 'izidok.dev@gmail.com',
+                'nama_dokter' => $nama_dokter,
+                'nama_pasien' => $nama_pasien,
+                'tanggal' => $tanggal,
+                'jam' => $jam,
+                'pembayaran' => $pembayaran,
+                'detail_pembayaran' => $detail_pembayaran
+            ];
+
+            if (\sendEmail($email_data, Constant::EMAIL_RECEIPT)) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Struk berhasil dikirim',
+                ]);
+            }
+        }
     }
-
 }
