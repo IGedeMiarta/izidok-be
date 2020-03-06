@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constant;
 use App\DetailPembayaran;
+use App\Klinik;
 use App\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -159,7 +160,7 @@ class PembayaranController extends Controller
   public function update(Request $request)
   {
     $this->validate($request, [
-      'status' => 'required|in:DRAFT,BELUM LUNAS,LUNAS',
+      'status' => 'required|in:BELUM LUNAS,LUNAS',
     ]);
 
     $pembayaran = Pembayaran::find($request->id);
@@ -282,24 +283,29 @@ class PembayaranController extends Controller
             'pembayaran.id',
             'nomor_ijin AS no_sip',
             'klinik.nomor_telp',
-            'nomor_rekam_medis',
+            'rekam_medis.nomor_rekam_medis',
+            'pembayaran.no_invoice',
             'pasien.nama AS nama_pasien',
             'jaminan',
             'users.nama AS nama_dokter',
             'pembayaran.created_by',
             'pembayaran.updated_at AS created_time',
-            //'trans_klinik.updated_at AS admission_time',
-            //'rekam_medis.created_at AS discharge'
+            'trans_klinik.updated_at AS admission_time',
+            'rekam_medis.created_at AS discharge_time',
             'total',
             'potongan',
             'total_net',
+            'kota.nama AS kota'
         ])
         ->leftJoin('trans_klinik', 'pembayaran.transklinik_id', '=', 'trans_klinik.id')
         ->leftJoin('klinik', 'trans_klinik.klinik_id', '=', 'klinik.id')
         ->leftJoin('pasien', 'trans_klinik.pasien_id', '=', 'pasien.id')
         ->leftJoin('users', 'trans_klinik.examination_by', '=', 'users.id')
+        ->leftJoin('rekam_medis', 'trans_klinik.id', '=', 'rekam_medis.transklinik_id')
+        ->leftJoin('kota', 'klinik.kota', '=', 'kota.id')
         ->where('pembayaran.id', $request->id)
         ->where('pembayaran.klinik_id', $user->klinik_id)
+        ->distinct('pembayaran.id')
         ->get();
 
         if(count($pembayaran) > 0) {
