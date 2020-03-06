@@ -128,6 +128,7 @@ class RekamMedisController extends Controller
         ->with('pemeriksaan_fisik')
         ->with('diagnosa')
         ->where('created_by', $this->user->id)
+        ->orderBy('id', 'desc')
         ->paginate(4);
 
         foreach ($rekam_medis as $rm) {
@@ -138,6 +139,7 @@ class RekamMedisController extends Controller
             $item['is_draw'] = $rm->diagnosa->is_draw;
             $item['draw_path'] = $rm->diagnosa->draw_path;
             $item['created_by'] =$rm->diagnosa->created_by;
+            $item['concat'] = $item['kode_penyakit'] . ' - ' . date('Y-m-d', strtotime($rm->created_at));
             $rm->diagnosa_result = (object) $item;
         }
 
