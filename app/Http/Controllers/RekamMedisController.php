@@ -133,7 +133,7 @@ class RekamMedisController extends Controller
 
         foreach ($rekam_medis as $rm) {
             $item['id'] = $rm->diagnosa->id;
-            $disease_code = KodePenyakit::select('id', 'kode', 'description')->find(substr($rm->diagnosa->kode_penyakit_id, 1, 1));
+            $disease_code = KodePenyakit::select('id', 'kode', 'description')->find(substr($rm->diagnosa->kode_penyakit_id, 1, strpos($rm->diagnosa->kode_penyakit_id, ',')-1));
             $item['kode_penyakit'] = str_limit($disease_code->description, 27);
             $item['notes'] = $rm->diagnosa->notes;
             $item['is_draw'] = $rm->diagnosa->is_draw;
@@ -187,9 +187,18 @@ class RekamMedisController extends Controller
          */
 
         #update transaksi klinik
+        $date_from = date('Y-m-d');   
+        $date_from = strtotime($date_from);
+        $date_to = date('Y-m-d', strtotime(date('Y-m-d')."+".$request->next_konsultasi." days"));  
+        $date_to = strtotime($date_to);
+        $days = 0;
+        for ($i=$date_from; $i<$date_to; $i+=86400) {
+            $days += 1;
+        }
+
         $trans_klinik = TransKlinik::find($request->transklinik_id);
-        $trans_klinik->durasi_konsultasi = $request->next_konsultasi;
-        $trans_klinik->tgl_next_konsultasi = date('Y-m-d', strtotime($request->tgl_next_konsultasi));
+        $trans_klinik->durasi_konsultasi = $days;
+        $trans_klinik->tgl_next_konsultasi = is_null($request->tgl_next_konsultasi) ? null : date('Y-m-d', strtotime($request->tgl_next_konsultasi));
         $trans_klinik->save();
 
         #get data pasien, insert anamnesa

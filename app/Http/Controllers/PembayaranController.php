@@ -238,7 +238,7 @@ class PembayaranController extends Controller
           $oldDtl->updated_by = $request->user_id;
           $oldDtl->updated_at = date('Y-m-d H:i:s');
           $oldDtl->update();
-          array_push($result, $detail);
+          array_push($result, $oldDtl);
         }else{
           $detail = new DetailPembayaran();
           $detail->pembayaran_id = $request->pembayaran_id;
@@ -257,7 +257,8 @@ class PembayaranController extends Controller
 
     $pembayaran = Pembayaran::find($request->pembayaran_id);
     $pembayaran->total = $request->total;
-    $pembayaran->total_net = $request->total_net;
+    $pembayaran->total_net = $request->total_nett;
+    $pembayaran->potongan = $request->potongan;
     $pembayaran->updated_at = date('Y-m-d H:i:s');
     $pembayaran->update();
 
