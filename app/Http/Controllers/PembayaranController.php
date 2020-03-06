@@ -271,4 +271,60 @@ class PembayaranController extends Controller
 
   }
 
+    public function receipt(Request $request)
+    {
+        $user = $this->user;
+
+        $pembayaran = Pembayaran::select([
+            'pembayaran.id',
+            'nomor_ijin AS no_sip',
+            'klinik.nomor_telp',
+            'nomor_rekam_medis',
+            'pasien.nama AS nama_pasien',
+            'jaminan',
+            'users.nama AS nama_dokter',
+            'pembayaran.created_by',
+            'pembayaran.updated_at AS created_time',
+            //'trans_klinik.updated_at AS admission_time',
+            //'rekam_medis.created_at AS discharge'
+            'total',
+            'potongan',
+            'total_net',
+        ])
+        ->leftJoin('trans_klinik', 'pembayaran.transklinik_id', '=', 'trans_klinik.id')
+        ->leftJoin('klinik', 'trans_klinik.klinik_id', '=', 'klinik.id')
+        ->leftJoin('pasien', 'trans_klinik.pasien_id', '=', 'pasien.id')
+        ->leftJoin('users', 'trans_klinik.examination_by', '=', 'users.id')
+        ->where('pembayaran.id', $request->id)
+        ->where('pembayaran.klinik_id', $user->klinik_id)
+        ->get();
+
+        if(count($pembayaran) > 0) {
+            $detail_pembayaran = DetailPembayaran::select([
+                'kode_layanan',
+                'nama_layanan',
+                'tarif',
+                'quantity',
+                'subtotal_tarif'
+            ])
+            ->leftJoin('pembayaran', 'detail_pembayaran.pembayaran_id', '=', 'pembayaran.id')
+            ->where('pembayaran.id', $request->id)
+            ->get();
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'pembayaran not found'
+            ]);
+        }
+
+        $data['pembayaran'] = $pembayaran;
+        $data['detail_pembayaran'] = $detail_pembayaran;
+        //return $data;
+
+        return view('receipt', [
+            'pembayaran'=>$pembayaran,
+            'detail_pembayaran' => $detail_pembayaran
+        ]);
+    }
+
 }
