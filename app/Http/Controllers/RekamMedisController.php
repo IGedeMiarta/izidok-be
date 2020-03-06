@@ -189,7 +189,7 @@ class RekamMedisController extends Controller
         $date_from = strtotime($date_from);
         $date_to = date('Y-m-d', strtotime(date('Y-m-d')."+".$request->next_konsultasi." days"));  
         $date_to = strtotime($date_to);
-        $count = 0;
+        $days = 0;
         for ($i=$date_from; $i<$date_to; $i+=86400) {
             $days += 1;
         }
