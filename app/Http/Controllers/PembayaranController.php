@@ -361,4 +361,22 @@ class PembayaranController extends Controller
             }
         }
     }
+
+    /**
+     * Get pasien email by pembayaran id.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param integer $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getPasienEmailByPembayaranId(Request $request, $id)
+    {
+      $pembayaran = Pembayaran::with(['transklinik.pasien:id,email'])->find($id);
+
+      if($pembayaran && $pembayaran->transklinik && $pembayaran->transklinik->pasien) {
+        return response()->json($pembayaran->transklinik->pasien->email);
+      }
+
+      return response()->json("");
+    }
 }
