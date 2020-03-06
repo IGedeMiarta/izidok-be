@@ -132,7 +132,7 @@ class RekamMedisController extends Controller
 
         foreach ($rekam_medis as $rm) {
             $item['id'] = $rm->diagnosa->id;
-            $disease_code = KodePenyakit::select('id', 'kode', 'description')->find(substr($rm->diagnosa->kode_penyakit_id, 1, 1));
+            $disease_code = KodePenyakit::select('id', 'kode', 'description')->find(substr($rm->diagnosa->kode_penyakit_id, 1, strpos($rm->diagnosa->kode_penyakit_id, ',')-1));
             $item['kode_penyakit'] = str_limit($disease_code->description, 27);
             $item['notes'] = $rm->diagnosa->notes;
             $item['is_draw'] = $rm->diagnosa->is_draw;
