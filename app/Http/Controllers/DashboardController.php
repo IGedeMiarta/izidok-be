@@ -16,36 +16,44 @@ class DashboardController extends Controller
 {
 	public function getPasien(Request $request)
 	{
-		$user = User::find($request->user_id);
-        $trans_klinik = new TransKlinik();
+        $user = User::find($request->user_id);
 
-        if (!$user->hasRole(Constant::SUPER_ADMIN)) {
-			$trans_klinik = $trans_klinik->where('klinik_id', $user->klinik_id);
-        }
+        $today_queue = TransKlinik::where('klinik_id', $user->klinik_id)
+            ->whereDate('waktu_konsultasi', Carbon::today())
+            ->where('status', '!=', Constant::TRX_BATAL)
+            ->count();
 
-        $consultation_time = Carbon::today();
-        $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI, Constant::TRX_SELESAI];
+        $new_patient = Pasien::where('klinik_id', $user->klinik_id)
+            ->whereDate('created_at', Carbon::today())
+            ->count();
 
-        $trans_klinik = TransKlinik::where('trans_klinik.klinik_id', $user->klinik_id)
-          ->where('waktu_konsultasi', $consultation_time)
-          ->whereIn('status', $status)
-          ->count();
+        $last_queue = TransKlinik::where('klinik_id', $user->klinik_id)
+            ->whereDate('waktu_konsultasi', Carbon::today())
+            ->where('status', Constant::TRX_KONSULTASI)
+            ->value('nomor_antrian');
 
-		$data['today_patient'] = $trans_klinik;
+        $cancel_queue = TransKlinik::where('klinik_id', $user->klinik_id)
+            ->whereDate('waktu_konsultasi', Carbon::today())
+            ->where('status', Constant::TRX_BATAL)
+            ->count();
 
-		if (!$trans_klinik) {
-			return response()->json([
-				'success' => false,
-				'message' => 'failed, you dont have role to see this',
-				'data' => $data
-			], 201);
-		}
+        $today_income = Pembayaran::where('klinik_id', $user->klinik_id)
+            ->whereDate('updated_at', Carbon::today())
+			->where('status', Constant::LUNAS)
+            ->sum('total_net');
+
+        $data['pasien_hari_ini'] = $today_queue;
+        $data['pasien_baru_hari_ini'] = $new_patient;
+        $data['nomor_antrian_saat_ini'] = $last_queue;
+        $data['pasien_batal_hari_ini'] = $cancel_queue;
+        $data['total_pendapatan_hari_ini'] = 'Rp. '.number_format($today_income, 0, ',', '.').',-';
+
 		return response()->json([
 			'success' => true,
 			'message' => 'success',
 			'data' => $data
-		], 201);
-	}
+		], 200);
+    }
 
 	public function getPasienRawatJalan(Request $request)
 	{
