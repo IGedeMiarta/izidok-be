@@ -100,10 +100,13 @@ class PembayaranController extends Controller
       'detail_pembayaran[*].quantity' => 'required|integer'
     ]);
 
+    $kode_faskes = Klinik::where('id', $request->klinik_id)->value('kode_faskes');
+    $noInvoice = substr($kode_faskes.date(".y-md.His").rand(), 0,24);
 
     $pembayaran = new Pembayaran();
     $pembayaran->transklinik_id = $request->transklinik_id;
     $pembayaran->klinik_id = $request->klinik_id;
+    $pembayaran->no_invoice = $noInvoice;
     $pembayaran->jaminan = $request->jaminan;
     $pembayaran->potongan = $request->potongan;
     $pembayaran->status = $request->status;
