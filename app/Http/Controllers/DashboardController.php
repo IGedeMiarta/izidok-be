@@ -47,49 +47,6 @@ class DashboardController extends Controller
 		], 201);
 	}
 
-	private function pasienRangeDate($user_id, $from, $to)
-	{
-		$pasien_baru = Pasien::where('user_id', $user_id)
-			->whereBetween('created_at', [$from, $to])
-			->get();
-		return $pasien_baru;
-	}
-
-	private function pasienWeekly($user_id)
-	{
-		$start_week = Carbon::now()->startOfWeek();
-		$end_week = Carbon::now()->endOfWeek();
-
-		$pasien_baru = Pasien::where('user_id', $user_id)
-			->whereBetween('created_at', [$start_week, $end_week])
-			->get()
-			->groupBy(function ($date) {
-				return Carbon::parse($date->created_at)->format('d');
-			});
-		return $pasien_baru;
-	}
-
-	private function pasienMonthly($user_id)
-	{
-		$pasien_baru = Pasien::where('user_id', $user_id)
-			->get()
-			->groupBy(function ($date) {
-				return Carbon::parse($date->created_at)->format('m');
-			});
-
-		return $pasien_baru;
-	}
-
-	private function pasienAnnual($user_id)
-	{
-		$pasien_baru = Pasien::where('user_id', $user_id)
-			->get()
-			->groupBy(function ($date) {
-				return Carbon::parse($date->created_at)->format('Y');
-			});
-		return $pasien_baru;
-	}
-
 	public function getPasienRawatJalan(Request $request)
 	{
 		$this->validate($request, [
