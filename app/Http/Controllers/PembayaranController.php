@@ -7,6 +7,7 @@ use App\DetailPembayaran;
 use App\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class PembayaranController extends Controller
 {
@@ -56,7 +57,7 @@ class PembayaranController extends Controller
         $pembayaran = Pembayaran::select([
             'pembayaran.id',
             'pasien.nomor_rekam_medis',
-            'pasien.nama',
+            DB::raw("CONCAT(pasien.nama,' (',DATE_FORMAT(pasien.tanggal_lahir, '%d-%m-%Y'),')') as nama"),
             'pasien.jenis_kelamin',
             'pembayaran.status',
           ])
