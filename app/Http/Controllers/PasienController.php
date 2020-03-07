@@ -581,7 +581,7 @@ class PasienController extends Controller
         $klinikId = Auth::user()->klinik_id;
         $identity = Pasien::where('nik', $request->nik)->where('klinik_id', $klinikId)->exists();
 
-        if ($identity) {
+        if ($identity && (!is_null($request->nik) || !empty($request->nik))) {
             return response()->json(['status' => false, 'message' => 'identity is already in use!!']);
         } else {
             return response()->json(['status' => true, 'message' => 'identity valid']);
