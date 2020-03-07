@@ -128,8 +128,15 @@ class RekamMedisController extends Controller
         ->with('pemeriksaan_fisik')
         ->with('diagnosa')
         ->where('created_by', $this->user->id)
-        ->orderBy('id', 'desc')
-        ->paginate(4);
+        ->orderBy('id', 'desc');
+        if($request->kode_penyakit_id){
+            $rekam_medis = $rekam_medis->whereHas('diagnosa', function ($data) use ($request) {
+                $data->where('kode_penyakit_id','like',"%{$request->kode_penyakit_id},%")
+                ->orWhere('kode_penyakit_id','like',"%,{$request->kode_penyakit_id}%")
+                ->orWhere('kode_penyakit_id','like',"%[{$request->kode_penyakit_id}]%");
+            });
+        }
+        $rekam_medis = $rekam_medis->paginate(4);
 
         foreach ($rekam_medis as $rm) {
             $item['id'] = $rm->diagnosa->id;
