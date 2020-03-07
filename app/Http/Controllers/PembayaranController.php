@@ -339,6 +339,7 @@ class PembayaranController extends Controller
             $nama_dokter = $pembayaran->pluck('nama_dokter')->first();
             $nama_pasien = $pembayaran->pluck('nama_pasien')->first();
             $tanggal = date("dmY", strtotime($pembayaran->pluck('created_time')->first()));
+            $tanggal2 = date("d-m-Y", strtotime($pembayaran->pluck('created_time')->first()));
             $jam = date("H:i:s", strtotime($pembayaran->pluck('created_time')->first()));
 
             $email_data = [
@@ -348,6 +349,7 @@ class PembayaranController extends Controller
                 'nama_dokter' => $nama_dokter,
                 'nama_pasien' => $nama_pasien,
                 'tanggal' => $tanggal,
+                'tanggal2' => $tanggal2,
                 'jam' => $jam,
                 'pembayaran' => $pembayaran,
                 'detail_pembayaran' => $detail_pembayaran
