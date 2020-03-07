@@ -91,27 +91,27 @@ class PasienController extends Controller
 	{
 		$this->validate($request, [
             'nama' => 'required|string',
-            'jenis_identitas' => 'string',
-			'nik' => 'string',
+            'jenis_identitas' => 'string|nullable',
+			'nik' => 'string|nullable',
 			'tempat_lahir' => 'string',
 			'tanggal_lahir' => 'required|date_format:Y-m-d',
 			'jenis_kelamin' => 'required|integer',
-			'golongan_darah' => 'string',
+			'golongan_darah' => 'string|nullable',
 			'alamat_rumah' => 'required|string',
 			//'rt' => 'string',
 			//'rw' => 'string',
 			//'kelurahan' => 'string',
             //'kecamatan' => 'string',
-            'provinsi' => 'integer',
-            'kota' =>  'integer',
-			'status_perkawinan' => 'string',
+            'provinsi' => 'integer|nullable',
+            'kota' =>  'integer|nullable',
+			'status_perkawinan' => 'string|nullable',
 			//'pekerjaan' => 'string',
 			'nomor_hp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|max:30',
 			//'nama_penjamin' => 'string',
 			//'nomor_polis_asuransi' => 'string',
 			//'nomor_member_asuransi' => 'string',
-			'email' => 'string',
-			'nama_penanggung_jawab' => 'string',
+			'email' => 'string|nullable',
+			'nama_penanggung_jawab' => 'string|nullable',
 			'tensi_sistole' => 'integer',
 			'tensi_diastole' => 'integer',
 			'nadi' => 'integer',
@@ -119,7 +119,7 @@ class PasienController extends Controller
 			'respirasi' => 'integer',
 			'tinggi_badan' => 'integer',
 			'berat_badan' => 'integer',
-			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15'
+			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15|nullable'
 		]);
 
         $dob = $request->tanggal_lahir;
