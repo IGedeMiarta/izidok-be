@@ -132,7 +132,8 @@ class RekamMedisController extends Controller
         ->paginate(4);
 
         foreach ($rekam_medis as $rm) {
-            $item['id'] = $rm->diagnosa->kode_penyakit_id;
+            $item['id'] = $rm->diagnosa->id;
+            $item['kode_penyakit_id'] = $rm->diagnosa->kode_penyakit_id;
             $disease_code = KodePenyakit::select('id', 'kode', 'description')->find(substr($rm->diagnosa->kode_penyakit_id, 1, strpos($rm->diagnosa->kode_penyakit_id, ',')-1));
             $item['kode_penyakit'] = str_limit($disease_code->description, 27);
             $item['notes'] = $rm->diagnosa->notes;
