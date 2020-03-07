@@ -293,6 +293,7 @@ class RekamMedisController extends Controller
         }
 
         $data['rekam_medis'] = $rekam_medis;
+        $data['pembayaran'] = ['id' => $pembayaran->id];
 
         if ($status) {
             return response()->json([

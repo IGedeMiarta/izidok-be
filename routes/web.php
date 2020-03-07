@@ -167,6 +167,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->put('/pembayaran/{id}', ['uses' => 'PembayaranController@update']);
         $router->delete('/pembayaran/{id}', ['uses' => 'PembayaranController@delete']);
         $router->get('/pembayaran/struk/{id}', ['uses' => 'PembayaranController@receipt']);
+        $router->get('/pembayaran/pasien-email/{id}', ['uses' => 'PembayaranController@getPasienEmailByPembayaranId']);
 
         //paket
         $router->get('/paket', ['uses' => 'PaketController@index']);
