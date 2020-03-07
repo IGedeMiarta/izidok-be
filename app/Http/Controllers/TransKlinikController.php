@@ -72,7 +72,7 @@ class TransKlinikController extends Controller
 
         $trans_klinik = TransKlinik::select([
             'trans_klinik.id',
-            DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"),
+            'waktu_konsultasi',
             'nomor_antrian',
             'status',
             'extend',
@@ -101,7 +101,7 @@ class TransKlinikController extends Controller
           ->paginate($request->limit);
 
         $data['role'] = $user->roles->first()->name;
-		$data['trans_klinik'] = $trans_klinik;
+    		$data['trans_klinik'] = $trans_klinik;
 
 		if (!$trans_klinik) {
 			return response()->json([
