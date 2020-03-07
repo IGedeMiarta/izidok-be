@@ -89,7 +89,7 @@ class TransKlinikController extends Controller
             'berat_badan'
           ])
           ->join('pasien', 'pasien.id', '=', 'trans_klinik.pasien_id')
-          ->where('waktu_konsultasi', $consultation_time)
+          ->where(DB::raw('date(waktu_konsultasi)'), $consultation_time)
           ->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
           ->where('status', 'like', "%{$request->status}%")
           ->where('trans_klinik.klinik_id', $user->klinik_id)
@@ -174,7 +174,7 @@ class TransKlinikController extends Controller
     $trans_klinik->pasien_id = $request->pasien_id;
     $trans_klinik->klinik_id = $user->klinik_id;
     $trans_klinik->created_by = $request->user_id;
-    $trans_klinik->waktu_konsultasi = $consultation_time;
+    $trans_klinik->waktu_konsultasi = Carbon::now();
     $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id, $consultation_time);
     $trans_klinik->anamnesa = $request->anamnesis;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
@@ -257,7 +257,7 @@ class TransKlinikController extends Controller
   public function getNextOrderNumber($klinik_id, $consultation_time)
   {
     $trans_klinik = TransKlinik::where('klinik_id', $klinik_id)
-      ->where('waktu_konsultasi', $consultation_time)
+      ->where(DB::raw('date(waktu_konsultasi)'), $consultation_time)
       ->orderBy('nomor_antrian', 'desc')->first();
 
     $number = 1;
@@ -276,7 +276,7 @@ class TransKlinikController extends Controller
 
         $exist = TransKlinik::where('pasien_id', $pasien_id)
             ->where('klinik_id', '=', $klinik_id)
-            ->where('waktu_konsultasi', '=', $consultation_time)
+            ->where(DB::raw('date(waktu_konsultasi)'), '=', $consultation_time)
             ->whereNotIn('status', $status)
             ->exists();
 
