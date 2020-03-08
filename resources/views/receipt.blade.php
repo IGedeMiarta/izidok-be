@@ -73,7 +73,7 @@
         <p>{{strtoupper($p->nama_pasien)}}</p>
         <p>PASIEN {{$p->jaminan}}</p>
         <p>Dokter : dr.{{$p->nama_dokter}}</p>
-        <p>Created by : {{$p->createdBy->nama}}</p>
+        <p>Created by : {{ Auth::user()->nama }}</p>
     <br>
         <p align="right">CREATED TIME : {{date("d M,Y H:i:s", strtotime($p->created_time))}}</p>
         <p align="right">ADMISSION TIME : {{date("d M,Y H:i:s", strtotime($p->admission_time))}}</p>
@@ -111,7 +111,7 @@
     </table>
     <br>
         <p align="right">{{date("d F Y", strtotime($p->created_time))}} </td>
-        <p class="signature">{{$p->createdBy->nama}}</td>
+        <p class="signature">{{Auth::user()->nama}}</td>
         @endforeach
     <p class="footer">**********</p>
     <p class="footer2">Semoga Lekas Sembuh dan Sehat Selalu</p>
