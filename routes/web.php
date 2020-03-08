@@ -105,6 +105,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         //layanan
         $router->group(['middleware' => ['role:dokter_praktek|admin_klinik|super_admin|operator']], function () use ($router) {
             $router->get('/layanan', 'LayananController@index');
+            $router->get('/getalllayanan', 'LayananController@getAllLayanan');
             $router->post('/layanan', 'LayananController@store');
             $router->get('/layanan/{id}', 'LayananController@show');
             $router->put('/layanan/{id}', 'LayananController@update');

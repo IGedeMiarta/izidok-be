@@ -60,6 +60,17 @@ class LayananController extends Controller
 		], 201);
 	}
 
+	public function getAllLayanan(Request $request){
+		$user = $this->user;
+		$data['layanan'] = Layanan::select('id', 'kode_layanan', 'nama_layanan', 'tarif')
+			->where('klinik_id', $user->klinik_id)->get();
+		return response()->json([
+			'success' => true,
+			'message' => 'success',
+			'data' => $data
+		], 200);
+	}
+
 	public function store(Request $request)
 	{
 		$user = User::find($request->user_id);
