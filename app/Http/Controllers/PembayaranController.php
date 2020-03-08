@@ -173,7 +173,7 @@ class PembayaranController extends Controller
       }
 
     $pembayaran->status = $request->status;
-    $pembayaran->updated_at = Auth::user()->id;
+    $pembayaran->updated_by= Auth::user()->id;
     $pembayaran->save();
 
     return response()->json([
