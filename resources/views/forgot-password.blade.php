@@ -41,7 +41,7 @@
 <div class="col num12" style="min-width: 320px; max-width: 600px; display: table-cell; vertical-align: top; width: 600px;">
 <div style="width: 100% !important;"><!-- [if (!mso)&(!IE)]><!-->
 <div style="border: 0px solid transparent; padding: 5px 0px 5px 20px;"><!--<![endif]--> <!-- [if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]-->
-<div align="center"><a href="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png"><img style="padding: 10px;" src="https://api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="50%" border="0" /></a></div>
+<div align="center"><a href="http://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png"><img style="padding: 10px;" src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="50%" border="0" /></a></div>
 <!-- <div style="color:#058FE0;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
 												<div style="font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 12px; line-height: 1.2; color: #058FE0; mso-line-height-alt: 14px;">
 													<p style="font-size: 50px; line-height: 1.2; text-align: center; mso-line-height-alt: 60px; margin: 0;"><span style="font-size: 50px;"><strong>IZiDOK</strong></span></p>
