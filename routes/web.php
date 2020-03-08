@@ -139,6 +139,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->post('/rekam_medis', 'RekamMedisController@store');
             $router->get('/rekam_medis/{id}', 'RekamMedisController@show');
             $router->get('/rekam_medis/pasien/{pasien_id}', 'RekamMedisController@getRekamMedisByPasien');
+            $router->get('/rekam_medis/pasien/kode_penyakit/{pasien_id}', 'RekamMedisController@getAllKodePenyakitByPasien');
         });
 
         //organ

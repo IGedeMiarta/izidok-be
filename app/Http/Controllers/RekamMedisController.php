@@ -120,6 +120,41 @@ class RekamMedisController extends Controller
         }
     }
 
+    /**
+     * Get all kode_penyakit by pasien
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getAllKodePenyakitByPasien(Request $request)
+    {
+        $rekam_medis = DB::table('rekam_medis')
+            ->select([
+                'diagnosa.kode_penyakit_id',
+            ])
+            ->join('trans_klinik', 'trans_klinik.id', '=', 'rekam_medis.transklinik_id')
+            ->join('diagnosa', 'diagnosa.id', '=', 'rekam_medis.diagnosa_id')
+            ->where('trans_klinik.pasien_id', $request->pasien_id)
+            ->get();
+        
+        $kode_penyakits = [];
+        foreach($rekam_medis as $rm) {
+            $kode_penyakits = array_merge(
+                $kode_penyakits, 
+                explode(',', substr($rm->kode_penyakit_id, 1, strlen($rm->kode_penyakit_id)-2))
+            );
+        }
+        $kode_penyakits = array_unique($kode_penyakits);
+
+        $kode_penyakits = KodePenyakit::select('id', 'kode', 'description')->whereIn('id', $kode_penyakits)->get();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $kode_penyakits
+        ]);
+    }
+
     public function getRekamMedisByPasien(Request $request)
     {
         $rekam_medis = RekamMedis::whereHas('transKlinik', function ($data) use ($request) {
