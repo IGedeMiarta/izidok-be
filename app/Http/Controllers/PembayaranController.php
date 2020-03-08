@@ -173,6 +173,7 @@ class PembayaranController extends Controller
       }
 
     $pembayaran->status = $request->status;
+    $pembayaran->updated_at = Auth::user()->id;
     $pembayaran->save();
 
     return response()->json([
@@ -290,7 +291,7 @@ class PembayaranController extends Controller
             'users.nama AS nama_dokter',
             'pembayaran.created_by',
             'pembayaran.updated_at AS created_time',
-            'trans_klinik.updated_at AS admission_time',
+            'trans_klinik.created_at AS admission_time',
             'rekam_medis.created_at AS discharge_time',
             'total',
             'potongan',
@@ -366,7 +367,7 @@ class PembayaranController extends Controller
 
     /**
      * Get pasien email by pembayaran id.
-     * 
+     *
      * @param \Illuminate\Http\Request $request
      * @param integer $id
      * @return \Illuminate\Http\Response
