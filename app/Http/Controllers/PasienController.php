@@ -257,7 +257,7 @@ class PasienController extends Controller
 			'kota' => function($q) {
 				$q->select('id', 'nama');
 			}
-		])->find($request->id);
+		])->find($request->id)->where('user_id',$request->user_id);
 		if (empty($pasien)) {
 			return response()->json([
 				'status' => false,
