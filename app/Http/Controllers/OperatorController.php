@@ -55,9 +55,14 @@ class OperatorController extends Controller
     $this->validate($request, [
       'nama' => 'required|string',
       'email' => 'required|email',
-      'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
+      'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
       'password' => 'required|confirmed|min:6',
     ]);
+
+    $phone = User::where('nomor_telp', $request->nomor_telp)->orderBy('id', 'desc')->get();
+    if ((app('App\Http\Controllers\UserController')->isUserInvalid($phone) === false)) {
+        return response()->json(['status' => false, 'message' => 'Nomor telepon telah digunakan!']);
+    }
 
     $logged_user = $this->user;
 
