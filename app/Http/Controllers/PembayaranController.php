@@ -289,7 +289,7 @@ class PembayaranController extends Controller
             'pasien.nama AS nama_pasien',
             'jaminan',
             'users.nama AS nama_dokter',
-            'pembayaran.created_by',
+            'pembayaran.updated_by',
             'pembayaran.updated_at AS created_time',
             'trans_klinik.created_at AS admission_time',
             'rekam_medis.created_at AS discharge_time',
