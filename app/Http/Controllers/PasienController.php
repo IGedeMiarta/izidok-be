@@ -250,6 +250,7 @@ class PasienController extends Controller
 
 	public function show(Request $request)
 	{
+		$klinikId = Auth::user()->klinik_id;
 		$pasien = Pasien::with([
 			'provinsi' => function($q) {
 				$q->select('id', 'provinsi_nama');
@@ -257,7 +258,7 @@ class PasienController extends Controller
 			'kota' => function($q) {
 				$q->select('id', 'nama');
 			}
-		])->find($request->id);
+		])->where('id',$request->id)->where('klinik_id',$klinikId)->first();
 		if (empty($pasien)) {
 			return response()->json([
 				'status' => false,
