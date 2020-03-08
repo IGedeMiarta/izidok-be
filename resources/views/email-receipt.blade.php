@@ -20,7 +20,7 @@
 			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">{{strtoupper($p->nama_pasien)}}</p>
 			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">PASIEN {{$p->jaminan}}</p>
 			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">Dokter : dr.{{$p->nama_dokter}}</p>
-			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">Created by : {{$p->createdBy->nama}}</p>
+			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">Created by : {{Auth::user()->nama}}</p>
 		<br style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px;">
 			<p align="right" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">CREATED TIME : {{date("d M,Y H:i:s", strtotime($p->created_time))}}</p>
 			<p align="right" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">ADMISSION TIME : {{date("d M,Y H:i:s", strtotime($p->admission_time))}}</p>
@@ -58,7 +58,7 @@
 		</table>
 		<br style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px;">
 			<p align="right" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">{{date("d F Y", strtotime($p->created_time))}}
-			</p><p class="signature" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px; text-align: right; margin: 30px 0px 0px 0px;">{{$p->createdBy->nama}}
+			</p><p class="signature" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px; text-align: right; margin: 30px 0px 0px 0px;">{{Auth::user()->nama}}
 			@endforeach
 		</p><p class="footer1" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px; text-align: center; margin: 50px 0px 15px 0px;">**********</p>
 		<p class="footer2" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px; text-align: center; margin-bottom: 30px;">Semoga Lekas Sembuh dan Sehat Selalu</p>
