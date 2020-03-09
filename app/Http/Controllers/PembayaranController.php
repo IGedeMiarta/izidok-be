@@ -252,6 +252,7 @@ class PembayaranController extends Controller
     			$detail->nama_layanan = $item['nama_layanan'];
     			$detail->tarif = $item['tarif'];
     			$detail->quantity = $item['quantity'];
+          $detail->subtotal_tarif = intval($item['tarif'])*intval($item['quantity']);
     			$detail->created_by = $request->user_id;
     			$detail->save();
     			array_push($result, $detail);
