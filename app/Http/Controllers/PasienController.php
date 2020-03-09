@@ -260,11 +260,11 @@ class PasienController extends Controller
 				$q->select('id', 'nama');
 			}
 		])->where('id',$request->id)->where('klinik_id',$klinikId)->first();
-		$rm = new RekamMedisController();
-		$request->pasien_id = $pasien->id;
-		$dtaRm = json_decode(json_encode($rm->getAllKodePenyakitByPasien($request)), true);
+		// $rm = new RekamMedisController();
+		// $request->pasien_id = $pasien->id;
+		// $dtaRm = json_decode(json_encode($rm->getAllKodePenyakitByPasien($request)), true);
 		
-		if ($dtaRm['original']['success']) {
+		// if ($dtaRm['original']['success']) {
 			if (empty($pasien)) {
 				return response()->json([
 					'status' => false,
@@ -278,13 +278,13 @@ class PasienController extends Controller
 					'message' => 'success'
 				]);
 			}
-		} else {
-			return response()->json([
-				'status' => false,
-				'message' => "data rekam medis not found",
-				'data' => ''
-			]);
-		}
+		// } else {
+		// 	return response()->json([
+		// 		'status' => false,
+		// 		'message' => "data rekam medis not found",
+		// 		'data' => ''
+		// 	]);
+		// }
 	}
 
 	public function getByDate(Request $request)
