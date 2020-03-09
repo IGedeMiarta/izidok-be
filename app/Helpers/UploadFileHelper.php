@@ -38,7 +38,7 @@ function uploadToCloud($prefix, $file)
         } else {
             $filename .= '.' . $file->extension();
             Storage::cloud()->putFileAs($prefix, $file, $filename);
-            $url = Storage::cloud()->url($prefix, $filename);
+            $url = Storage::cloud()->url($prefix.'/'.$filename);
         }
     }
 
