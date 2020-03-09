@@ -146,12 +146,20 @@ class RekamMedisController extends Controller
         }
         $kode_penyakits = array_unique($kode_penyakits);
 
-        $kode_penyakits = KodePenyakit::select('id', 'kode', 'description')->whereIn('id', $kode_penyakits)->get();
-        
+        $kode_penyakits = KodePenyakit::select('id', 'kode', 'description')->whereIn('id', $kode_penyakits);
+
+        if (!$kode_penyakits->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'data not found',
+                'data' => null
+            ]);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $kode_penyakits
+            'data' => $kode_penyakits->get()
         ]);
     }
 
