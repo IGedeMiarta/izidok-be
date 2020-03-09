@@ -62,7 +62,7 @@ class LayananController extends Controller
 
 	public function getAllLayanan(Request $request){
 		$user = $this->user;
-		$data['layanan'] = Layanan::select('id', 'kode_layanan', 'nama_layanan', 'tarif')
+		$data['layanan']['data'] = Layanan::select('id', 'kode_layanan', 'nama_layanan', 'tarif')
 			->where('klinik_id', $user->klinik_id)->get();
 		return response()->json([
 			'success' => true,
