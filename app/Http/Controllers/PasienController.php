@@ -13,6 +13,7 @@ use App\Spesialisasi;
 use App\Klinik;
 use Carbon\Carbon;
 use DB;
+use App\Http\Controllers\RekamMedisController;
 
 class PasienController extends Controller
 {
@@ -259,17 +260,29 @@ class PasienController extends Controller
 				$q->select('id', 'nama');
 			}
 		])->where('id',$request->id)->where('klinik_id',$klinikId)->first();
-		if (empty($pasien)) {
-			return response()->json([
-				'status' => false,
-				'message' => "pasien not found",
-				'data' => ''
-			]);
+		$rm = new RekamMedisController();
+		$request->pasien_id = $pasien->id;
+		$dtaRm = json_decode(json_encode($rm->getAllKodePenyakitByPasien($request)), true);
+		
+		if ($dtaRm['original']['success']) {
+			if (empty($pasien)) {
+				return response()->json([
+					'status' => false,
+					'message' => "pasien not found",
+					'data' => ''
+				]);
+			} else {
+				return response()->json([
+					'status' => true,
+					'data' => $pasien,
+					'message' => 'success'
+				]);
+			}
 		} else {
 			return response()->json([
-				'status' => true,
-				'data' => $pasien,
-				'message' => 'success'
+				'status' => false,
+				'message' => "data rekam medis not found",
+				'data' => ''
 			]);
 		}
 	}
