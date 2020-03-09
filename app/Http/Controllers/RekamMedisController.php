@@ -336,7 +336,12 @@ class RekamMedisController extends Controller
         }
 
         $data['rekam_medis'] = $rekam_medis;
-        $data['pembayaran'] = ['id' => $pembayaran->id];
+
+        $newPembayaran = Pembayaran::select('id')
+            ->where('transklinik_id', $request->transklinik_id)
+            ->orderByDesc('id')
+            ->first();
+        $data['pembayaran'] = ['id' => $newPembayaran->id];
 
         if ($status) {
             return response()->json([
