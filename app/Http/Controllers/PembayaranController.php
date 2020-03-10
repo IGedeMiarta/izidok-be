@@ -6,6 +6,7 @@ use App\Constant;
 use App\DetailPembayaran;
 use App\Klinik;
 use App\Pembayaran;
+use App\KodePenyakit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DB;
@@ -382,5 +383,99 @@ class PembayaranController extends Controller
       }
 
       return response()->json("");
+    }
+
+    public function laporanPendapatan(Request $request)
+    {
+        $user = $this->user;
+
+        if(empty($request->column) && empty($request->order)) {
+            $column = 'pembayaran_id';
+            $order = 'desc';
+        } else {
+            $column = $request->column;
+            $order = $request->order;
+        }
+
+        $man = "laki-laki";
+        $women = "perempuan";
+		$gender = ''; // jika karakter yg di search kosong atau ada di "perempuan" dan "laki-laki"
+
+		if(!empty($request->jenis_kelamin)) {
+			$male = $female = false;
+
+			if (strpos($man, $request->jenis_kelamin) !== false) {
+				$male = true;
+			}
+			if (strpos($women, $request->jenis_kelamin) !== false) {
+				$female = true;
+			}
+
+			if(!$male) $gender = 0; // jika perempuan
+			elseif(!$female) $gender = 1; // jika laki2
+        }
+
+        $pendapatan = Pembayaran::select([
+            'pembayaran.id AS pembayaran_id',
+            'waktu_konsultasi',
+            'pasien.nama',
+            DB::raw("DATE_FORMAT(pasien.tanggal_lahir, '%d-%b-%Y') AS tanggal_lahir"),
+            'pasien.nomor_rekam_medis',
+            DB::raw("CONCAT('Rp. ', FORMAT(total_net, 0, 'id_ID'), ',-') AS jumlah_transaksi"),
+            'rekam_medis.diagnosa_id',
+            'diagnosa.kode_penyakit_id',
+        ])
+        ->leftJoin('trans_klinik', 'pembayaran.transklinik_id', '=', 'trans_klinik.id')
+        ->leftJoin('pasien', 'trans_klinik.pasien_id', '=', 'pasien.id')
+        ->leftJoin('rekam_medis', 'trans_klinik.id', '=', 'rekam_medis.transklinik_id')
+        ->leftJoin('diagnosa', 'rekam_medis.diagnosa_id', '=', 'diagnosa.id')
+        ->whereBetween(DB::raw('date(waktu_konsultasi)'), [
+            date('Y-m-d', strtotime($request->from)),
+            date('Y-m-d', strtotime($request->to))
+        ])
+        ->whereDate('waktu_konsultasi', 'like', "%{$request->waktu_konsultasi}")
+        ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
+        ->where('pasien.tanggal_lahir', 'like', "%{$request->tanggal_lahir}%")
+        ->where('pasien.nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}")
+        ->where('pembayaran.klinik_id', $user->klinik_id)
+        ->where('pembayaran.status', Constant::LUNAS);
+
+        if($request->kode_penyakit_id){
+            $pendapatan = $pendapatan->whereHas('transklinik.rekamMedis.diagnosa', function ($data) use ($request) {
+                $data->where('kode_penyakit_id', 'like', "%{$request->kode_penyakit_id},%")
+                ->orWhere('kode_penyakit_id', 'like', "%,{$request->kode_penyakit_id}%")
+                ->orWhere('kode_penyakit_id', 'like', "%[{$request->kode_penyakit_id}]%");
+            });
+        }
+
+        $periode = date('d-M-Y', strtotime($request->from)).' - '.date('d-M-Y', strtotime($request->to));
+        $total_pasien = $pendapatan->count('pembayaran.id');
+        $total_pendapatan = $pendapatan->sum('total_net');
+        $pendapatan = $pendapatan->orderBy($column, $order)->paginate($request->limit);
+
+        foreach ($pendapatan as $p) {
+            $item['id'] = $p->diagnosa_id;
+            $item['kode_penyakit_id'] = $p->kode_penyakit_id;
+            $disease_code = KodePenyakit::select('id', 'kode', 'description')->find(substr($p->kode_penyakit_id, 1, strpos($p->kode_penyakit_id, ',')-1));
+            $item['deskripisi'] = $disease_code['description'];
+            $p->diagnosa = (object) $item;
+        }
+
+        $data['periode'] = $periode;
+        $data['total_pasien'] = $total_pasien;
+        $data['total_pendapatan'] = 'Rp. '.number_format($total_pendapatan,0,'','.').',-';
+        $data['pendapatan'] = $pendapatan;
+
+		if (!$data) {
+			return response()->json([
+				'success' => false,
+				'message' => 'failed, you dont have role to see this',
+			], 201);
+		}
+		return response()->json([
+			'success' => true,
+			'message' => 'success',
+			'data' => $data
+		], 201);
     }
 }
