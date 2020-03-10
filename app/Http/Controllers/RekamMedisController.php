@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\RekamMedis;
 use App\TransKlinik;
 use App\Pasien;
+use App\Klinik;
 use App\Anamnesa;
 use App\Constant;
 use App\Diagnosa;
@@ -122,7 +123,7 @@ class RekamMedisController extends Controller
 
     /**
      * Get all kode_penyakit by pasien
-     * 
+     *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
@@ -136,11 +137,11 @@ class RekamMedisController extends Controller
             ->join('diagnosa', 'diagnosa.id', '=', 'rekam_medis.diagnosa_id')
             ->where('trans_klinik.pasien_id', $request->pasien_id)
             ->get();
-        
+
         $kode_penyakits = [];
         foreach($rekam_medis as $rm) {
             $kode_penyakits = array_merge(
-                $kode_penyakits, 
+                $kode_penyakits,
                 explode(',', substr($rm->kode_penyakit_id, 1, strlen($rm->kode_penyakit_id)-2))
             );
         }
@@ -320,9 +321,14 @@ class RekamMedisController extends Controller
         $status = $rekam_medis->save();
 
         #insert pembayaran
+        $klinikId = $trans_klinik->klinik_id;
+        $kode_faskes = Klinik::where('id', $klinikId)->value('kode_faskes');
+        $noInvoice = substr($kode_faskes.date(".y-md.His").rand(), 0,24);
+
         $pembayaran = new Pembayaran();
         $pembayaran->transklinik_id = $request->transklinik_id;
         $pembayaran->klinik_id = $trans_klinik->klinik_id;
+        $pembayaran->no_invoice = $noInvoice;
         $pembayaran->status = Constant::BELUM_LUNAS;
         $pembayaran->created_by = $request->user_id;
         $pembayaran->save();
