@@ -75,7 +75,7 @@ class RekamMedisController extends Controller
           ])
           ->leftJoin('trans_klinik', 'rekam_medis.transklinik_id', '=', 'trans_klinik.id')
           ->leftJoin('pasien', 'trans_klinik.pasien_id', '=', 'pasien.id')
-          ->where('pasien.nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}")
+          ->where('pasien.nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
           ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
           ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
           ->where('pasien.nomor_hp', 'like', "%{$request->nomor_hp}%")
