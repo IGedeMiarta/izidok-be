@@ -433,10 +433,10 @@ class PembayaranController extends Controller
             date('Y-m-d', strtotime($request->from)),
             date('Y-m-d', strtotime($request->to))
         ])
-        ->whereDate('waktu_konsultasi', 'like', "%{$request->waktu_konsultasi}")
+        ->whereDate('waktu_konsultasi', 'like', "%{$request->waktu_konsultasi}%")
         ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
         ->where('pasien.tanggal_lahir', 'like', "%{$request->tanggal_lahir}%")
-        ->where('pasien.nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}")
+        ->where('pasien.nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
         ->where('pembayaran.klinik_id', $user->klinik_id)
         ->where('pembayaran.status', Constant::LUNAS);
 
