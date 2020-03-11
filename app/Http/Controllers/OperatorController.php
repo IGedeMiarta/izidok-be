@@ -33,7 +33,7 @@ class OperatorController extends Controller
             'users.email',
             'users.nomor_telp',
             'audits.event',
-            'audits.created_at'
+            'audits.created_at AS last_active'
         )
         ->leftJoin('users', 'operator.user_id', '=', 'users.id')
         ->leftJoin('audits', function ($join) {
