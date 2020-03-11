@@ -339,7 +339,7 @@ class OperatorController extends Controller
   public function checkAvailableOp(){
     $user = $this->user;
 
-    $op = Operator::where('created_by',$user->id)->where('deleted_at','!=',null)->exists();
+    $op = Operator::where('created_by',$user->id)->where('deleted_at',null)->exists();
 
     if ($op) {
       return response()->json([
