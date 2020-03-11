@@ -50,7 +50,7 @@ class PaketController extends Controller
             ];
         }
 
-        $paygate = Paygate::all();
+        $paygate = Paygate::where('status',1)->get();
 
         foreach ($paygate as $key => $p) {
             $pg[] = [
