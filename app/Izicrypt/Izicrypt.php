@@ -43,6 +43,51 @@ class Izicrypt
     }
 
     /**
+     * Item in laravel collection decryption.
+     * 
+     * @param mixed $item
+     * @param array $encrypted
+     * @param 
+     */
+    public function itemCollectionDecrypt(&$item, $encrypted=[], $state='only')
+    {
+        if(empty($encrypted) && isset($item->encrypted) && $item->encrypted) {
+            $encrypted = $item->encrypted;
+        }
+
+        if($item instanceof \Illuminate\Database\Eloquent\Model) {
+            if(isset($item->encrypted_except) && $item->encrypted_except === true) {
+                $state = 'except';
+            }
+
+            foreach($item->getAttributes() as $key => $value) {
+                if(empty($encrypted)) break;
+                if(empty($value)) continue;
+
+                if(in_array($key, $encrypted) && $state=='only') {
+                    $item->{$key} = $this->decrypt($value);
+                }
+                elseif(!in_array($key, $encrypted) && $state=='except') {
+                    $item->{$key} = $this->decrypt($value);
+                }
+            }
+        }
+        else {
+            foreach($item as $key => $value) {
+                if(empty($encrypted)) break;
+                if(empty($value)) continue;
+
+                if(in_array($key, $encrypted) && $state=='only') {
+                    $item->{$key} = $this->decrypt($value);
+                }
+                elseif(!in_array($key, $encrypted) && $state=='except') {
+                    $item->{$key} = $this->decrypt($value);
+                }
+            }
+        }
+    }
+
+    /**
      * data encryption.
      * 
      * @param string $data

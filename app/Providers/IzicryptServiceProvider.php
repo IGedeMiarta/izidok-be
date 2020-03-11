@@ -16,42 +16,9 @@ class IzicryptServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Collection::macro('decrypt', function($arr=[], $state='only') {
-            return $this->each(function($item) use($arr, $state) {
-                if(empty($arr) && isset($item->encrypted) && $item->encrypted) {
-                    $arr = $item->encrypted;
-                }
-
-                if($item instanceof \Illuminate\Database\Eloquent\Model) {
-                    if(isset($item->encrypted_except) && $item->encrypted_except === true) {
-                        $state = 'except';
-                    }
-
-                    foreach($item->getAttributes() as $key => $value) {
-                        if(empty($arr)) break;
-                        if(empty($value)) continue;
-
-                        if(in_array($key, $arr) && $state=='only') {
-                            $item->{$key} = Izicrypt::encrypt($value);
-                        }
-                        elseif(!in_array($key, $arr) && $state=='except') {
-                            $item->{$key} = Izicrypt::encrypt($value);
-                        }
-                    }
-                }
-                else {
-                    foreach($item as $key => $value) {
-                        if(empty($arr)) break;
-                        if(empty($value)) continue;
-
-                        if(in_array($key, $arr) && $state=='only') {
-                            $item->{$key} = Izicrypt::encrypt($value);
-                        }
-                        elseif(!in_array($key, $arr) && $state=='except') {
-                            $item->{$key} = Izicrypt::encrypt($value);
-                        }
-                    }
-                }
+        Collection::macro('decrypt', function($encrypted=[], $state='only') {
+            return $this->each(function($item) use($encrypted, $state) {
+                Izicrypt::itemCollectionDecrypt($item, $encrypted, $state);
             });
         });
     }
