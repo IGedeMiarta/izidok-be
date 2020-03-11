@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class Izicrypt
 {
+    /**
+     * encryption secret key.
+     * 
+     * @var string $secret
+     */
     protected $secret = '!zid0ks3cr3tk3y3ncrypti0n#';
 
     /**
@@ -19,19 +24,20 @@ class Izicrypt
      * @param string $state default 'only'
      * @return array
      */
-    public function requestEncrypt(Request &$request, array $keys = [], string $state = 'only') {
+    public function requestEncrypt(Request &$request, array $keys = [], string $state = 'only') 
+    {
         if(!in_array($state, ['only', 'except'])) throw new \Exception('Request Encryption state either \'only\' or \'except\'');
         $arr = $request->all();
 
         foreach($arr as $key => $value) {
             if(empty($keys)) {
-                $request->request->set($key, \iziEncrypt($value));
+                $request->request->set($key, $this->encrypt($value));
             }
             elseif($state == 'only' && in_array($key, $keys)) {
-                $request->request->set($key, \iziEncrypt($value));
+                $request->request->set($key, $this->encrypt($value));
             }
             elseif($state == 'except' && !in_array($key, $keys)) {
-                $request->request->set($key, \iziEncrypt($value));
+                $request->request->set($key, $this->encrypt($value));
             }
         }
     }
@@ -42,7 +48,8 @@ class Izicrypt
      * @param string $data
      * @return string
      */
-    public function encrypt(string $data) {
+    public function encrypt(string $data) 
+    {
         $user = Auth::user();
         $secret = $this->secret;
 
@@ -73,7 +80,8 @@ class Izicrypt
      * @param string $data
      * @return string
      */
-    public function decrypt(string $data) {
+    public function decrypt(string $data) 
+    {
         $user = Auth::user();
         $secret = '!zid0ks3cr3tk3y3ncrypti0n#';
 
