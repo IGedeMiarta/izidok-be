@@ -14,6 +14,7 @@ use App\Operator;
 use App\Klinik;
 use App\Dokter;
 use App\Layanan;
+use App\Billing;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
@@ -198,6 +199,7 @@ class UserController extends Controller
                 $first_login = true;
                 $op = Operator::where('created_by',$user->id)->exists();
                 $trf = Layanan::where('klinik_id',$user->klinik->id)->exists();
+                $pkt = Billing::where('klinik_id',$user->klinik->id)->exists();
 
                 if (is_null($user->klinik->spesialisasi_id)) {
                     $position = 'spesialisasi';
@@ -205,6 +207,8 @@ class UserController extends Controller
                     $position = 'operator';
                 } elseif (!$trf) {
                     $position = 'tarif';
+                } elseif (!$pkt) {
+                    $position = 'subscribe';
                 }
             } else {
                 $first_login = false;
