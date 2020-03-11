@@ -27,8 +27,7 @@ class OperatorController extends Controller
     if (!$user->hasRole(Constant::SUPER_ADMIN)) {
         $operator = $operator->select(
             'operator.id',
-            'operator.user_id',
-            'users.id',
+            'users.id AS user_id',
             'users.nama',
             'users.email',
             'users.nomor_telp',
