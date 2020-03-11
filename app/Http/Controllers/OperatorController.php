@@ -25,11 +25,23 @@ class OperatorController extends Controller
     $operator = new Operator;
 
     if (!$user->hasRole(Constant::SUPER_ADMIN)) {
-        $operator = $operator->select('id', 'nama', 'user_id')
-            ->withAndWhereHas('user', function ($data) use ($user) {
-                $data->select('id', 'nama', 'email', 'nomor_telp');
-                $data->where('users.klinik_id', $user->klinik_id);
-        });
+        $operator = $operator->select(
+            'operator.id',
+            'operator.user_id',
+            'users.id',
+            'users.nama',
+            'users.email',
+            'users.nomor_telp',
+            'audits.event',
+            'audits.created_at'
+        )
+        ->leftJoin('users', 'operator.user_id', '=', 'users.id')
+        ->leftJoin('audits', function ($join) {
+            $join->on('users.id', '=', 'audits.user_id')
+                ->where('audits.event', '=', 'logout')
+                ->whereRaw('audits.created_at IN (select MAX(created_at) FROM audits GROUP BY user_id)');
+        })
+        ->where('users.klinik_id', $user->klinik_id);
     }
 
     $operator = $operator->paginate($request->limit);
