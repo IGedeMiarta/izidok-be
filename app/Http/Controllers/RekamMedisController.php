@@ -419,19 +419,12 @@ class RekamMedisController extends Controller
     {
         $rekam_medis = RekamMedis::where('id', $request->id)
             ->with(['transklinik:id,durasi_konsultasi,tgl_next_konsultasi', 'anamnesa', 'diagnosa', 'pemeriksaan_fisik', 'pemeriksaan_penunjang', 'tatalaksana'])
-            ->get();
+            ->first();
 
         $arr_kode_penyakit = [];
-        foreach($rekam_medis as $rm) {
-            $arr_kode_penyakit = array_merge(
-                $arr_kode_penyakit,
-                explode(',', substr($rm->diagnosa->kode_penyakit_id, 1, strlen($rm->diagnosa->kode_penyakit_id)-2))
-            );
-        }
-        $arr_kode_penyakit = array_unique($arr_kode_penyakit);
-        $arr_kode_penyakit = KodePenyakit::select('id', 'kode', 'description')->whereIn('id', $arr_kode_penyakit )->get();
-
-        $rm->diagnosa->kode_penyakit = (object) $arr_kode_penyakit;
+        $kdPenyakitId = !empty($rekam_medis->diagnosa->kode_penyakit_id) ? substr($rekam_medis->diagnosa->kode_penyakit_id, 1,-1) : null;
+        $arr_kode_penyakit = KodePenyakit::select('id', 'kode', 'description')->whereIn('id', explode(',', $kdPenyakitId))->get();
+        $rekam_medis->kode_diagnosa = (object) $arr_kode_penyakit;
 
         if (empty($rekam_medis)) {
             return response()->json([
