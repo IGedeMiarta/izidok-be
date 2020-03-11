@@ -18,6 +18,9 @@ $router->get('/key', function () {
     return str_random(32);
 });
 
+// $router->get('encrypt', 'ExampleController@encrypt');
+// $router->get('decrypt', 'ExampleController@decrypt');
+
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->get('/email/verify', 'UserController@verifyEmail');
     $router->get('/username/verify', 'UserController@verifyUsername');
