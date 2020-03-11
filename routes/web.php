@@ -137,8 +137,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->group(['middleware' => ['role:dokter_praktek|dokter_klinik']], function () use ($router) {
             $router->get('/rekam_medis', 'RekamMedisController@index');
             $router->post('/rekam_medis', 'RekamMedisController@store');
-            $router->get('/rekam_medis/{id}', 'RekamMedisController@show');
             $router->get('/rekam_medis/kode_penyakit', 'RekamMedisController@getAllKodePenyakitByKlinik');
+            $router->get('/rekam_medis/{id}', 'RekamMedisController@show');
             $router->get('/rekam_medis/pasien/{pasien_id}', 'RekamMedisController@getRekamMedisByPasien');
             $router->get('/rekam_medis/pasien/kode_penyakit/{pasien_id}', 'RekamMedisController@getAllKodePenyakitByPasien');
         });
@@ -166,12 +166,13 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/pembayaran', ['uses' => 'PembayaranController@index']);
         $router->post('/pembayaran', ['uses' => 'PembayaranController@store']);
         $router->post('/pembayaran/detail', ['uses' => 'PembayaranController@addDetail']);
+        $router->get('/pembayaran/pendapatan/', ['uses' => 'PembayaranController@laporanPendapatan']);
         $router->get('/pembayaran/{id}', ['uses' => 'PembayaranController@show']);
         $router->put('/pembayaran/{id}', ['uses' => 'PembayaranController@update']);
         $router->delete('/pembayaran/{id}', ['uses' => 'PembayaranController@delete']);
         $router->get('/pembayaran/struk/{id}', ['uses' => 'PembayaranController@receipt']);
         $router->get('/pembayaran/pasien-email/{id}', ['uses' => 'PembayaranController@getPasienEmailByPembayaranId']);
-        $router->get('/pembayaran/pendapatan/', ['uses' => 'PembayaranController@laporanPendapatan']);
+
 
         //paket
         $router->get('/paket', ['uses' => 'PaketController@index']);
