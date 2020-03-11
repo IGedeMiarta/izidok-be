@@ -83,6 +83,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/operator/{id}', ['middleware' => 'permission:read-operator', 'uses' => 'OperatorController@show']);
         $router->put('/operator/{id}', ['middleware' => 'permission:update-operator', 'uses' => 'OperatorController@update']);
         $router->delete('/operator/{id}', ['middleware' => 'permission:delete-operator', 'uses' => 'OperatorController@delete']);
+        $router->get('/checkavailop', ['middleware' => 'permission:create-operator', 'uses' => 'OperatorController@checkAvailableOp']);
 
         //dokter
         $router->get('/dokter', ['uses' => 'DokterController@index']);

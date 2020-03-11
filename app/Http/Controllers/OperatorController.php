@@ -17,7 +17,7 @@ class OperatorController extends Controller
 
 	public function __construct(){
 		$this->user = Auth::user();
-    }
+  }
 
   public function index(Request $request)
   {
@@ -334,5 +334,22 @@ class OperatorController extends Controller
       }
 
       return false;
+  }
+
+  public function checkAvailableOp(){
+    $user = $this->user;
+
+    $op = Operator::where('created_by',$user->id)->where('deleted_at','!=',null)->exists();
+
+    if ($op) {
+      return response()->json([
+        'status' => false,
+        'message' => 'Klinik sudah memiliki Asisten Dokter'
+      ]);
+    }
+    return response()->json([
+      'status' => true,
+      'message' => 'Klinik belum memiliki Asisten Dokter'
+    ]);
   }
 }
