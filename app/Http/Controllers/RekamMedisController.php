@@ -190,7 +190,9 @@ class RekamMedisController extends Controller
         }
 
         $kode_penyakits = array_unique($kode_penyakits);
-        $kode_penyakits = KodePenyakit::select('id', 'kode', 'description')->whereIn('id', $kode_penyakits);
+        $kode_penyakits = KodePenyakit::select('id', 'kode', 'description')
+            ->whereIn('id', $kode_penyakits)
+            ->where('description', 'like', "%{$request->search}%");
 
         if (!$kode_penyakits->exists()) {
             return response()->json([
