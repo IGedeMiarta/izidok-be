@@ -12,6 +12,7 @@ use App\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class PayFlagController extends Controller
 {
@@ -98,11 +99,20 @@ class PayFlagController extends Controller
             }
 
             if($billing->amount_disc == $request->transactionAmount) {
-                $billing->status = 1;
-                $billing->pay_date = Carbon::now();
-                $billing->save();
+                DB::beginTransaction();
+                $updated = Billing::where('no_invoice', $request->transactionNo)
+                    ->update([
+                        'status' => 1,
+                        'pay_date' => Carbon::now()
+                    ]);
+                
+                if($updated === 1) {
+                    DB::commit();
+                    return response()->json($this->payFlagResponse($request, '00', 'Success'), 200);
+                }
 
-                return response()->json($this->payFlagResponse($request, '00', 'Success'), 200);
+                DB::rollBack();
+                return response()->json($this->payFlagResponse($request, '01', 'Failed DB'), 200);
             }
 
             return response()->json($this->payFlagResponse($request, '01', 'Failed'), 200);
