@@ -36,7 +36,9 @@ class UserController extends Controller
 
     public function show($id = null)
     {
-        $user = User::with('roles')->find($id);
+        $user = User::with('klinik')->find($id);
+        $user->klinik->spesialisasi;
+
         if (!$user) {
             return response()->json(['status' => false]);
         } else {
