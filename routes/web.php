@@ -177,6 +177,11 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/pembayaran/struk/{id}', ['uses' => 'PembayaranController@receipt']);
         $router->get('/pembayaran/pasien-email/{id}', ['uses' => 'PembayaranController@getPasienEmailByPembayaranId']);
 
+        //billing
+        $router->group(['middleware' => ['role:dokter_praktek|admin_klinik']], function () use ($router) {
+            $router->get('/billing', ['uses' => 'BillingController@index']);
+        });
+
         //paket
         $router->get('/paket', ['uses' => 'PaketController@index']);
         $router->get('/paket/{id}', ['uses' => 'PaketController@show']);
