@@ -26,7 +26,7 @@ class PaygateController extends Controller
      */
     public function index()
     {
-        $paygate = Paygate::all();
+        $paygate = Paygate::where('status',1)->get();
 
         foreach ($paygate as $key => $p) {
             $pg[] = [
@@ -104,7 +104,7 @@ class PaygateController extends Controller
                 $bill->save();
 
                 $pktCtrl = new PaketController();
-                $dtlPmbyrn = $pktCtrl->detailPembayaran($id)->getData();
+                $dtlPmbyrn = $pktCtrl->detailPembayaran($bill->id)->getData();
 
                 $email_data = [
                     'subject' => 'Pembayaran izidok',
