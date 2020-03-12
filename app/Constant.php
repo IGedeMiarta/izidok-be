@@ -82,5 +82,10 @@ class Constant
 
 	#subscribe
 	const PAYMENT_CONFIRMATION = 'payment-confirmation';
-	const CANCEL_SUBSCRIBE = 'cancel-subscribe';
+    const CANCEL_SUBSCRIBE = 'cancel-subscribe';
+
+    #billing
+    const PACKAGE_INACTIVE = 1;
+    const PACKAGE_UNUSED = 0;
+    const PACKAGE_USED = 1;
 }
