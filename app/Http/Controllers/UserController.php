@@ -289,7 +289,6 @@ class UserController extends Controller
     {
         $email = $request->input('email');
         $user = User::where('email', '=', $email)->orderBy('id', 'desc')->first();
-
         if (empty($user)) {
             return response()->json([
                 'status' => false,
@@ -298,25 +297,8 @@ class UserController extends Controller
         }
         else
         {
-            $all_activation = Activation::where("user_id","=",$user->id)->get();
-            $flag = 0;
-            foreach ($all_activation as $row)
-            {
-                if($row->status == 1)
-                {
-                    $flag = 1;
-                }
-            }
-
-            if($flag == 0)
-            {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'User has not been activated'
-                ]);
-            }
-            else
-            {
+            $cekDok = Dokter::where('user_id',$user->id)->exists();
+            if (!$cekDok) {
                 $all_forgot = ForgotPassword::where("user_id", "=", $user->id)->get();
                 foreach ($all_forgot as $forgot) {
                     $forgot->delete();
@@ -348,8 +330,59 @@ class UserController extends Controller
                         'data' => $forgot_password
                     ]);
                 }
-            }
+            }else{
+                $all_activation = Activation::where("user_id","=",$user->id)->get();
+                $flag = 0;
+                foreach ($all_activation as $row)
+                {
+                    if($row->status == 1)
+                    {
+                        $flag = 1;
+                    }
+                }
 
+                if($flag == 0)
+                {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'User has not been activated'
+                    ]);
+                }
+                else
+                {
+                    $all_forgot = ForgotPassword::where("user_id", "=", $user->id)->get();
+                    foreach ($all_forgot as $forgot) {
+                        $forgot->delete();
+                    }
+
+                    $forgot_password = new ForgotPassword();
+                    $forgot_password->token = base64_encode(str_random(40));
+                    $forgot_password->user_id = $user->id;
+                    $forgot_password->email = $email;
+                    $forgot_password->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
+                    $forgot_password->save();
+
+                    $forgot_url = url(env('APP_PREFIX', 'api/v1') . '/check_forgot/' . $forgot_password->token);
+                    $current_user_name = User::select('nama')->where('id', $user->id)->value('nama');
+
+                    $email_data = [
+                        'subject' => 'Forgot Password',
+                        'message' => 'Click link below to reset your password: \n ' . $forgot_url,
+                        'activation_url' => $forgot_url,
+                        'to' => [$forgot_password->email],
+                        'from' => 'izidok.dev@gmail.com',
+                        'name' =>  $current_user_name,
+                    ];
+
+                    if (\sendEmail($email_data, Constant::FORGOT_EMAIL_TEMPLATE)) {
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'forgot password telah dibuat',
+                            'data' => $forgot_password
+                        ]);
+                    }
+                }
+            }
             // Mail::raw('You can reset password by klik :'.url('/api/v1/forgot_password/'.$forgot_password->token), function($msg) use ($request){
             //     $msg->subject('Hi reset your password');
             //     $msg->to([$request->email]);
