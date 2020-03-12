@@ -457,7 +457,7 @@ class PembayaranController extends Controller
             $item['id'] = $p->diagnosa_id;
             $item['kode_penyakit_id'] = $p->kode_penyakit_id;
             $disease_code = KodePenyakit::select('id', 'kode', 'description')->find(substr($p->kode_penyakit_id, 1, strpos($p->kode_penyakit_id, ',')-1));
-            $item['deskripisi'] = $disease_code['description'];
+            $item['deskripsi'] = $disease_code['description'];
             $p->diagnosa = (object) $item;
         }
 
