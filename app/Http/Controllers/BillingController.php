@@ -137,4 +137,36 @@ class BillingController extends Controller
 		], 200);
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function packageDetails(Request $request)
+    {
+        $user = $this->user;
+
+        $package_detail = Billing::select([
+            'billing.id',
+            'paket.nama AS paket',
+            DB::raw("CONCAT(paket_bln, ' Bulan') AS durasi"),
+            'paket.desc AS fitur',
+        ])
+        ->join('paket', 'billing.paket_id', '=', 'paket.id')
+        ->where('billing.klinik_id', $user->klinik_id)
+        ->find($request->id);
+
+        if (empty($package_detail)) {
+            return response()->json([
+                'status' => false,
+                'message' => "package not found",
+            ]);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'data' => $package_detail
+            ]);
+        }
+    }
 }
