@@ -9,6 +9,7 @@ use App\Constant;
 use App\Paket;
 use App\Addson;
 use App\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,11 +17,11 @@ class PayFlagController extends Controller
 {
     /**
      * Payment Flag - Payment Gateway Bayarind
-     * 
+     *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) 
+    public function store(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
@@ -40,7 +41,7 @@ class PayFlagController extends Controller
             if ($validator->fails()) {
                 return response()->json($this->payFlagResponse($request, '03', 'Invalid Parameter'), 200);
             }
-            
+
             $pg = Paygate::select('secretkey')
                 ->where('channel_id', $request->channelId)
                 ->first();
@@ -61,7 +62,7 @@ class PayFlagController extends Controller
             $billing = Billing::select('expired_pay', 'amount_disc', 'status')
                 ->where('no_invoice', $request->transactionNo)
                 ->first();
-            
+
             // 0 = waiting
             // 1 = success
             // 2 = failed
@@ -88,7 +89,7 @@ class PayFlagController extends Controller
 
                 return response()->json($this->payFlagResponse($request, $payStatus, $payMessage), 200);
             }
-                
+
             $payment_date = new Carbon($request->transactionDate);
             $payment_expired = $billing->expired_pay;
 
@@ -98,29 +99,30 @@ class PayFlagController extends Controller
 
             if($billing->amount_disc == $request->transactionAmount) {
                 $billing->status = 1;
+                $billing->pay_date = Carbon::now();
                 $billing->save();
 
                 return response()->json($this->payFlagResponse($request, '00', 'Success'), 200);
             }
 
             return response()->json($this->payFlagResponse($request, '01', 'Failed'), 200);
-        } 
+        }
         catch(\Exception $e) {
             report($e);
             return response()->json($this->payFlagResponse($request, '01', 'Failed with exception'), 200);
         }
     }
-    
+
     /**
      * Generate Payment Flag Response.
      * And save to payflag_log table.
-     * 
+     *
      * @param \Illuminate\Http\Request $request
      * @param string $status
      * @param string $message
      * @return array
      */
-    protected function payFlagResponse(Request $request, $status, $message) 
+    protected function payFlagResponse(Request $request, $status, $message)
     {
         PayflagLog::create(array_merge($request->all(), [
             'paymentStatus' => $status,
