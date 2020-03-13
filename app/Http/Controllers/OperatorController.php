@@ -37,8 +37,7 @@ class OperatorController extends Controller
         ->leftJoin('users', 'operator.user_id', '=', 'users.id')
         ->leftJoin('audits', function ($join) {
             $join->on('users.id', '=', 'audits.user_id')
-                ->where('audits.event', '=', 'logout')
-                ->whereRaw('audits.created_at IN (select MAX(created_at) FROM audits GROUP BY user_id)');
+                ->whereRaw('audits.created_at IN (select MAX(created_at) FROM audits WHERE audits.event = "logout" GROUP BY user_id)');
         })
         ->where('users.klinik_id', $user->klinik_id);
     }

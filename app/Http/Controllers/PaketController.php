@@ -36,7 +36,7 @@ class PaketController extends Controller
             $arrDesc = [];
             $desc = explode(';', $p['desc']);
 
-            for ($i=0; $i < count($desc); $i++) { 
+            for ($i=0; $i < count($desc); $i++) {
                 $arrDesc[$i+1] = $desc[$i];
             }
 
@@ -104,7 +104,7 @@ class PaketController extends Controller
         $arrDesc = [];
         $desc = explode(';', $data->desc);
 
-        for ($i=0; $i < count($desc); $i++) { 
+        for ($i=0; $i < count($desc); $i++) {
             $arrDesc[$i+1] = $desc[$i];
         }
 
@@ -147,7 +147,7 @@ class PaketController extends Controller
     public function detailPembayaran($id)
     {
         $data['detail'] = DB::table('billing as b')
-            ->select('pl.id','pl.channelId','pl.serviceCode','pl.currency','pl.transactionNo','pl.transactionAmount','pl.transactionDate','pl.transactionExpire','pl.description','pl.customerAccount','pl.customerName',
+            ->select('pl.id','b.id AS billing_id','pl.channelId','pl.serviceCode','pl.currency','pl.transactionNo','pl.transactionAmount','pl.transactionDate','pl.transactionExpire','pl.description','pl.customerAccount','pl.customerName',
                 DB::raw('case when b.status = 0 then "MENUNGGU PEMBAYARAN" else "LUNAS" end as status_billing'),
                 'b.pg_id','p.nama as paket','p.harga as harga_paket','a.nama as addson','a.harga as harga_addson','b.amount_real','b.amount_disc','pr.value as diskon','pr.satuan as satuan_promo')
             ->join('paygate_log as pl','b.no_invoice','=','pl.transactionNo')
@@ -163,7 +163,7 @@ class PaketController extends Controller
                 $arrDesc = [];
                 $desc = explode(';', $p['description']);
 
-                for ($i=0; $i < count($desc); $i++) { 
+                for ($i=0; $i < count($desc); $i++) {
                     $arrDesc[$i+1] = $desc[$i];
                 }
                 $data['tutorial'][] = [
