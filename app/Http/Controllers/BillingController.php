@@ -46,17 +46,18 @@ class BillingController extends Controller
         ])
         ->join('paket', 'billing.paket_id', '=', 'paket.id')
         ->where('no_invoice', 'like', "%{$request->nomor_tagihan}%")
-        ->where('paket.nama', 'like', "%{$request->produk}%")
+        ->where('nama', 'like', "%{$request->produk}%")
         ->where('paket_bln', 'like', "%{$request->periode_berlaku}%")
         ->where('amount_disc', 'like', "%{$request->total_pembayaran}%")
-        ->where(function ($query) use ($request) {
-            $query->whereDate('pay_date', 'like', "%{$request->tanggal_bayar}%")
-                ->orWhereNull('pay_date');
-        })
         ->where('status', 'like', "%{$request->status}%")
         ->where('klinik_id', $user->klinik_id)
-        ->orderBy($column, $order)
-        ->paginate($request->limit);
+        ->orderBy($column, $order);
+
+        if(!empty($request->tanggal_bayar)) {
+            $billing = $billing->whereDate('pay_date', 'like', "%{$request->tanggal_bayar}%");
+        }
+
+        $billing = $billing->paginate($request->limit);
 
         if (!$billing) {
 			return response()->json([
@@ -195,7 +196,7 @@ class BillingController extends Controller
         ->join('paket', 'billing.paket_id', '=', 'paket.id')
         ->join('klinik_subscribe', 'klinik_subscribe.billing_id', '=', 'billing.id' )
         ->where('klinik_subscribe.status', Constant::PACKAGE_ACTIVE)
-        ->where('expired_date', '<', Carbon::now())
+        ->where('expired_date', '>', Carbon::now())
         ->where('billing.klinik_id', $user->klinik_id)
         ->first();
 
