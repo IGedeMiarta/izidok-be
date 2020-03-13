@@ -49,8 +49,10 @@ class BillingController extends Controller
         ->where('paket.nama', 'like', "%{$request->produk}%")
         ->where('paket_bln', 'like', "%{$request->periode_berlaku}%")
         ->where('amount_disc', 'like', "%{$request->total_pembayaran}%")
-        ->whereDate('pay_date', 'like', "%{$request->tanggal_bayar}%")
-        ->orWhereNull('pay_date')
+        ->where(function ($query) use ($request) {
+            $query->whereDate('pay_date', 'like', "%{$request->tanggal_bayar}%")
+                ->orWhereNull('pay_date');
+        })
         ->where('billing.klinik_id', $user->klinik_id)
         ->orderBy($column, $order)
         ->paginate($request->limit);
@@ -116,7 +118,7 @@ class BillingController extends Controller
             DB::raw("DATE_FORMAT(pay_date, '%d %M %Y, %H:%i:%S ') AS waktu_pembelian"),
             'paket.nama AS paket',
             DB::raw("DATE_FORMAT(started_date, '%d %M %Y') AS mulai_berlaku"),
-            DB::raw("DATE_FORMAT(expired_date, '%d %M %Y') AS habis_berlaku"),
+            DB::raw("DATE_FORMAT(expired_date, '%d %M %Y') AS habis_berlaku")
         ])
         ->join('paket', 'billing.paket_id', '=', 'paket.id')
         ->join('klinik_subscribe', 'klinik_subscribe.billing_id', '=', 'billing.id' )
