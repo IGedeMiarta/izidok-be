@@ -38,7 +38,7 @@ class BillingController extends Controller
         $billing = Billing::select([
             'billing.id',
             'no_invoice AS nomor_tagihan',
-            'paket.nama AS produk',
+            'nama AS produk',
             DB::raw("CONCAT(paket_bln, ' bulan') AS periode_berlaku"),
             DB::raw("CONCAT('Rp. ', FORMAT(amount_disc, 0, 'id_ID'), ',-') AS total_pembayaran"),
             DB::raw("DATE_FORMAT(pay_date, '%d/%m/%Y') AS tanggal_bayar"),
@@ -82,8 +82,8 @@ class BillingController extends Controller
         $package = Billing::select([
             'billing.id',
             DB::raw("DATE_FORMAT(pay_date, '%d %M %Y, %H:%i:%S') AS waktu_pembelian"),
-            'paket.nama AS paket',
-            'paket.limit AS jumlah_kouta',
+            'nama AS paket',
+            'limit AS jumlah_kouta',
         ])
         ->join('paket', 'billing.paket_id', '=', 'paket.id')
         ->where('status', Constant::BILLING_SUCCESS)
@@ -116,7 +116,7 @@ class BillingController extends Controller
         $package = Billing::select([
             'billing.id',
             DB::raw("DATE_FORMAT(pay_date, '%d %M %Y, %H:%i:%S ') AS waktu_pembelian"),
-            'paket.nama AS paket',
+            'nama AS paket',
             DB::raw("DATE_FORMAT(started_date, '%d %M %Y') AS mulai_berlaku"),
             DB::raw("DATE_FORMAT(expired_date, '%d %M %Y') AS habis_berlaku")
         ])
@@ -150,9 +150,9 @@ class BillingController extends Controller
 
         $package_detail = Billing::select([
             'billing.id',
-            'paket.nama AS paket',
+            'nama AS paket',
             DB::raw("CONCAT(paket_bln, ' Bulan') AS durasi"),
-            'paket.desc AS fitur',
+            'desc AS fitur',
         ])
         ->join('paket', 'billing.paket_id', '=', 'paket.id')
         ->where('billing.klinik_id', $user->klinik_id)

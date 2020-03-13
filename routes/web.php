@@ -182,6 +182,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->get('/billing', ['uses' => 'BillingController@index']);
             $router->get('/billing/package/', ['uses' => 'BillingController@packageList']);
             $router->get('/billing/package-expired/', ['uses' => 'BillingController@packageListExpired']);
+            $router->get('/billing/package-active/', ['uses' => 'BillingController@packageActive']);
             $router->get('/billing/package/{id}', ['uses' => 'BillingController@packageDetails']);
         });
 
