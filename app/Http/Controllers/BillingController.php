@@ -53,7 +53,8 @@ class BillingController extends Controller
             $query->whereDate('pay_date', 'like', "%{$request->tanggal_bayar}%")
                 ->orWhereNull('pay_date');
         })
-        ->where('billing.klinik_id', $user->klinik_id)
+        ->where('status', 'like', "%{$request->status}%")
+        ->where('klinik_id', $user->klinik_id)
         ->orderBy($column, $order)
         ->paginate($request->limit);
 
