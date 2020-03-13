@@ -16,8 +16,13 @@ class IzicryptServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Collection::macro('decrypt', function($encrypted=[], $state='only') {
-            return $this->each(function($item) use($encrypted, $state) {
+        Collection::macro('decrypt', function($encrypted=[], $state='only', $raw=false) {
+            if(is_bool($state)) {
+                $raw = $state;
+                $state = 'only';
+            }
+
+            return $this->each(function($item) use($encrypted, $state, $raw) {
                 Izicrypt::itemCollectionDecrypt($item, $encrypted, $state);
             });
         });

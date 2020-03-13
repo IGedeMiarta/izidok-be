@@ -22,10 +22,16 @@ class Izicrypt
      * @param Illuminate\Http\Request $request
      * @param array $keys
      * @param string $state default 'only'
+     * @param boolean $raw
      * @return array
      */
-    public function requestEncrypt(Request &$request, array $keys = [], string $state = 'only') 
+    public function requestEncrypt(Request &$request, array $keys=[], string $state='only', $raw=false) 
     {
+        if(is_bool($state)) {
+            $raw = $state;
+            $state = 'only';
+        }
+
         if(!in_array($state, ['only', 'except'])) throw new \Exception('Request Encryption state either \'only\' or \'except\'');
         $arr = $request->all();
 
@@ -47,10 +53,16 @@ class Izicrypt
      * 
      * @param mixed $item
      * @param array $encrypted
+     * @param boolean $raw
      * @param 
      */
-    public function itemCollectionDecrypt(&$item, $encrypted=[], $state='only')
+    public function itemCollectionDecrypt(&$item, $encrypted=[], $state='only', $raw=false)
     {
+        if(is_bool($state)) {
+            $raw = $state;
+            $state = 'only';
+        }
+
         if(empty($encrypted) && isset($item->encrypted) && $item->encrypted) {
             $encrypted = $item->encrypted;
         }
@@ -65,7 +77,7 @@ class Izicrypt
                 if(empty($value)) continue;
 
                 if(in_array($key, $encrypted) && $state=='only') {
-                    $item->{$key} = $this->decrypt($value);
+                    $item->{$key} = $this->decrypt($value, $raw);
                 }
                 elseif(!in_array($key, $encrypted) && $state=='except') {
                     $item->{$key} = $this->decrypt($value);
@@ -78,10 +90,10 @@ class Izicrypt
                 if(empty($value)) continue;
 
                 if(in_array($key, $encrypted) && $state=='only') {
-                    $item->{$key} = $this->decrypt($value);
+                    $item->{$key} = $this->decrypt($value, $raw);
                 }
                 elseif(!in_array($key, $encrypted) && $state=='except') {
-                    $item->{$key} = $this->decrypt($value);
+                    $item->{$key} = $this->decrypt($value, $raw);
                 }
             }
         }
@@ -91,9 +103,10 @@ class Izicrypt
      * data encryption.
      * 
      * @param string $data
+     * @param boolean $raw
      * @return string
      */
-    public function encrypt(string $data) 
+    public function encrypt(string $data, $raw=false) 
     {
         $user = Auth::user();
         $secret = $this->secret;
@@ -109,7 +122,8 @@ class Izicrypt
             $data = str_pad($data, 16, ' ', STR_PAD_LEFT); // need to be ltrim at decrypt
         }
 
-        $result = openssl_encrypt($data, 'aes-256-xts', $secret, 0, $iv);
+        $options = $raw ? OPENSSL_RAW_DATA : OPENSSL_ZERO_PADDING;
+        $result = openssl_encrypt($data, 'aes-256-xts', $secret, $options, $iv);
 
         if($result === false) {
             throw new EncryptionFailedException("Encryption failed");
@@ -123,9 +137,10 @@ class Izicrypt
      * data decryption.
      * 
      * @param string $data
+     * @param boolean $raw
      * @return string
      */
-    public function decrypt(string $data) 
+    public function decrypt(string $data, $raw=false) 
     {
         $user = Auth::user();
         $secret = '!zid0ks3cr3tk3y3ncrypti0n#';
@@ -139,7 +154,8 @@ class Izicrypt
 
         $data = substr($data, 32);
 
-        $result = openssl_decrypt($data, 'aes-256-xts', $secret, 0, $iv_bin);
+        $options = $raw ? OPENSSL_RAW_DATA : OPENSSL_ZERO_PADDING;
+        $result = openssl_decrypt($data, 'aes-256-xts', $secret, $options, $iv_bin);
 
         if($result === false) {
             throw new DecryptionFailedException("Decryption failed");

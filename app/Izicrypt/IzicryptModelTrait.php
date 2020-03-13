@@ -8,7 +8,12 @@ trait IzicryptModelTrait
 {
     public function decrypt($encrypted=[], $state='only')
     {
-        Izicrypt::itemCollectionDecrypt($this, $encrypted, $state);
+        if(is_bool($state)) {
+            $raw = $state;
+            $state = 'only';
+        }
+
+        Izicrypt::itemCollectionDecrypt($this, $encrypted, $state, $raw);
         
         return $this;
     }
