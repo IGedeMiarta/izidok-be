@@ -171,4 +171,44 @@ class BillingController extends Controller
             ]);
         }
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function packageActive(Request $request)
+    {
+        $user = $this->user;
+
+        $package_active = Billing::select([
+            'billing.id',
+            'nama AS paket',
+            'klinik_subscribe.status',
+            'klinik_subscribe.limit AS sisa_kouta',
+            'paket.limit AS paket_kouta',
+            DB::raw("DATE_FORMAT(pay_date, '%d %M %Y %H:%i:%s') AS pembelian"),
+            DB::raw("DATE_FORMAT(started_date, '%d %M %Y %H:%i:%s') AS mulai_berlaku"),
+            DB::raw("DATE_FORMAT(expired_date, '%d %M %Y %H:%i:%s') AS habis_berlaku"),
+        ])
+        ->join('paket', 'billing.paket_id', '=', 'paket.id')
+        ->join('klinik_subscribe', 'klinik_subscribe.billing_id', '=', 'billing.id' )
+        ->where('klinik_subscribe.status', Constant::PACKAGE_ACTIVE)
+        ->where('expired_date', '<', Carbon::now())
+        ->where('billing.klinik_id', $user->klinik_id)
+        ->first();
+
+        if (empty($package_active)) {
+            return response()->json([
+                'status' => false,
+                'message' => "package not found",
+            ]);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'data' => $package_active
+            ]);
+        }
+    }
 }

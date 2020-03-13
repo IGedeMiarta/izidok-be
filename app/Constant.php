@@ -89,5 +89,5 @@ class Constant
     const BILLING_UNUSED = 0;
 
     #package
-    const PACKAGE_USED = 1;
+    const PACKAGE_ACTIVE = 1;
 }
