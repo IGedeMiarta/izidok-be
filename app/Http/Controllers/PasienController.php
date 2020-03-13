@@ -112,7 +112,8 @@ class PasienController extends Controller
 			//'nomor_polis_asuransi' => 'string',
 			//'nomor_member_asuransi' => 'string',
 			'email' => 'string|nullable',
-			'nama_penanggung_jawab' => 'string|nullable',
+            'nama_penanggung_jawab' => 'string|nullable',
+            'hubungan_pasien' => 'string|nullable',
 			'tensi_sistole' => 'integer',
 			'tensi_diastole' => 'integer',
 			'nadi' => 'integer',
@@ -168,7 +169,8 @@ class PasienController extends Controller
 		//$pasien->nomor_polis_asuransi = $request->input('nomor_polis_asuransi');
 		//$pasien->nomor_member_asuransi = $request->input('nomor_member_asuransi');
 		$pasien->email = $request->input('email');
-		$pasien->nama_penanggung_jawab = $request->input('nama_penanggung_jawab');
+        $pasien->nama_penanggung_jawab = $request->input('nama_penanggung_jawab');
+        $pasien->hubungan_pasien = $request->input('hubungan_pasien');
 		$pasien->nomor_hp_penanggung_jawab = $request->input('nomor_hp_penanggung_jawab');
 		$pasien->tensi_sistole = $request->input('tensi_sistole');
 		$pasien->tensi_diastole = $request->input('tensi_diastole');
@@ -261,7 +263,7 @@ class PasienController extends Controller
 			}
 		])->where('id',$request->id)->where('klinik_id',$klinikId)->first();
 
-		
+
 		if (empty($pasien)) {
 			return response()->json([
 				'status' => false,
@@ -273,7 +275,7 @@ class PasienController extends Controller
 			$rm = new RekamMedisController();
 			$request->pasien_id = $pasien->id;
 			$dtaRm = json_decode(json_encode($rm->getAllKodePenyakitByPasien($request)), true);
-			
+
 			return response()->json([
 				'status' => true,
 				'message' => 'success',
