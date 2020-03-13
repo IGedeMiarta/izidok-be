@@ -84,8 +84,8 @@ class BillingController extends Controller
             'paket.limit AS jumlah_kouta',
         ])
         ->join('paket', 'billing.paket_id', '=', 'paket.id')
-        ->where('status', Constant::PACKAGE_INACTIVE)
-        ->where('used_status', Constant::PACKAGE_UNUSED)
+        ->where('status', Constant::BILLING_SUCCESS)
+        ->where('used_status', Constant::BILLING_UNUSED)
         ->where('billing.klinik_id', $user->klinik_id)
         ->paginate(5);
 
