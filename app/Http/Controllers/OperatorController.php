@@ -10,6 +10,7 @@ use App\Reference;
 use App\Activation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use DB;
 
 class OperatorController extends Controller
 {
@@ -32,7 +33,7 @@ class OperatorController extends Controller
             'users.email',
             'users.nomor_telp',
             'audits.event',
-            'audits.created_at AS last_active'
+            DB::raw("DATE_FORMAT(audits.created_at, '%d-%m-%Y %H:%i:%s') AS last_active")
         )
         ->leftJoin('users', 'operator.user_id', '=', 'users.id')
         ->leftJoin('audits', function ($join) {
