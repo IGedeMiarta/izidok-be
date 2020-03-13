@@ -65,7 +65,7 @@ class PaygateController extends Controller
 
     public function store(Request $request){
         $user = Auth::user();
-        $klinikId = $user->id;
+        $klinikId = $user->klinik_id;
         $noInvoice = substr('IZD'.date('ymdHis').rand(), 0,18);
         $now = date('Y-m-d H:i:s');
         $expPay = date('Y-m-d H:i:s', strtotime($now."+1 days"));
@@ -150,11 +150,11 @@ class PaygateController extends Controller
             $ca = substr($user->nomor_telp, -11);
         } else {
             $ca = $user->nomor_telp;
-            for ($i=strlen($user->nomor_telp); $i < 11; $i++) { 
+            for ($i=strlen($user->nomor_telp); $i < 11; $i++) {
                 $ca = '0'.$ca;
             }
         }
-        
+
         $custAcc = $pg->company_code.$ca;
 
         $req = [
@@ -196,11 +196,11 @@ class PaygateController extends Controller
             $ca = substr($user->nomor_telp, -10);
         } else {
             $ca = $user->nomor_telp;
-            for ($i=strlen($user->nomor_telp); $i < 10; $i++) { 
+            for ($i=strlen($user->nomor_telp); $i < 10; $i++) {
                 $ca = '0'.$ca;
             }
         }
-        
+
         $custAcc = $pg->company_code.$ca;
 
         $req = [
@@ -309,6 +309,6 @@ class PaygateController extends Controller
                 'data' => $response,
             ], 200);
         }
-        
+
     }
 }
