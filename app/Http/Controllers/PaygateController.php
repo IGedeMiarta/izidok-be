@@ -117,7 +117,8 @@ class PaygateController extends Controller
                     return response()->json([
                         'status' => true,
                         'message' => 'email konfirmasi pembayaran sudah dibuat',
-                        'data' => $user->email
+                        'data' => $user->email,
+                        'billing_id' => $bill->id
                     ]);
                 }
             } catch (\Exception $e) {
