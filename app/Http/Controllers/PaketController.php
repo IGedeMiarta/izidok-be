@@ -112,6 +112,7 @@ class PaketController extends Controller
             $klinikSub->expired_date = date('Y-m-d H:i:s', strtotime("+1 month"));
             $klinikSub->status = 1;
             $klinikSub->created_by = Auth::user()->id;
+            $klinikSub->save();
         }
 
         $arrDesc = [];
