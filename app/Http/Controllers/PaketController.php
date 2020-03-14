@@ -6,6 +6,7 @@ use App\Paket;
 use App\Addson;
 use App\Subscribe;
 use App\Paygate;
+use App\PaygateLog;
 use App\PaygateTutorial;
 use App\Billing;
 use App\Dokter;
