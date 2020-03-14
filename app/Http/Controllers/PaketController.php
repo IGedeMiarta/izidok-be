@@ -11,6 +11,7 @@ use App\Billing;
 use App\Dokter;
 use App\Operator;
 use App\User;
+use App\KlinikSubscribe;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use DB;
@@ -101,6 +102,18 @@ class PaketController extends Controller
     public function show($id)
     {
         $data = Paket::where('id',$id)->first();
+        
+        if ($id == 1) {
+            $klinikSub = new KlinikSubscribe();
+            $klinikSub->klinik_id = Auth::user()->klinik_id;
+            $klinikSub->paket_id = $id;
+            $klinikSub->limit = $data->limit;
+            $klinikSub->started_date = date('Y-m-d H:i:s');
+            $klinikSub->expired_date = date('Y-m-d H:i:s', strtotime("+1 month"));
+            $klinikSub->status = 1;
+            $klinikSub->created_by = Auth::user()->id;
+        }
+
         $arrDesc = [];
         $desc = explode(';', $data->desc);
 
