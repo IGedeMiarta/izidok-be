@@ -101,17 +101,64 @@ class PaketController extends Controller
      */
     public function show($id)
     {
+        $user = Auth::user();
         $data = Paket::where('id',$id)->first();
         
         if ($id == 1) {
+            $noInvoice = substr('IZD'.date('ymdHis').rand(), 0,18);
+            $now = date('Y-m-d H:i:s');
+            $expPay = date('Y-m-d H:i:s', strtotime($now."+1 days"));
+            $pg = Paygate::find(2);
+
+            if (strlen($user->nomor_telp) > 11) {
+                $ca = substr($user->nomor_telp, -11);
+            } else {
+                $ca = $user->nomor_telp;
+                for ($i=strlen($user->nomor_telp); $i < 11; $i++) {
+                    $ca = '0'.$ca;
+                }
+            }
+
+            $custAcc = $pg->company_code.$ca;
+            $req = [
+                'channelId' => $pg->channel_id,
+                'serviceCode' => '1021',
+                'currency' => 'IDR',
+                'transactionNo' => $noInvoice,
+                'transactionAmount' => '0',
+                'transactionDate' => $now,
+                'transactionExpire' => $expPay,
+                'description' => 'Pembelian Paket Free Trial',
+                'customerAccount' => $custAcc,
+                'customerName' => $user->nama,
+                'authCode' => hash("sha256",$noInvoice.'0'.$pg->channel_id.$pg->secretkey),
+                'rc' => '00',
+                'created_by' => $user->id
+            ];
+
+            PaygateLog::create($req);
+
+            $bill = new Billing();
+            $bill->klinik_id = $user->klinik_id;
+            $bill->paket_id = 1;
+            $bill->paket_bln = 1;
+            $bill->no_invoice = $noInvoice;
+            $bill->expired_pay = $expPay;
+            $bill->amount_disc = 0;
+            $bill->amount_real = 0;
+            $bill->created_by = $user->id;
+            $bill->created_at = $now;
+            $bill->save();
+
             $klinikSub = new KlinikSubscribe();
-            $klinikSub->klinik_id = Auth::user()->klinik_id;
+            $klinikSub->billing_id = $bill->id;
+            $klinikSub->klinik_id = $user->klinik_id;
             $klinikSub->paket_id = $id;
             $klinikSub->limit = $data->limit;
             $klinikSub->started_date = date('Y-m-d H:i:s');
             $klinikSub->expired_date = date('Y-m-d H:i:s', strtotime("+1 month"));
             $klinikSub->status = 1;
-            $klinikSub->created_by = Auth::user()->id;
+            $klinikSub->created_by = $user->id;
             $klinikSub->save();
         }
 
