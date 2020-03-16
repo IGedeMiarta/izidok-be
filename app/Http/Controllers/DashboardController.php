@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Constant;
+use App\Klinik;
+use App\KlinikSubscribe;
 use App\Operator;
 use Illuminate\Http\Request;
 use App\Pasien;
@@ -42,11 +44,26 @@ class DashboardController extends Controller
 			->where('status', Constant::LUNAS)
             ->sum('total_net');
 
+        $package = KlinikSubscribe::select([
+            'klinik_subscribe.id',
+            DB::raw("CONCAT(nama, ' (', paket_bln, '-bulan-berlangganan)') AS paket"),
+            DB::raw("DATE_FORMAT(expired_date, '%d-%m-%Y, %H:%i:%s') AS habis_berlaku"),
+            DB::raw("DATEDIFF(expired_date, NOW()) AS sisa_hari"),
+            'klinik_subscribe.limit AS sisa_kouta',
+        ])
+        ->join('billing', 'klinik_subscribe.billing_id', '=', 'billing.id')
+        ->join('paket', 'klinik_subscribe.paket_id', '=', 'paket.id')
+        ->where('klinik_subscribe.klinik_id', $user->klinik_id)
+        ->where('klinik_subscribe.status', Constant::PACKAGE_ACTIVE)
+        ->where('expired_date', '>', Carbon::now())
+        ->first();
+
         $data['pasien_hari_ini'] = $today_queue;
         $data['pasien_baru_hari_ini'] = $new_patient;
         $data['nomor_antrian_saat_ini'] = $last_queue;
         $data['pasien_batal_hari_ini'] = $cancel_queue;
         $data['total_pendapatan_hari_ini'] = 'Rp. '.number_format($today_income, 0, ',', '.').',-';
+        $data['paket_berlangganan'] = $package;
 
 		return response()->json([
 			'success' => true,
