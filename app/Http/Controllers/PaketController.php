@@ -106,6 +106,15 @@ class PaketController extends Controller
         $data = Paket::where('id',$id)->first();
         
         if ($id == 1) {
+            $checkBill = Billing::where('klinik_id',$user->klinik_id)->where('paket_id',1)->exists();
+            if ($checkBill) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak dapat menggunakan Paket ini kembali.',
+                    'data' => null,
+                ], 200);
+            }
+
             $noInvoice = substr('IZD'.date('ymdHis').rand(), 0,18);
             $now = date('Y-m-d H:i:s');
             $expPay = date('Y-m-d H:i:s', strtotime($now."+1 days"));
