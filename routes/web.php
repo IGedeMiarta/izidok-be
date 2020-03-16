@@ -58,11 +58,11 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
     $router->group(['middleware' => ['auth','singdev']], function () use ($router) {
         //user
+        $router->get('/user/finish', 'UserController@isFirstLogin');
         $router->get('/user/{id}', 'UserController@show');
         $router->put('/user/{id}', 'UserController@update');
         $router->post('/user/upload-foto/{id}', 'UserController@uploadFotoProfile');
         $router->post('/change_password', 'UserController@changePassword');
-        $router->get('/user/finish', 'UserController@isFirstLogin');
         $router->group(['middleware' => ['role:super_admin|admin_klinik']], function () use ($router) {
             $router->get('/user', 'UserController@index');
             $router->delete('/user/{id}', 'UserController@delete');
