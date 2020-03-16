@@ -46,7 +46,8 @@ class DashboardController extends Controller
 
         $package = KlinikSubscribe::select([
             'klinik_subscribe.id',
-            DB::raw("CONCAT(nama, ' (', paket_bln, '-bulan-berlangganan)') AS paket"),
+            'nama AS nama_paket',
+            DB::raw("CONCAT('(', paket_bln, '-bulan-berlangganan)') AS paket"),
             DB::raw("DATE_FORMAT(expired_date, '%d-%m-%Y, %H:%i:%s') AS habis_berlaku"),
             DB::raw("DATEDIFF(expired_date, NOW()) AS sisa_hari"),
             'klinik_subscribe.limit AS sisa_kouta',
