@@ -141,6 +141,7 @@ class PaketController extends Controller
 
             $bill = new Billing();
             $bill->klinik_id = $user->klinik_id;
+            $bill->pg_id = 2;
             $bill->paket_id = 1;
             $bill->paket_bln = 1;
             $bill->no_invoice = $noInvoice;
