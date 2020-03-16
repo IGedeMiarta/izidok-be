@@ -104,11 +104,6 @@ class LayananController extends Controller
 			array_push($result, $layanan);
         }
 
-        $user = Auth::user();
-	    if (!empty($user) && $user->is_first_login !== 0) {
-            $user->update(['is_first_login' => 0]);
-        }
-
         $data['layanan'] = $result;
         $data['is_first_login'] = $user->is_first_login;
 

@@ -633,6 +633,16 @@ class UserController extends Controller
         }
     }
 
+    public function isFirstLogin()
+    {
+        $user = Auth::user();
+	    if (!empty($user) && $user->is_first_login !== 0) {
+            $user->update(['is_first_login' => 0]);
+
+            return response()->json(['status' => true, 'message' => 'First login changed']);
+        }
+    }
+
     public function createRoles()
     {
         Role::create(['name' => 'super_admin']);
