@@ -3,11 +3,11 @@
 <div class="content" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; width: 600px; margin-left: auto; margin-right: auto;">
 	<p class="normal" style="font-family: 'Courier New', Courier, monospace; height: 3px; padding: 0px 10px 0px 10px; font-size: 14px; line-height: normal;">Hai, {{@$nama_pasien}}</p>
 	<br style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px;">
-	<p class="normal" style="font-family: 'Courier New', Courier, monospace; height: 3px; padding: 0px 10px 0px 10px; font-size: 14px; line-height: normal;">Berikut kami lampirkan struk pembayaran transaksi Anda pada tanggal {{@$tanggal2}} pukul {{@$jam}} di Tempat Praktek dr. {{@$nama_dokter}},</p>
+	<p class="normal" style="font-family: 'Courier New', Courier, monospace; height: 3px; padding: 0px 10px 0px 10px; font-size: 14px; line-height: normal;">Berikut kami lampirkan struk pembayaran transaksi Anda pada tanggal {{@$tanggal2}} pukul {{@$jam}} di Tempat Praktek {{@$nama_dokter}},</p>
 	<div class="main" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; width: 90mm; height: auto; border: 1px solid #eee; margin-top: 50px; margin-right: auto; margin-left: auto;">
 		<br style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px;">
 		@foreach ($pembayaran as $p)
-			<p class="header" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px; font-weight: bold; text-align: center; margin-top: 20px;">Praktek dr. {{$p->nama_dokter}} </p>
+			<p class="header" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px; font-weight: bold; text-align: center; margin-top: 20px;">Praktek {{$p->nama_dokter}} </p>
 			<img class="medlinx" src="https://pngimage.net/wp-content/uploads/2018/06/logo-rumah-sakit-png-2.png" alt="logo-izidok" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; display: block; margin-left: auto; margin-right: auto; max-width: 140px; max-height: 70px;">
 			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px; font-weight: bold;" align="center">SIP. {{$p->no_sip}}</p>
 			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px; font-weight: bold;" align="center">Telp. {{$p->nomor_telp}}</p>
@@ -19,7 +19,7 @@
 			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">NO. STRUK : {{$p->no_invoice}}</p>
 			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">{{strtoupper($p->nama_pasien)}}</p>
 			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">PASIEN {{$p->jaminan}}</p>
-			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">Dokter : dr.{{$p->nama_dokter}}</p>
+			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">Dokter : {{$p->nama_dokter}}</p>
 			<p style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">Created by : {{Auth::user()->nama}}</p>
 		<br style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px;">
 			<p align="right" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">CREATED TIME : {{date("d M,Y H:i:s", strtotime($p->created_time))}}</p>
@@ -65,5 +65,5 @@
 	</div>
 	<p class="normal" align="right" style="font-family: 'Courier New', Courier, monospace; height: 3px; padding: 0px 10px 0px 10px; font-size: 14px; line-height: normal;">Terima kasih,</p>
 	<br style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px;">
-	<p class="normal" align="right" style="font-family: 'Courier New', Courier, monospace; height: 3px; padding: 0px 10px 0px 10px; font-size: 14px; line-height: normal;">Praktek dr. {{$nama_dokter}}</p>
+	<p class="normal" align="right" style="font-family: 'Courier New', Courier, monospace; height: 3px; padding: 0px 10px 0px 10px; font-size: 14px; line-height: normal;">Praktek {{$nama_dokter}}</p>
 </div>

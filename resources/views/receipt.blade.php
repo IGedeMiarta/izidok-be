@@ -60,7 +60,7 @@
 <div class="main">
 	<br>
     @foreach ($pembayaran as $p)
-        <p class="header">Praktek dr. {{$p->nama_dokter}} </p>
+        <p class="header">Praktek {{$p->nama_dokter}} </p>
         <img class="medlinx" src="https://pngimage.net/wp-content/uploads/2018/06/logo-rumah-sakit-png-2.png" alt="logo-izidok"/>
         <p style="font-weight: bold" align="center">SIP. {{$p->no_sip}}</p>
         <p style="font-weight: bold" align="center">Telp. {{$p->nomor_telp}}</p>
@@ -72,7 +72,7 @@
         <p>NO. STRUK : {{$p->no_invoice}}</p>
         <p>{{strtoupper($p->nama_pasien)}}</p>
         <p>PASIEN {{$p->jaminan}}</p>
-        <p>Dokter : dr.{{$p->nama_dokter}}</p>
+        <p>Dokter : {{$p->nama_dokter}}</p>
         <p>Created by : {{ Auth::user()->nama }}</p>
     <br>
         <p align="right">CREATED TIME : {{date("d M,Y H:i:s", strtotime($p->created_time))}}</p>
