@@ -16,6 +16,7 @@ class TransKlinik extends Model implements Auditable
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+    protected $fillable = ['reminder'];
 
     public function klinikDokter()
     {

@@ -313,7 +313,7 @@ class TransKlinikController extends Controller
                 $email_data = [
                     'subject' => 'Jadwal Konsultasi Lanjutan_'.$l->nama_dokter.'_'.strftime('%A, %d %B %Y', strtotime($l->tgl_next_konsultasi)),
                     'to' => $l->email_pasien,
-                    'from' => 'izidok.dev@gmail.com',
+                    'from' => 'posmaster@esindo.net',
                     'nama_pasien' => $l->nama_pasien,
                     'waktu_konsultasi' => strftime('%A, %d %B %Y', strtotime($l->waktu_konsultasi)),
                     'next_konsultasi' => strftime('%A, %d %B %Y', strtotime($l->tgl_next_konsultasi)),
@@ -323,6 +323,8 @@ class TransKlinikController extends Controller
                     'email' => $l->email
                 ];
                 \sendEmail($email_data, Constant::EMAIL_REMINDER);
+                $trans_klinik = TransKlinik::find($l->id);
+                $trans_klinik->update(['reminder' => 2]);
             }
             return response()->json([
                 'status' => true,
