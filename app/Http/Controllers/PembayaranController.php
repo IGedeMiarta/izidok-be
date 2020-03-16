@@ -346,7 +346,7 @@ class PembayaranController extends Controller
             $jam = date("H:i:s", strtotime($pembayaran->pluck('created_time')->first()));
 
             $email_data = [
-                'subject' => 'Struk/INVOICE_dr'.$nama_dokter.'_'.$nama_pasien.'_'.$tanggal,
+                'subject' => 'Struk/INVOICE_'.$nama_dokter.'_'.$nama_pasien.'_'.$tanggal,
                 'to' => [$email],
                 'from' => 'izidok.dev@gmail.com',
                 'nama_dokter' => $nama_dokter,
