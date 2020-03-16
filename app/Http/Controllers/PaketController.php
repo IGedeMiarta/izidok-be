@@ -148,6 +148,7 @@ class PaketController extends Controller
             $bill->expired_pay = $expPay;
             $bill->amount_disc = 0;
             $bill->amount_real = 0;
+            $bill->status = 1;
             $bill->created_by = $user->id;
             $bill->created_at = $now;
             $bill->save();
