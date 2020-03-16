@@ -70,7 +70,11 @@ class Constant
 	const KATEGORI_UMUM = "10";
 	const KATEGORI_GIGI = "20";
 	const TIPE_FASKES_DOKTER_PRAKTIK = "10";
-	const TIPE_FASKES_KLINIK = "20";
+    const TIPE_FASKES_KLINIK = "20";
+
+    #rekam medis
+    const REMIND = '1';
+    const EMAIL_REMINDER = 'email-reminder';
 
 	#status pembayaran
 	const DRAFT = 'DRAFT';

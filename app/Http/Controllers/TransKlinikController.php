@@ -287,6 +287,55 @@ class TransKlinikController extends Controller
         return false;
     }
 
+    public function emailReminder()
+    {
+        $list = TransKlinik::select([
+            'trans_klinik.id',
+            'waktu_konsultasi',
+            'tgl_next_konsultasi',
+            'users.nama AS nama_dokter',
+            'users.nomor_telp',
+            'users.email',
+            'pasien.nama AS nama_pasien',
+            'pasien.email AS email_pasien',
+            'klinik.alamat'
+        ])
+        ->join('users', 'trans_klinik.examination_by', '=', 'users.id')
+        ->join('pasien', 'trans_klinik.pasien_id', '=', 'pasien.id')
+        ->join('klinik', 'trans_klinik.klinik_id', '=', 'klinik.id')
+        ->where('reminder', Constant::REMIND)
+        ->whereDate('tgl_next_konsultasi', Carbon::tomorrow())
+        ->get();
+
+        if(count($list)) {
+            setlocale(LC_TIME, 'IND');
+            foreach ($list as $l) {
+                $email_data = [
+                    'subject' => 'Jadwal Konsultasi Lanjutan_'.$l->nama_dokter.'_'.strftime('%A, %d %B %Y', strtotime($l->tgl_next_konsultasi)),
+                    'to' => $l->email_pasien,
+                    'from' => 'posmaster@esindo.net',
+                    'nama_pasien' => $l->nama_pasien,
+                    'waktu_konsultasi' => strftime('%A, %d %B %Y', strtotime($l->waktu_konsultasi)),
+                    'next_konsultasi' => strftime('%A, %d %B %Y', strtotime($l->tgl_next_konsultasi)),
+                    'nama_dokter' => $l->nama_dokter,
+                    'alamat' => $l->alamat,
+                    'nomor_telp' =>  $l->nomor_telp,
+                    'email' => $l->email
+                ];
+                \sendEmail($email_data, Constant::EMAIL_REMINDER);
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Email berhasil dikirim',
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email list kosong',
+            ]);
+        }
+    }
+
     public function moveQueue()
     {
         $klinikId = Auth::user()->klinik_id;
