@@ -267,6 +267,11 @@ class PaygateController extends Controller
             $pl->cancel_rc = $response['transactionStatus'];
             $pl->update();
 
+            $bil->status = 3;
+            $bil->cancel_by = Auth::user()->id;
+            $bil->cancel_date = date('Y-m-d H:i:s');
+            $bil->update();
+
             $data = [
                 'pg' => $pg,
                 'pl' => $pl,
