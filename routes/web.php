@@ -193,7 +193,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/paket', ['uses' => 'PaketController@index']);
         $router->get('/paket/{id}', ['uses' => 'PaketController@show']);
         $router->get('/detailpembayaran/{id}', ['uses' => 'PaketController@detailPembayaran']);
-        $router->get('/invoice/{id}', ['uses' => 'PaketController@generatePdfinvoice']);
+        $router->get('/invoice/{id}', ['uses' => 'PaketController@generatePdfInvoice']);
 
         //adds-on
         $router->get('/addson', ['uses' => 'PaketController@getAddson']);
