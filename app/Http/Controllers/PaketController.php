@@ -297,10 +297,8 @@ class PaketController extends Controller
         $pdf = app()->make('dompdf.wrapper');
         $html = view('invoice', ['data' => (array) $dtlPmbyrn->data])->render();
         $pdf->loadHTML($html);
-        //$pdf->loadView('invoice', ['data' => (array) $dtlPmbyrn->data]);
 
-        return $pdf->download('invoice (masih dirapihin).pdf');
-        //return view('invoice', ['data' => (array) $dtlPmbyrn->data,]);
+        return $pdf->stream('invoice (masih dirapihin).pdf');
     }
 
     /**
