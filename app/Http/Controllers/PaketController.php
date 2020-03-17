@@ -295,10 +295,9 @@ class PaketController extends Controller
         $dtlPmbyrn = $this->detailPembayaran($request->id)->getData();
 
         $pdf = app()->make('dompdf.wrapper');
-        $html = view('invoice', ['data' => (array) $dtlPmbyrn->data])->render();
-        $pdf->loadHTML($html);
+        $pdf->loadview('invoice', ['data' => (array) $dtlPmbyrn->data]);
 
-        return $pdf->download('invoice.pdf');
+        return $pdf->download('invoice (masih dirapihin).pdf');
         //return view('invoice', ['data' => (array) $dtlPmbyrn->data,]);
     }
 
