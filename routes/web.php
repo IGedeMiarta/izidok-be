@@ -33,6 +33,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->get('/province', ['uses' => 'ProvinsiKotaController@getProvince']);
     $router->get('/getcitybyprovince/{id}', ['uses' => 'ProvinsiKotaController@getCityByProvince']);
 
+    //engagement
     $router->get('/email/reminder', ['uses' => 'TransKlinikController@emailReminder']);
 
     //registration
