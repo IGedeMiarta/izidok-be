@@ -104,7 +104,7 @@ class PaketController extends Controller
     {
         $user = Auth::user();
         $data = Paket::where('id',$id)->first();
-        
+
         if ($id == 1) {
             $checkBill = Billing::where('klinik_id',$user->klinik_id)->where('paket_id',1)->exists();
             if ($checkBill) {
@@ -282,6 +282,24 @@ class PaketController extends Controller
                 'data' => null,
             ], 200);
         }
+    }
+
+    /**
+     * generate pdf from html
+     *
+     * @param array $data
+     * @param string $type
+     */
+    public function generatePdfInvoice(Request $request)
+    {
+        $dtlPmbyrn = $this->detailPembayaran($request->id)->getData();
+
+        $pdf = app()->make('dompdf.wrapper');
+        $html = view('invoice', ['data' => (array) $dtlPmbyrn->data])->render();
+        $pdf->loadHTML($html);
+
+        return $pdf->download('invoice.pdf');
+        //return view('invoice', ['data' => (array) $dtlPmbyrn->data,]);
     }
 
     /**
