@@ -300,6 +300,10 @@ class RekamMedisController extends Controller
         $trans_klinik->reminder = $request->email_konsultasi ? '1' : '0';
         $trans_klinik->save();
 
+        if ($request->email_konsultasi) {
+            Pasien::where('id',$request->pasien_id)->update(['email' => $request->email_konsultasi]);
+        }
+
         #get data pasien, insert anamnesa
         $pasien = $trans_klinik->pasien;
         $anamnesa = new Anamnesa();
