@@ -13,6 +13,7 @@ use App\Constant;
 use App\Diagnosa;
 use App\Pembayaran;
 use App\DetailPembayaran;
+use App\KlinikSubscribe;
 use App\KodePenyakit;
 use App\Layanan;
 use App\PemeriksaanFisik;
@@ -402,7 +403,30 @@ class RekamMedisController extends Controller
             ->first();
         $data['pembayaran'] = ['id' => $newPembayaran->id];
 
-        if ($status) {
+        $remaining_quota = KlinikSubscribe::select([
+            'klinik_subscribe.id',
+            'nama AS nama_paket',
+            'klinik_subscribe.limit AS sisa_qouta',
+            'expired_date',
+            'status'
+        ])
+        ->join('paket', 'klinik_subscribe.paket_id', '=', 'paket.id')
+        ->where('status', Constant::PACKAGE_ACTIVE)
+        ->where('klinik_id', $klinikId)
+        ->first();
+
+        if(empty($remaining_quota)){
+            return response()->json([
+                'status' => false,
+                'message' => 'Tidak ada paket aktif',
+            ], 200);
+        } elseif (empty($remaining_quota->sisa_qouta)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Qouta telah habis',
+            ], 200);
+        } else if (!empty($remaining_quota->sisa_qouta)) {
+            KlinikSubscribe::where('id', $remaining_quota->id)->decrement('limit');
             return response()->json([
                 'status' => true,
                 'message' => 'success',
