@@ -1,112 +1,198 @@
 <style type="text/css">
-	*{
-		font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    .clearfix:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    body {
+        position: relative;
+        width: 21cm;
+        height: 29.7cm;
+        margin: 0 auto;
+        font-family: Arial, sans-serif;
         font-size: 12px;
-		line-height: 6px;
-	}
-    p{
-		height: 3px;
-		padding: 0px 10px 0px 10px;
-	}
-    hr{
-        width: 95%
     }
-    table.one {
-        position:relative;
-        float:left;
-        margin-bottom: 20px;
+
+    img {
+        padding: 5px 0 40px 0;
     }
-    table.two {
-        position:relative;
-        float:right;
-        margin-bottom: 20px;
+
+    h2.name {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 30px;
     }
-    table.three{
-        width: 100%;
-        border: 1px solid black;
-        margin-bottom: 20px;
-	}
-    table.four{
-        width: 25%;
-        border: 1px solid black;
+
+    #details {
+        margin-bottom: 50px;
+    }
+
+    #left-top {
+        float: left;
+        padding: 28px 0 0 6px;
+    }
+
+    #right-top {
         float: right;
-	}
-    td{
-        height: 10px;
-        padding: 5px 10px 10px 10px;
+        padding-right: 86px;
     }
-	.content{
-        width: 600px;
-        margin-left: auto;
-        margin-right: auto;
+
+    div.status {
+        vertical-align: middle;
+    }
+
+    div.lunas {
+        display:inline-block;
+        width: 200px;
+        padding: 5px 0 5px 0;
+        margin-top: 10px;
+        border: 1px solid green;
+        box-sizing: border-box;
+        color: green;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    table {
+        width: 90%;
+        border:none;
+        border-collapse: collapse;
+        border-spacing: 0;
+        margin-bottom: 20px;
+    }
+
+    table th {
+        background-color: #0080ff;
+    }
+
+    table th{
+        border:none;
+        padding: 10px;
+        text-align: right;
+    }
+
+    table td {
+        border-bottom: 1px solid gray;
+        padding: 10px;
+        text-align: right;
+    }
+
+    table .desc {
+        width: 30%;
+        text-align: left;
+    }
+
+    table .qty {
+        width: 20%;
+        text-align: center;
+    }
+
+    table .unit,
+    table .total {
+        width: 25%;
+    }
+
+    table tfoot td {
+        padding: 10px 10px;
+    }
+
+    table tfoot tr:first-child td {
+        border-top: none;
+    }
+
+    table tfoot tr:last-child td {
+        border-top: none;
+    }
+
+    table tfoot tr td:first-child {
+        border: none;
+    }
+
+    footer {
+        width: 90%;
+        height: 10px;
+        position: absolute;
+        bottom: 0;
+        padding-right: 30px;
+        text-align: right;
     }
 </style>
-
-<div class="content">
-    <table class="one">
-        <tr>
-            <td>{{$data['dokter']->nama}}</td>
-        </tr>
-        <tr>
-            <td>No. Telepon : {{$data['dokter']->nomor_telp}}</td>
-        </tr>
-        <tr>
-            <td>{{$data['dokter']->email}}</td>
-        </tr>
-    </table>
-    <table class="two">
-        <tr>
-            <td>No. Invoice : {{$data['detail']->transactionNo}}</td>
-        </tr>
-        <tr>
-            <td>Tanggal Pembelian : {{$data['detail']->transactionDate}}</td>
-        </tr>
-        <tr>
-            <td>Tanggal Maksimal Pembayaran : {{$data['detail']->transactionExpire}}</td>
-        </tr>
-        <tr>
-            <td>Metode Pembayaran : {{$data['paygate']->nama}}</td>
-        </tr>
-        <tr>
-            <td>Status Pembayaran : {{$data['detail']->status_billing}}</td>
-        </tr>
-    </table>
-    <table class="three">
-        <thead>
+<!DOCTYPE html>
+<html lang="en">
+    <body>
+    <main>
+        <div id="details" class="clearfix">
+            <div id="left-top">
+                <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="15%"/>
+                <div>{{$data['dokter']->nama}}</div>
+                <div>No. Handphone : {{$data['dokter']->nomor_telp}}</div>
+                <div>{{$data['dokter']->email}}</div>
+            </div>
+            <div id="right-top">
+                <?php setlocale(LC_TIME, 'IND'); ?>
+                <h2 class="name">INVOICE</h2>
+                <div>No. Invoice : {{$data['detail']->transactionNo}}</div>
+                <div>Tanggal Pembelian : {{strftime("%d %B %Y", strtotime($data['detail']->transactionDate))}}</div>
+                <div>Tanggal Maksimal Pembayaran : {{strftime("%d %B %Y %H:%M:%S", strtotime($data['detail']->transactionExpire))}}</div>
+                <div>Metode Pembayaran : {{$data['paygate']->nama}}</div>
+                <div class="status"> Status Pembayaran : <div class="lunas">{{$data['detail']->status_billing}}</div></div>
+            </div>
+        </div>
+        <table border="0" cellspacing="0" cellpadding="0">
+            <thead>
             <tr>
-                <th>Nama Paket</th>
-                <th>Qty</th>
+                <th class="desc">Nama Paket</th>
+                <th class="qty">QTY</th>
                 <th>Harga Unit</th>
-                <th>Jumlah</th>
+                <th>Jumlah (Rp)</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr>
-                <td>Paket {{$data['detail']->paket}}</td>
-                <td>1</td>
-                <td>{{$data['detail']->harga_paket}}</td>
-                <td>{{$data['detail']->harga_paket}}</td>
+                <td class="desc">Paket {{$data['detail']->paket}}</td>
+                <td class="qty">{{$data['detail']->durasi_paket}}</td>
+                <td class="unit">{{'Rp. '.number_format($data['detail']->harga_paket,0,'','.').',-'}}</td>
+                <td class="total">{{'Rp. '.number_format($data['detail']->amount_real,0,'','.').',-'}}</td>
             </tr>
             @if(!is_null($data['detail']->addson))
             <tr>
-                <td>1</td>
-                <td>Paket {{$data['detail']->addson}}</td>
-                <td>Rp{{$data['detail']->harga_addson}}</td>
-                <td>Rp{{$data['detail']->harga_addson}}</td>
+                <td class="desc">Paket {{$data['detail']->addson}}</td>
+                <td class="qty">1</td>
+                <td class="unit">{{'Rp. '.number_format($data['detail']->harga_addson,0,'','.').',-'}}</td>
+                <td class="total">{{'Rp. '.number_format($data['detail']->harga_addson,0,'','.').',-'}}</td>
             </tr>
             @endif
-        </tbody>
-    </table>
-    <table class="four">
-        <tr>
-            <td>{{$data['detail']->amount_real}}</td>
-        </tr>
-        <tr>
-            <td>{{$data['detail']->diskon ? null : '-'}}</td>
-        </tr>
-        <tr>
-            <td>{{$data['detail']->amount_disc}}</td>
-        </tr>
-    </table>
-</div>
-
+            <tfoot>
+                <tr>
+                    <td colspan="2"></td>
+                    <td>Subtotal (Rp)</td>
+                    <td>{{'Rp. '.number_format($data['detail']->amount_real,0,'','.').',-'}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td>Potongan</td>
+                    <td>
+                        @if ($data['detail']->satuan_promo == 'rupiah')
+                            {{'Rp. '.number_format($data['detail']->diskon,0,'','.').',-'}}
+                        @elseif ($data['detail']->satuan_promo == 'percent')
+                            {{$data['detail']->diskon.'%'}}
+                        @else
+                            {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td>Total</td>
+                    <td>{{'Rp. '.number_format($data['detail']->amount_disc,0,'','.').',-'}}</td>
+                </tr>
+              </tfoot>
+        </table>
+    </main>
+        <footer>
+        customercare@medlinx.co.id, contact center : 021-723-7982
+        </footer>
+    </body>
+</html>
