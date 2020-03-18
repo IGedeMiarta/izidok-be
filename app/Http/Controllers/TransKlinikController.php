@@ -178,7 +178,6 @@ class TransKlinikController extends Controller
     $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id, $consultation_time);
     $trans_klinik->anamnesa = $request->anamnesis;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
-    $trans_klinik->reminder = $request->email_konsultasi ? '1' : '0';
     $trans_klinik->save();
 
     #update pasien
@@ -190,7 +189,6 @@ class TransKlinikController extends Controller
       $pasien->tensi_sistole = $request->tensi_sistole;
       $pasien->tensi_diastole = $request->tensi_diastole;
       $pasien->nadi = $request->nadi;
-      $pasien->email = $request->email_konsultasi ? $request->email_konsultasi : null;
       $pasien->save();
     }
 
