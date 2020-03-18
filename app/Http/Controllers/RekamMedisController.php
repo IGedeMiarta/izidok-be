@@ -426,7 +426,8 @@ class RekamMedisController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'data' => $data
+                'data' => $data,
+                'kuota' => $remaining_quota,
             ], 201);
         } else {
             return response()->json([
