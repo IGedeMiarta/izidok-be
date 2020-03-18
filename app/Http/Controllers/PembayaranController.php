@@ -329,9 +329,6 @@ class PembayaranController extends Controller
             ]);
         }
 
-        $data['pembayaran'] = $pembayaran;
-        $data['detail_pembayaran'] = $detail_pembayaran;
-
         if(empty($request->email)) {
             return view('receipt', [
                 'pembayaran' => $pembayaran,
