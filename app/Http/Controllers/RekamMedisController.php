@@ -415,12 +415,7 @@ class RekamMedisController extends Controller
         ->where('klinik_id', $klinikId)
         ->first();
 
-        if(empty($remaining_quota)){
-            return response()->json([
-                'status' => false,
-                'message' => 'Tidak ada paket aktif',
-            ], 200);
-        } elseif (empty($remaining_quota->sisa_qouta)) {
+        if (empty($remaining_quota->sisa_qouta)) {
             return response()->json([
                 'status' => false,
                 'message' => 'Qouta telah habis',
