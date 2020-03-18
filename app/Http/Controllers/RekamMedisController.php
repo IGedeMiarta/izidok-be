@@ -297,6 +297,7 @@ class RekamMedisController extends Controller
         $trans_klinik = TransKlinik::find($request->transklinik_id);
         $trans_klinik->durasi_konsultasi = $days;
         $trans_klinik->tgl_next_konsultasi = $request->durasi_konsultasi == 99 ? date('Y-m-d') : date('Y-m-d', strtotime($request->tgl_next_konsultasi)); //99 = tidak memilih jadwal next konsultasi
+        $trans_klinik->reminder = $request->email_konsultasi ? '1' : '0';
         $trans_klinik->save();
 
         #get data pasien, insert anamnesa
