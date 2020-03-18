@@ -45,12 +45,12 @@ class BillingController extends Controller
             'status'
         ])
         ->join('paket', 'billing.paket_id', '=', 'paket.id')
+        ->where('klinik_id', $user->klinik_id)
         ->where('no_invoice', 'like', "%{$request->nomor_tagihan}%")
         ->where('nama', 'like', "%{$request->produk}%")
         ->where('paket_bln', 'like', "%{$request->periode_berlaku}%")
         ->where('amount_disc', 'like', "%{$request->total_pembayaran}%")
         ->where('status', 'like', "%{$request->status}%")
-        ->where('klinik_id', $user->klinik_id)
         ->orderBy($column, $order);
 
         if(!empty($request->tanggal_bayar)) {
@@ -84,13 +84,14 @@ class BillingController extends Controller
         $package = Billing::select([
             'billing.id',
             DB::raw("DATE_FORMAT(pay_date, '%d %M %Y, %H:%i:%S') AS waktu_pembelian"),
-            'nama AS paket',
-            'limit AS jumlah_kouta',
+            DB::raw("CONCAT(nama, '-' ,paket_bln) AS nama"),
+            DB::raw("case when paket.limit = 'Unlimited' then 'Unlimited' else paket.limit * paket_bln end as jumlah_kouta")
         ])
         ->join('paket', 'billing.paket_id', '=', 'paket.id')
+        ->where('billing.klinik_id', $user->klinik_id)
         ->where('status', Constant::BILLING_SUCCESS)
         ->where('used_status', Constant::BILLING_UNUSED)
-        ->where('billing.klinik_id', $user->klinik_id)
+        ->orderBy('billing.id', 'desc')
         ->paginate(5);
 
         if (!$package) {
@@ -118,7 +119,7 @@ class BillingController extends Controller
         $package = Billing::select([
             'billing.id',
             DB::raw("DATE_FORMAT(pay_date, '%d %M %Y, %H:%i:%S ') AS waktu_pembelian"),
-            'nama AS paket',
+            DB::raw("CONCAT(nama, '-' ,paket_bln) AS nama"),
             DB::raw("DATE_FORMAT(started_date, '%d %M %Y') AS mulai_berlaku"),
             DB::raw("DATE_FORMAT(expired_date, '%d %M %Y') AS habis_berlaku")
         ])
@@ -126,6 +127,7 @@ class BillingController extends Controller
         ->join('klinik_subscribe', 'klinik_subscribe.billing_id', '=', 'billing.id' )
         ->where('billing.klinik_id', $user->klinik_id)
         ->where('expired_date', '<', Carbon::now())
+        ->orderBy('billing.id', 'desc')
         ->paginate(5);
 
         if (!$package) {
@@ -152,7 +154,7 @@ class BillingController extends Controller
 
         $package_detail = Billing::select([
             'billing.id',
-            'nama AS paket',
+            DB::raw("CONCAT(nama, '-' ,paket_bln) AS nama"),
             DB::raw("CONCAT(paket_bln, ' Bulan') AS durasi"),
             'desc AS fitur',
         ])
@@ -195,9 +197,9 @@ class BillingController extends Controller
         ])
         ->join('paket', 'billing.paket_id', '=', 'paket.id')
         ->join('klinik_subscribe', 'klinik_subscribe.billing_id', '=', 'billing.id' )
+        ->where('billing.klinik_id', $user->klinik_id)
         ->where('klinik_subscribe.status', Constant::PACKAGE_ACTIVE)
         ->where('expired_date', '>', Carbon::now())
-        ->where('billing.klinik_id', $user->klinik_id)
         ->first();
 
         if (empty($package_active)) {
