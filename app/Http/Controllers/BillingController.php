@@ -199,7 +199,6 @@ class BillingController extends Controller
         ->join('klinik_subscribe', 'klinik_subscribe.billing_id', '=', 'billing.id' )
         ->where('billing.klinik_id', $user->klinik_id)
         ->where('klinik_subscribe.status', Constant::PACKAGE_ACTIVE)
-        ->where('expired_date', '>', Carbon::now())
         ->first();
 
         if (empty($package_active)) {
