@@ -108,7 +108,7 @@ $app->alias('cache', \Illuminate\Cache\CacheManager::class);  // if you don't ha
 $app->register(Spatie\Permission\PermissionServiceProvider::class);
 $app->register(Jenssegers\Agent\AgentServiceProvider::class);
 $app->register(App\Providers\IzicryptServiceProvider::class);
-$app->register(\Barryvdh\DomPDF\ServiceProvider::class);
+$app->register(\Seguce92\DomPDF\ServiceProvider::class);
 $app->configure('dompdf');
 
 /*

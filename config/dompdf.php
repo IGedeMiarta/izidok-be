@@ -74,9 +74,20 @@ return array(
         "chroot" => realpath(base_path()),
 
         /**
+         * Whether to use Unicode fonts or not.
+         *
+         * When set to true the PDF backend must be set to "CPDF" and fonts must be
+         * loaded via load_font.php.
+         *
+         * When enabled, dompdf can support all Unicode glyphs. Any glyphs used in a
+         * document must be present in your fonts, however.
+         */
+        "DOMPDF_UNICODE_ENABLED" => true,
+
+        /**
          * Whether to enable font subsetting or not.
          */
-        "enable_font_subsetting" => false,
+        "enable_font_subsetting" => true,
 
         /**
          * The PDF rendering backend to use
