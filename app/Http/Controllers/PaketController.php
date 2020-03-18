@@ -321,4 +321,86 @@ class PaketController extends Controller
     public function destroy($id)
     {
     }
+
+    public function checkPackage(){
+        $klinikId = Auth::user()->klinik_id;
+        $paket = KlinikSubscribe::where('klinik_id',$klinikId)->where('status',1);
+        $billing = Billing::where('klinik_id',$klinikId)->where('status',1)->where('used_status',0);
+
+        if ($paket->exists()) {
+            $pkt = $paket->first();
+
+            if ($pkt->limit <= 0 && $pkt->expired_date <= date('Y-m-d H:i:s') && !$billing->exists()) {
+                //Kuota habis, masa berlaku habis, belum beli paket
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Paket Anda telah berakhir, silahkan lakukan pembelian Paket untuk dapat melakukan aktivitas ini.',
+                    'data' => $pkt,
+                ], 200);
+            }elseif ($pkt->limit > 0 && $pkt->expired_date <= date('Y-m-d H:i:s') && !$billing->exists()) {
+                //Kuota masih ada, masa berlaku habis (kuota hangus), belum beli paket.
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Masa Berlaku Paket Anda telah berakhir, silahkan lakukan pembelian untuk dapat melakukan aktivitas ini.',
+                    'data' => $pkt,
+                ], 200);
+            }elseif (($pkt->limit <= 0 && $pkt->expired_date < date('Y-m-d H:i:s') && $billing->exists()) || ($pkt->limit == 0 && $pkt->expired_date > date('Y-m-d H:i:s') && $billing->exists())) {
+                //Kuota habis, masa berlaku habis, sudah beli paket ATAU Kuota habis, masa berlaku masih ada, namun sudah beli paket
+                $bill = $billing->first();
+                $bill->used_status = 1;
+                $bill->update();
+
+                $pkt->status = 0;
+                $pkt->update();
+
+                $pkg = Paket::find($bill->paket_id);
+
+                $newPaket = new KlinikSubscribe();
+                $newPaket->billing_id = $bill->id;
+                $newPaket->klinik_id = $klinikId;
+                $newPaket->paket_id = $bill->paket_id;
+                $newPaket->addson_id = $bill->addson_id;
+                $newPaket->limit = strtolower($pkg->limit) != 'unlimited' ? $bill->paket_bln * $pkg->limit : '99999';
+                $newPaket->started_date = date('Y-m-d H:i:s');
+                $newPaket->expired_date = date('Y-m-d H:i:s', strtotime("+ ".$bill->paket_bln." month"));
+                $newPaket->status = '1';
+                $newPaket->created_by = Auth::user()->id;
+                $newPaket->save();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Paket Anda '.$pkg->nama.' telah OTOMATIS Aktif mulai dari tanggal '.$newPaket->started_date.' hingga '.$newPaket->expired_date.'!.',
+                    'data' => $newPaket,
+                ], 200);
+            }elseif ($pkt->limit <= 0 && $pkt->expired_date > date('Y-m-d H:i:s') && !$billing->exists()) {
+                //Kuota habis, masa berlaku masih ada, belum beli paket.
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Kuota Anda telah habis, silahkan lakukan pembelian Paket untuk dapat melakukan aktivitas ini.',
+                    'data' => $pkt,
+                ], 200);
+            }
+        }else{
+            $billWaiting = Billing::
+                where('klinik_id',$klinikId)
+                ->where('status',0)
+                ->where(
+                    DB::raw('expired_pay','>',date('Y-m-d H:i:s'))
+                );
+            if ($billWaiting->exists()) {
+                //Saat inisiasi, memilih ‘beli paket’, lalu ketika statusnya sedang menunggu pembayaran, dia ingin akses menu lain.
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Silahkan selesaikan proses Pembayaran Paket Anda untuk dapat melakukan aktivitas ini.',
+                    'data' => null,
+                ], 200);
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'message' => 'belum melakukan pembelian paket apapun',
+                    'data' => null,
+                ], 200);
+            }
+        }
+    }
 }

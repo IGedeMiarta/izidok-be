@@ -195,6 +195,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/paket/{id}', ['uses' => 'PaketController@show']);
         $router->get('/detailpembayaran/{id}', ['uses' => 'PaketController@detailPembayaran']);
         $router->get('/invoice/{id}', ['uses' => 'PaketController@generatePdfInvoice']);
+        $router->get('/cekPaket', ['uses' => 'PaketController@checkPackage']);
 
         //adds-on
         $router->get('/addson', ['uses' => 'PaketController@getAddson']);
