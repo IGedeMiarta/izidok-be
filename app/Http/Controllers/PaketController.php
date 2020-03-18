@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Paket;
 use App\Addson;
-use App\Subscribe;
 use App\Paygate;
 use App\PaygateLog;
 use App\PaygateTutorial;
@@ -27,7 +26,7 @@ class PaketController extends Controller
     public function index()
     {
         $klinikId = Auth::user()->klinik_id;
-        $exist = Subscribe::where('klinik_id',$klinikId)->exists();
+        $exist = KlinikSubscribe::where('klinik_id',$klinikId)->exists();
         if ($exist) {
             $paket = Paket::where('id','!=',1)->get();
         } else {
