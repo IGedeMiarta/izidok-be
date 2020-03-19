@@ -399,7 +399,7 @@ class PaketController extends Controller
             }else{
                 return response()->json([
                     'success' => false,
-                    'message' => 'belum melakukan pembelian paket apapun',
+                    'message' => 'Anda belum melakukan pembelian paket apapun',
                     'data' => null,
                 ], 200);
             }
