@@ -371,7 +371,7 @@ class PaketController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Paket Anda '.$pkg->nama.' telah OTOMATIS Aktif mulai dari tanggal '.$newPaket->started_date.' hingga '.$newPaket->expired_date.'!.',
+                    'message' => 'Paket Anda '.$pkg->nama.' telah OTOMATIS Aktif mulai dari tanggal '.$newPaket->started_date.' hingga '.$newPaket->expired_date.'!',
                     'data' => $newPaket,
                 ], 200);
             }elseif ($pkt->limit <= 0 && $pkt->expired_date > date('Y-m-d H:i:s') && !$billing->exists()) {
