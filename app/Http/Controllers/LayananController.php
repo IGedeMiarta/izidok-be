@@ -303,7 +303,8 @@ class LayananController extends Controller
 	public function delete($id = null)
 	{
 		$layanan = Layanan::find($id);
-		$user = $this->user;
+        $user = $this->user;
+        $count_layanan = Layanan::where('klinik_id', $user->klinik_id)->count();
 
 		if ($user->cant('updateOrDelete', $layanan)) {
 			abort(403);
@@ -312,9 +313,13 @@ class LayananController extends Controller
 		if (empty($layanan)) {
 			return response()->json([
 				'status' => false,
-				'data' => '',
 				'message' => 'layanan not found'
-			]);
+            ]);
+        } elseif ($count_layanan < 3) {
+            return response()->json([
+				'status' => false,
+				'message' => 'Data tarif minimal 2'
+            ]);
 		} else {
 			$nama = $layanan->nama_layanan;
 			$layanan->delete();
