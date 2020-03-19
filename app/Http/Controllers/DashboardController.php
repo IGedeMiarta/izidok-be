@@ -45,7 +45,7 @@ class DashboardController extends Controller
         $package_active = Billing::select([
             'billing.id',
             'nama AS nama_paket',
-            DB::raw("CONCAT('(', paket_bln, '-bulan-berlangganan)') AS paket"),
+            DB::raw("CONCAT('(', paket_bln, '-bulan-berlangganan)') AS durasi_paket"),
             DB::raw("DATE_FORMAT(expired_date, '%d-%m-%Y, %H:%i:%s') AS habis_berlaku"),
             DB::raw("DATEDIFF(expired_date, NOW()) AS sisa_hari"),
             'klinik_subscribe.limit AS sisa_kouta'
