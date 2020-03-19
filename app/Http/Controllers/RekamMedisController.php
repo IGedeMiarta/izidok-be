@@ -412,6 +412,7 @@ class RekamMedisController extends Controller
             'klinik_subscribe.id',
             'nama AS nama_paket',
             'klinik_subscribe.limit AS sisa_qouta',
+            'klinik_subscribe.paket_id',
             'expired_date',
             'status'
         ])
@@ -426,7 +427,9 @@ class RekamMedisController extends Controller
                 'message' => 'Qouta telah habis',
             ], 200);
         } else if (!empty($remaining_quota->sisa_qouta)) {
-            KlinikSubscribe::where('id', $remaining_quota->id)->decrement('limit');
+            if ($remaining_quota->paket_id != 4) {
+                KlinikSubscribe::where('id', $remaining_quota->id)->decrement('limit');
+            }
             return response()->json([
                 'status' => true,
                 'message' => 'success',
