@@ -295,8 +295,8 @@ class PaketController extends Controller
 
         $pdf = app()->make('dompdf.wrapper');
         $html = view('invoice', ['data' => (array) $dtlPmbyrn->data])->render();
-        $pdf->setWatermarkImage('https://i.ibb.co/Vj5GFH1/paid.png', 0.6, '30%');
-        //$pdf->setWatermarkText('LUNAS', '150px', 0.1, '0deg');
+        $pdf->setWatermarkImage(asset('upload/images/lunas.png'));
+
         $pdf->loadHTML($html);
 
         return $pdf->download('invoice.pdf');
