@@ -30,8 +30,8 @@ class PembayaranController extends Controller
 		}
 
         if(empty($request->column) && empty($request->order)) {
-            $column = 'status';
-            $order = 'asc';
+            $column = 'id';
+            $order = 'desc';
         } else {
             $column = $request->column;
             $order = $request->order;
