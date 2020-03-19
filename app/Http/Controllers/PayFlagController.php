@@ -109,6 +109,7 @@ class PayFlagController extends Controller
                 if($updated === 1) {
                     $bill = Billing::where('no_invoice', $request->transactionNo)->first();
                     $cekPket = KlinikSubscribe::where('klinik_id',$bill->klinik_id)->where('status',1)->exists();
+                    $pkg = Paket::find($bill->paket_id);
                     if (!$cekPket) {
                         $newPaket = new KlinikSubscribe();
                         $newPaket->billing_id = $bill->id;
