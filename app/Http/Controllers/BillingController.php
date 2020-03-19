@@ -190,7 +190,7 @@ class BillingController extends Controller
             'nama AS paket',
             'klinik_subscribe.status',
             'klinik_subscribe.limit AS sisa_kouta',
-            'paket.limit AS paket_kouta',
+            DB::raw("case when paket.limit = 'Unlimited' then 'Unlimited' else paket.limit * paket_bln end as jumlah_kouta"),
             DB::raw("DATE_FORMAT(pay_date, '%d %M %Y %H:%i:%s') AS pembelian"),
             DB::raw("DATE_FORMAT(started_date, '%d %M %Y %H:%i:%s') AS mulai_berlaku"),
             DB::raw("DATE_FORMAT(expired_date, '%d %M %Y %H:%i:%s') AS habis_berlaku"),
