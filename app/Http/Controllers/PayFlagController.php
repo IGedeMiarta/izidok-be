@@ -9,6 +9,7 @@ use App\Constant;
 use App\Paket;
 use App\Addson;
 use App\User;
+use App\KlinikSubscribe;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -105,8 +106,22 @@ class PayFlagController extends Controller
                         'status' => 1,
                         'pay_date' => Carbon::now()
                     ]);
-                
                 if($updated === 1) {
+                    $bill = Billing::where('no_invoice', $request->transactionNo)->first();
+                    $cekPket = KlinikSubscribe::where('klinik_id',$bill->klinik_id)->where('status',1)->exists();
+                    if (!$cekPket) {
+                        $newPaket = new KlinikSubscribe();
+                        $newPaket->billing_id = $bill->id;
+                        $newPaket->klinik_id = $bill->klinik_id;
+                        $newPaket->paket_id = $bill->paket_id;
+                        $newPaket->addson_id = $bill->addson_id;
+                        $newPaket->limit = strtolower($pkg->limit) != 'unlimited' ? $bill->paket_bln * $pkg->limit : '9999999999';
+                        $newPaket->started_date = date('Y-m-d H:i:s');
+                        $newPaket->expired_date = date('Y-m-d H:i:s', strtotime("+ ".$bill->paket_bln." month"));
+                        $newPaket->status = '1';
+                        $newPaket->created_by = $bill->created_by;
+                        $newPaket->save();
+                    }
                     DB::commit();
                     return response()->json($this->payFlagResponse($request, '00', 'Success'), 200);
                 }
