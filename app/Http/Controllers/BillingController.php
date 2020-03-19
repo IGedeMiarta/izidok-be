@@ -29,7 +29,7 @@ class BillingController extends Controller
 
         if (empty($request->column) && empty($request->order)) {
             $column = 'id';
-            $order = 'asc';
+            $order = 'desc';
         } else {
             $column = $request->column;
             $order = $request->order;
