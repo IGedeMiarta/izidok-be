@@ -262,13 +262,17 @@ class RekamMedisController extends Controller
         $rules = [
             'kode_penyakit' => 'required|array',
             'next_konsultasi' => 'required|integer',
-            'organ_id' => 'required|integer',
+            // 'organ_id' => 'required|integer',
             'transklinik_id' => 'required|integer',
         ];
 
-        if (!$request->pemeriksaan_is_draw) {
-            $rules['pemeriksaan_text'] = 'required';
+        if (!$request->anamnesa_is_draw) {
+            $rules['anamnesa_text'] = 'required';
         }
+
+        // if (!$request->pemeriksaan_is_draw) {
+        //     $rules['pemeriksaan_text'] = 'required';
+        // }
 
         if (!$request->diagnosa_is_draw) {
             $rules['diagnosa_text'] = 'required';
