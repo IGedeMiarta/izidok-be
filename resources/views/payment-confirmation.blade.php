@@ -248,6 +248,11 @@
                 <!-- START CENTERED WHITE CONTAINER -->
                 <table role="presentation" class="main">
                 <!-- START MAIN CONTENT AREA -->
+                <?php $total =
+                    $data['detail']->amount_disc+
+                    (is_null($data['detail']->addson) ? $data['detail']->harga_addson : 0)+
+                    $data['paygate']->biaya_admin;
+                ?>
                 <tr>
                     <td class="wrapper">
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
@@ -263,7 +268,7 @@
                                     <td class="bold">Batas Waktu Pembayaran</td>
                                 </tr>
                                 <tr>
-                                    <td>Rp. {{number_format($data['detail']->transactionAmount,0,'','.')}},-</td>
+                                    <td>Rp. {{number_format($total,0,'','.')}},-</td>
                                     <td>{{strftime("%A, %d %B %Y, %H:%M:%S", strtotime($data['detail']->transactionExpire))}}</td>
                                 </tr>
                                 <tr>
@@ -295,14 +300,13 @@
                             @endforeach
                             <hr>
                             <p class="bold">Detail Pembelian :</p>
-                            <?php $total = $data['detail']->harga_paket+(is_null($data['detail']->addson) ? $data['detail']->harga_addson : 0)+$data['paygate']->biaya_admin; ?>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>No. Tagihan : <span style="color:blue">{{$data['detail']->transactionNo}}</span></td>
                                 </tr>
                                 <tr>
                                     <td>Paket {{$data['detail']->paket.' ('.$data['detail']->durasi_paket.' bulan)'}}</td>
-                                    <td class="align-right">Rp {{number_format($data['detail']->harga_paket,0,'','.')}},-</td>
+                                    <td class="align-right">Rp {{number_format($data['detail']->amount_disc,0,'','.')}},-</td>
                                 </tr>
                                 @if(!is_null($data['detail']->addson))
                                 <tr>
