@@ -268,7 +268,7 @@ class PaygateController extends Controller
             $pl->update();
 
             $bil->status = 3;
-            $bil->cancel_by = Auth::user()->id;
+            $bil->cancel_by = is_null(Auth::user()) ? 0 : Auth::user()->id;
             $bil->cancel_date = date('Y-m-d H:i:s');
             $bil->update();
 
@@ -309,7 +309,7 @@ class PaygateController extends Controller
             $pl->update();
 
             $bil->status = 3;
-            $bil->cancel_by = Auth::user()->id;
+            $bil->cancel_by = is_null(Auth::user()) ? 0 : Auth::user()->id;
             $bil->cancel_date = date('Y-m-d H:i:s');
             $bil->update();
 
@@ -319,6 +319,19 @@ class PaygateController extends Controller
                 'data' => $response,
             ], 200);
         }
+    }
 
+    public function cronCancel(){
+        $data = Billing::where('status',0)
+            ->where('pay_date',null)
+            ->where('expired_pay','>=',date('Y-m-d H:i:s'))
+            ->where('cancel_date',null)
+            ->get();
+        if (count($data) > 0) {
+            foreach ($data as $key => $d) {
+                $pgl = PaygateLog::where('transactionNo',$d['no_invoice'])->first();
+                $cancel = $this->cancel($pgl['id']);
+            }
+        }
     }
 }
