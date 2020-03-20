@@ -273,6 +273,7 @@ class PaygateController extends Controller
             $bil->update();
 
             $data = [
+                'bill' => $bil,
                 'pg' => $pg,
                 'pl' => $pl,
                 'paket' => $pkt,

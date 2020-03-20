@@ -256,7 +256,7 @@
                             <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok"/>
                             <h2>Silahkan selesaikan pembayaran Anda!</h2>
                             <?php setlocale(LC_TIME, 'IND'); ?>
-                            <p class="bold">Pembelian berhasil dilakukan pada tanggal {{strftime("%A, %d %B %Y %H:%M:%S", strtotime($data['detail']->transactionDate))}}</p>
+                            <p class="bold">Pembelian berhasil dilakukan pada tanggal {{strftime("%A, %d %B %Y, %H:%M:%S", strtotime($data['detail']->transactionDate))}}</p>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td class="bold">Total Pembayaran</td>
@@ -264,7 +264,7 @@
                                 </tr>
                                 <tr>
                                     <td>Rp. {{number_format($data['detail']->transactionAmount,0,'','.')}},-</td>
-                                    <td>{{strftime("%A, %d %B %Y %H:%M:%S", strtotime($data['detail']->transactionExpire))}}</td>
+                                    <td>{{strftime("%A, %d %B %Y, %H:%M:%S", strtotime($data['detail']->transactionExpire))}}</td>
                                 </tr>
                                 <tr>
                                     <td class="bold">Metode Pembayaran</td>
