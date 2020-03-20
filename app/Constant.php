@@ -89,6 +89,7 @@ class Constant
     const CANCEL_SUBSCRIBE = 'cancel-subscribe';
 
     #billing
+    const BILLING_UNPAID = 0;
     const BILLING_SUCCESS = 1;
     const BILLING_UNUSED = 0;
 

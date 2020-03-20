@@ -214,4 +214,30 @@ class BillingController extends Controller
             ]);
         }
     }
+
+     /**
+     * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function packageUnpaid(Request $request)
+    {
+        $user = $this->user;
+
+        $package_unpaid = Billing::where('klinik_id', $user->klinik_id)
+                    ->where('status', Constant::BILLING_UNPAID)
+                    ->exists();
+
+        if ($package_unpaid) {
+            return response()->json([
+                'status' => false,
+                'message' => "There are unpaid transactions",
+            ]);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => 'There are no unpaid transactions',
+            ]);
+        }
+    }
 }
