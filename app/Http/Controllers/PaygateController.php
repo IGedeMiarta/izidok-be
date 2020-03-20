@@ -109,7 +109,7 @@ class PaygateController extends Controller
                 $email_data = [
                     'subject' => 'Pembayaran izidok',
                     'to' => [$user->email],
-                    'from' => 'izidok.dev@gmail.com',
+                    'from' => env('MAIL_USERNAME'),
                     'data' => (array) $dtlPmbyrn->data
                 ];
 
@@ -285,7 +285,7 @@ class PaygateController extends Controller
             $email_data = [
                 'subject' => 'Pembatalan Pembayaran izidok',
                 'to' => [$user->email],
-                'from' => 'izidok.dev@gmail.com',
+                'from' => env('MAIL_USERNAME'),
                 'data' => $data
             ];
 

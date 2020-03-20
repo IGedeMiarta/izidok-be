@@ -345,7 +345,7 @@ class PembayaranController extends Controller
             $email_data = [
                 'subject' => 'Struk/INVOICE_'.$nama_dokter.'_'.$nama_pasien.'_'.$tanggal,
                 'to' => [$email],
-                'from' => 'izidok.dev@gmail.com',
+                'from' => env('MAIL_USERNAME'),
                 'nama_dokter' => $nama_dokter,
                 'nama_pasien' => $nama_pasien,
                 'tanggal' => $tanggal,

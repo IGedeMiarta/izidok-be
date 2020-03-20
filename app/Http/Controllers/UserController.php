@@ -319,7 +319,7 @@ class UserController extends Controller
                     'message' => 'Click link below to reset your password: \n ' . $forgot_url,
                     'activation_url' => $forgot_url,
                     'to' => [$forgot_password->email],
-                    'from' => 'izidok.dev@gmail.com',
+                    'from' => env('MAIL_USERNAME'),
                     'name' =>  $current_user_name,
                 ];
 
@@ -370,7 +370,7 @@ class UserController extends Controller
                         'message' => 'Click link below to reset your password: \n ' . $forgot_url,
                         'activation_url' => $forgot_url,
                         'to' => [$forgot_password->email],
-                        'from' => 'izidok.dev@gmail.com',
+                        'from' => env('MAIL_USERNAME'),
                         'name' =>  $current_user_name,
                     ];
 
@@ -537,7 +537,7 @@ class UserController extends Controller
 
         $email_data = [
             'subject' => 'Konfirmasi Akun izidok',
-            'from' => 'izidok.dev@gmail.com',
+            'from' => env('MAIL_USERNAME'),
             'to' => [$user->email],
             'activation_url' => $data['activation_url'],
             'name' => $user->nama,
@@ -573,7 +573,7 @@ class UserController extends Controller
 
         $email_data = [
             'subject' => 'Operator Login Data',
-            'from' => 'izidok.dev@gmail.com',
+            'from' => env('MAIL_USERNAME'),
             'to' => [$doctor->email],
             'doctor_name' => $doctor->nama,
             'name' => $operator->nama,

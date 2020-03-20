@@ -116,7 +116,7 @@ class OperatorController extends Controller
 
     $email_data = [
       'subject' => 'Operator Login Data',
-      'from' => 'izidok.dev@gmail.com',
+      'from' => env('MAIL_USERNAME'),
       'to' => [$current_user_email],
       'doctor_name' => $current_user_name,
       'name' => $request->nama,

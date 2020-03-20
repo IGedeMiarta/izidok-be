@@ -138,7 +138,7 @@ class KlinikController extends Controller
 
         $email_data = [
             'subject' => 'Konfirmasi Akun izidok',
-            'from' => 'izidok.dev@gmail.com',
+            'from' => env('MAIL_USERNAME'),
             'to' => [$user->email],
             'activation_url' => $data['activation_url'],
             'name' => $user->nama,

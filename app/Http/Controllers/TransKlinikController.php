@@ -313,7 +313,7 @@ class TransKlinikController extends Controller
                 $email_data = [
                     'subject' => 'Jadwal Konsultasi Lanjutan_'.$l->nama_dokter.'_'.strftime('%A, %d %B %Y', strtotime($l->tgl_next_konsultasi)),
                     'to' => $l->email_pasien,
-                    'from' => 'izidok.dev@gmail.com',
+                    'from' => env('MAIL_USERNAME'),
                     'nama_pasien' => $l->nama_pasien,
                     'waktu_konsultasi' => strftime('%A, %d %B %Y', strtotime($l->waktu_konsultasi)),
                     'next_konsultasi' => strftime('%A, %d %B %Y', strtotime($l->tgl_next_konsultasi)),
