@@ -125,7 +125,12 @@
     <main>
         <div id="details" class="clearfix">
             <div id="left-top">
-                <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="15%"/>
+                <img src="{{asset('upload/images/logo-izidok.png')}}" alt="logo-izidok1" width="15%"/>
+                <img src="{{public_path('upload/images/logo-izidok.png')}}" alt="logo-izidok2" width="15%"/>
+                <img src="{{url('upload/images/logo-izidok.png')}}" alt="logo-izidok3" width="15%"/>
+                <img src="{{asset('public/upload/images/logo-izidok.png')}}" alt="logo-izidok4" width="15%"/>
+                <img src="{{public_path('public/upload/images/logo-izidok.png')}}" alt="logo-izidok5" width="15%"/>
+                <img src="{{url('public/upload/images/logo-izidok.png')}}" alt="logo-izidok6" width="15%"/>
                 <div>{{$data['dokter']->nama}}</div>
                 <div>No. Handphone : {{$data['dokter']->nomor_telp}}</div>
                 <div>{{$data['dokter']->email}}</div>
