@@ -268,7 +268,7 @@ class PaketController extends Controller
                 'nomor_telp' => $dokter->nomor_telp,
                 'email' => $dokter->email,
             ];
-            $data['detail']->amount_pay = $data['detail']['amount_disc'] + $pg->biaya_admin;
+            $data['detail']->amount_pay = $data['detail']->amount_disc + $pg->biaya_admin;
 
             return response()->json([
                 'success' => true,
