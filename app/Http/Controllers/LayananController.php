@@ -35,7 +35,7 @@ class LayananController extends Controller
             $order = $request->order;
         }
 
-        $layanan = Layanan::select('id', 'kode_layanan', 'nama_layanan', 'tarif')
+        $layanan = Layanan::select('id', 'kode_layanan', 'nama_layanan', 'tarif','priority')
             ->where('kode_layanan', 'like', "%{$request->kode_layanan}%")
             ->where('nama_layanan', 'like', "%{$request->nama_layanan}%")
             ->where('tarif', 'like', "%{$request->tarif}%")
@@ -62,7 +62,7 @@ class LayananController extends Controller
 
 	public function getAllLayanan(Request $request){
 		$user = $this->user;
-		$data['layanan']['data'] = Layanan::select('id', 'kode_layanan', 'nama_layanan', 'tarif')
+		$data['layanan']['data'] = Layanan::select('id', 'kode_layanan', 'nama_layanan', 'tarif','priority')
 			->where('klinik_id', $user->klinik_id)->get();
 		return response()->json([
 			'success' => true,
@@ -100,6 +100,7 @@ class LayananController extends Controller
 			$layanan->tarif = $layanan_obj['tarif'];
 			$layanan->klinik_id = $user->klinik_id;
 			$layanan->created_by = $request->user_id;
+			$layanan->priority = 0;
 			$layanan->save();
 			array_push($result, $layanan);
         }
