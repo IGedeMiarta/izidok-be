@@ -151,24 +151,24 @@
             </thead>
             <tbody>
             <tr>
-                <td class="desc">Paket {{$data['detail']->paket.'-'.$data['detail']->durasi_paket}}</td>
+                <td class="desc">Paket {{$data['detail']->paket.'-'.$data['detail']->durasi_paket.' ('.$data['detail']->durasi_paket.' bulan)'}}</td>
                 <td class="qty">1</td>
-                <td class="unit">{{'Rp. '.number_format($data['detail']->harga_paket,0,'','.').',-'}}</td>
-                <td class="total">{{'Rp. '.number_format($data['detail']->amount_real,0,'','.').',-'}}</td>
+                <td class="unit">Rp. {{number_format($data['detail']->harga_paket,0,'','.')}},-</td>
+                <td class="total">Rp. {{number_format($data['detail']->amount_real,0,'','.')}},-</td>
             </tr>
             @if(!is_null($data['detail']->addson))
             <tr>
                 <td class="desc">Paket {{$data['detail']->addson}}</td>
                 <td class="qty">1</td>
-                <td class="unit">{{'Rp. '.number_format($data['detail']->harga_addson,0,'','.').',-'}}</td>
-                <td class="total">{{'Rp. '.number_format($data['detail']->harga_addson,0,'','.').',-'}}</td>
+                <td class="unit">Rp. {{number_format($data['detail']->harga_addson,0,'','.')}},-</td>
+                <td class="total">Rp. {{number_format($data['detail']->harga_addson,0,'','.')}},-</td>
             </tr>
             @endif
             <tfoot>
                 <tr>
                     <td colspan="2"></td>
                     <td>Subtotal (Rp)</td>
-                    <td>{{'Rp. '.number_format($data['detail']->amount_real,0,'','.').',-'}}</td>
+                    <td>Rp. {{number_format($data['detail']->amount_real,0,'','.')}},-</td>
                 </tr>
                 <tr>
                     <td colspan="2"></td>
@@ -182,11 +182,14 @@
                             {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         @endif
                     </td>
+                    <td colspan="2"></td>
+                    <td>Biaya Admin</td>
+                    <td>Rp. {{number_format($data['paygate']->biaya_admin,0,'','.')}},-</td>
                 </tr>
                 <tr>
                     <td colspan="2"></td>
                     <td>Total</td>
-                    <td>{{'Rp. '.number_format($data['detail']->amount_disc,0,'','.').',-'}}</td>
+                    <td>Rp. {{number_format($data['detail']->transactionAmount,0,'','.')}},-</td>
                 </tr>
               </tfoot>
         </table>
