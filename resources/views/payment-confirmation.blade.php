@@ -317,7 +317,7 @@
                                         @elseif ($data['detail']->satuan_promo === 'percent')
                                             {{$data['detail']->diskon.'%'}}
                                         @else
-                                            {{'-'}}
+                                            {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         @endif
                                     </td>
                                 </tr>

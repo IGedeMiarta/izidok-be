@@ -303,7 +303,7 @@
                                         @elseif ($data['promo']->satuan === 'percent')
                                             {{$data['promo']->value.'%'}}
                                         @else
-                                            {{'-'}}
+                                            {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         @endif
                                     </td>
                                 </tr>
