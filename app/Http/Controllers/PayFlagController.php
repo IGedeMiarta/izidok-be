@@ -122,6 +122,9 @@ class PayFlagController extends Controller
                         $newPaket->status = '1';
                         $newPaket->created_by = $bill->created_by;
                         $newPaket->save();
+
+                        $bill->used_status = 1;
+                        $bill->update();
                     }
                     DB::commit();
                     return response()->json($this->payFlagResponse($request, '00', 'Success'), 200);
