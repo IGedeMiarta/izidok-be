@@ -243,6 +243,7 @@ class PaygateController extends Controller
         $pg = Paygate::find($bil->pg_id);
         $pkt = Paket::find($bil->paket_id);
         $adds = !is_null($bil->addson_id) ? Addson::find($bil->addson_id) : null;
+        $promo = Promo::find($bil->promo_id);
 
         $req = [
             'channelId' => $pl->channelId,
@@ -280,6 +281,7 @@ class PaygateController extends Controller
                 'pl' => $pl,
                 'paket' => $pkt,
                 'addson' => is_null($adds) ? null : $adds,
+                'promo' => $promo,
                 'user' => is_null(Auth::user()) ? 'sistem' : 'pengguna',
                 'now' => date('Y-m-d H:i:s'),
             ];

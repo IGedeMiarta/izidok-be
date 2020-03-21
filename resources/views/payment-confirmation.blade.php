@@ -248,11 +248,6 @@
                 <!-- START CENTERED WHITE CONTAINER -->
                 <table role="presentation" class="main">
                 <!-- START MAIN CONTENT AREA -->
-                <?php $total =
-                    $data['detail']->amount_disc+
-                    (is_null($data['detail']->addson) ? $data['detail']->harga_addson : 0)+
-                    $data['paygate']->biaya_admin;
-                ?>
                 <tr>
                     <td class="wrapper">
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
@@ -268,7 +263,7 @@
                                     <td class="bold">Batas Waktu Pembayaran</td>
                                 </tr>
                                 <tr>
-                                    <td>Rp. {{number_format($total,0,'','.')}},-</td>
+                                    <td>Rp. {{number_format($data['detail']->transactionAmount,0,'','.')}},-</td>
                                     <td>{{strftime("%A, %d %B %Y, %H:%M:%S", strtotime($data['detail']->transactionExpire))}}</td>
                                 </tr>
                                 <tr>
@@ -306,24 +301,36 @@
                                 </tr>
                                 <tr>
                                     <td>Paket {{$data['detail']->paket.' ('.$data['detail']->durasi_paket.' bulan)'}}</td>
-                                    <td class="align-right">Rp {{number_format($data['detail']->amount_disc,0,'','.')}},-</td>
+                                    <td class="align-right">Rp. {{number_format($data['detail']->amount_real,0,'','.')}},-</td>
                                 </tr>
                                 @if(!is_null($data['detail']->addson))
                                 <tr>
                                     <td>Paket {{$data['detail']->addson}}</td>
-                                    <td class="align-right">Rp {{number_format($data['detail']->harga_addson,0,'','.')}}</td>
+                                    <td class="align-right">Rp. {{number_format($data['detail']->harga_addson,0,'','.')}},-</td>
                                 </tr>
                                 @endif
                                 <tr>
+                                    <td>Potongan</td>
+                                    <td class="align-right">
+                                        @if ($data['detail']->satuan_promo === 'rupiah')
+                                            {{'Rp. '.number_format($data['detail']->diskon,0,'','.').',-'}}
+                                        @elseif ($data['detail']->satuan_promo === 'percent')
+                                            {{$data['detail']->diskon.'%'}}
+                                        @else
+                                            {{'-'}}
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>Biaya Admin</td>
-                                    <td class="align-right">Rp {{number_format($data['paygate']->biaya_admin,0,'','.')}},-</td>
+                                    <td class="align-right">Rp. {{number_format($data['paygate']->biaya_admin,0,'','.')}},-</td>
                                 </tr>
                             </table>
                             <hr>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td>Total Pembayaran</td>
-                                <td class="align-right">Rp {{number_format($total,0,'','.')}},-</td>
+                                <td class="align-right">Rp. {{number_format($data['detail']->transactionAmount,0,'','.')}},-</td>
                             </tr>
                             </table>
                             <hr>

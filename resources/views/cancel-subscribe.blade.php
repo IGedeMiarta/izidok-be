@@ -248,11 +248,6 @@
                 <!-- START CENTERED WHITE CONTAINER -->
                 <table role="presentation" class="main">
                 <!-- START MAIN CONTENT AREA -->
-                <?php $total =
-                    $data['bill']->amount_disc+
-                    (!is_null($data['addson']) ? $data['addson']->harga : 0)+
-                    $data['pg']->biaya_admin;
-                ?>
                 <tr>
                     <td class="wrapper">
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
@@ -269,7 +264,7 @@
                                     <td class="bold">Batas Waktu Pembayaran</td>
                                 </tr>
                                 <tr>
-                                    <td>Rp. {{number_format($total,0,',','.')}},-</td>
+                                    <td>Rp. {{number_format($data['pl']->transactionAmount,0,',','.')}},-</td>
                                     <td>{{strftime("%A, %d %B %Y, %H:%M:%S", strtotime($data['pl']->transactionExpire))}}</td>
                                 </tr>
                                 <tr>
@@ -292,14 +287,26 @@
                                 </tr>
                                 <tr>
                                     <td>Paket {{$data['paket']->nama.' ('.$data['bill']->paket_bln.' bulan)'}}</td>
-                                    <td class="align-right">Rp. {{number_format($data['bill']->amount_disc,0,'','.')}},-</td>
+                                    <td class="align-right">Rp. {{number_format($data['bill']->amount_real,0,'','.')}},-</td>
                                 </tr>
                                 @if(!is_null($data['addson']))
                                 <tr>
                                     <td>Paket {{$data['addson']->nama}}</td>
-                                    <td class="align-right">Rp. {{number_format($data['addson']->harga,0,'','.')}}</td>
+                                    <td class="align-right">Rp. {{number_format($data['addson']->harga,0,'','.')}},-</td>
                                 </tr>
                                 @endif
+                                <tr>
+                                    <td>Potongan</td>
+                                    <td class="align-right">
+                                        @if ($data['promo']->satuan === 'rupiah')
+                                            {{'Rp. '.number_format($data['promo']->value,0,'','.').',-'}}
+                                        @elseif ($data['promo']->satuan === 'percent')
+                                            {{$data['promo']->value.'%'}}
+                                        @else
+                                            {{'-'}}
+                                        @endif
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>Biaya Admin</td>
                                     <td class="align-right">Rp. {{number_format($data['pg']->biaya_admin,0,'','.')}},-</td>
@@ -309,7 +316,7 @@
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td>Total Pembayaran</td>
-                                <td class="align-right">Rp. {{number_format($total,0,'','.')}},-</td>
+                                <td class="align-right">Rp. {{number_format($data['pl']->transactionAmount,0,'','.')}},-</td>
                             </tr>
                             </table>
                             <hr>
