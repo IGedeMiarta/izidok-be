@@ -322,7 +322,6 @@ class TransKlinikController extends Controller
                     'nomor_telp' =>  $l->nomor_telp,
                     'email' => $l->email
                 ];
-                dd($email_data);
                 \sendEmail($email_data, Constant::EMAIL_REMINDER);
                 $trans_klinik = TransKlinik::find($l->id);
                 $trans_klinik->update(['reminder' => 2]);
