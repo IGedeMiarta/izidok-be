@@ -252,6 +252,13 @@ class LayananController extends Controller
 						'data' => ''
 					]);
 				} else {
+					if ($layanan->priority == 1 && ($layanan->nama_layanan != $request->nama_layanan)) {
+						return response()->json([
+							'status' => false,
+							'message' => "nama Layanan tidak dapat diubah",
+							'data' => ''
+						]);
+					}
 					$layanan->nama_layanan = $request->nama_layanan;
 					$layanan->kode_layanan = $request->kode_layanan;
 					$layanan->tarif = $request->tarif;
@@ -288,6 +295,13 @@ class LayananController extends Controller
 					'data' => ''
 				]);
 			} else {
+				if ($layanan->priority == 1 && ($layanan->nama_layanan != $request->nama_layanan)) {
+					return response()->json([
+						'status' => false,
+						'message' => "nama Layanan tidak dapat diubah",
+						'data' => ''
+					]);
+				}
 				$layanan->nama_layanan = $request->nama_layanan;
 				$layanan->kode_layanan = $request->kode_layanan;
 				$layanan->tarif = $request->tarif;
@@ -322,6 +336,13 @@ class LayananController extends Controller
 				'message' => 'Data tarif minimal 2'
             ]);
 		} else {
+			if ($layanan->priority == 1) {
+				return response()->json([
+					'status' => false,
+					'message' => "Layanan tidak dapat dihapus",
+					'data' => ''
+				]);
+			}
 			$nama = $layanan->nama_layanan;
 			$layanan->delete();
 			return response()->json([
