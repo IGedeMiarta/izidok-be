@@ -101,6 +101,7 @@ class PaygateController extends Controller
                 $bill->expired_pay = $expPay;
                 $bill->amount_disc = $request->amount_disc;
                 $bill->amount_real = $request->amount_real;
+                $bill->amount_pay = $amount_pay;
                 $bill->created_by = $user->id;
                 $bill->created_at = $now;
                 $bill->save();

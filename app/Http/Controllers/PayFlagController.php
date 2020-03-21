@@ -61,7 +61,7 @@ class PayFlagController extends Controller
                 return response()->json($this->payFlagResponse($request, '03', 'Invalid Auth Code'), 200);
             }
 
-            $billing = Billing::select('expired_pay', 'amount_disc', 'status')
+            $billing = Billing::select('expired_pay', 'amount_disc', 'amount_pay','status')
                 ->where('no_invoice', $request->transactionNo)
                 ->first();
 
@@ -99,7 +99,7 @@ class PayFlagController extends Controller
                 return response()->json($this->payFlagResponse($request, '04', 'Transaction Expired'), 200);
             }
 
-            if($billing->amount_disc == $request->transactionAmount) {
+            if($billing->amount_pay == $request->transactionAmount) {
                 DB::beginTransaction();
                 $updated = Billing::where('no_invoice', $request->transactionNo)
                     ->update([
