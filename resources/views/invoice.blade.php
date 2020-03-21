@@ -182,6 +182,8 @@
                             {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         @endif
                     </td>
+                </tr>
+                <tr>
                     <td colspan="2"></td>
                     <td>Biaya Admin</td>
                     <td>Rp. {{number_format($data['paygate']->biaya_admin,0,'','.')}},-</td>
