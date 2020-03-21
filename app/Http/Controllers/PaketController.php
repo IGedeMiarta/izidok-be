@@ -157,6 +157,8 @@ class PaketController extends Controller
             $bill->amount_disc = 0;
             $bill->amount_real = 0;
             $bill->status = 1;
+            $bill->pay_date = $now;
+            $bill->used_status = 1;
             $bill->created_by = $user->id;
             $bill->created_at = $now;
             $bill->save();
