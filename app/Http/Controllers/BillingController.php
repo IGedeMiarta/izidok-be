@@ -42,7 +42,7 @@ class BillingController extends Controller
             DB::raw("CONCAT(paket_bln, ' bulan') AS periode_berlaku"),
             DB::raw("CONCAT('Rp. ', FORMAT(amount_disc + paygate.biaya_admin, 0, 'id_ID'), ',-') AS total_pembayaran"),
             DB::raw("DATE_FORMAT(pay_date, '%d/%m/%Y') AS tanggal_bayar"),
-            'status'
+            'billing.status'
         ])
         ->join('paket', 'billing.paket_id', '=', 'paket.id')
         ->join('paygate', 'billing.pg_id', '=', 'paygate.id')
@@ -51,7 +51,7 @@ class BillingController extends Controller
         ->where('paket.nama', 'like', "%{$request->produk}%")
         ->where('paket_bln', 'like', "%{$request->periode_berlaku}%")
         ->where('amount_disc', 'like', "%{$request->total_pembayaran}%")
-        ->where('status', 'like', "%{$request->status}%")
+        ->where('billing.status', 'like', "%{$request->status}%")
         ->orderBy($column, $order);
 
         if(!empty($request->tanggal_bayar)) {
