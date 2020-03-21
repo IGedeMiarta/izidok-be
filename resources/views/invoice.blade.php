@@ -151,8 +151,8 @@
             </thead>
             <tbody>
             <tr>
-                <td class="desc">Paket {{$data['detail']->paket}}</td>
-                <td class="qty">{{$data['detail']->durasi_paket}}</td>
+                <td class="desc">Paket {{$data['detail']->paket.'-'.$data['detail']->durasi_paket}}</td>
+                <td class="qty">1</td>
                 <td class="unit">{{'Rp. '.number_format($data['detail']->harga_paket,0,'','.').',-'}}</td>
                 <td class="total">{{'Rp. '.number_format($data['detail']->amount_real,0,'','.').',-'}}</td>
             </tr>
