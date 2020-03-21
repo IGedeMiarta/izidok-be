@@ -69,10 +69,12 @@ class PaygateController extends Controller
         $noInvoice = substr('IZD'.date('ymdHis').rand(), 0,18);
         $now = date('Y-m-d H:i:s');
         $expPay = date('Y-m-d H:i:s', strtotime($now."+1 days"));
+        $pg = Paygate::find($request->pg_id);
+        $amount_pay = $pg->biaya_admin + $request->amount_disc;
 
         $dataPg = [
             'no_invoice' => $noInvoice,
-            'amount' => $request->amount_disc,
+            'amount' => $amount_pay,
             'trans_date' => $now,
             'expired_pay' => $expPay,
             'desc' => 'Pembelian Paket '.$request->paket_id.($request->addson_id ? ' dan Paket Adds-on '.$request->addson_id : ''),
