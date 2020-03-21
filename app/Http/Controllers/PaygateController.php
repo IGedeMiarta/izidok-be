@@ -325,7 +325,7 @@ class PaygateController extends Controller
     public function cronCancel(){
         $data = Billing::where('status',0)
             ->where('pay_date',null)
-            ->where('expired_pay','>=',date('Y-m-d H:i:s'))
+            ->where('expired_pay','<=',date('Y-m-d H:i:s'))
             ->where('cancel_date',null)
             ->get();
         if (count($data) > 0) {
