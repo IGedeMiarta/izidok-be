@@ -94,13 +94,19 @@ class LayananController extends Controller
 		$result = array();
 
 		foreach ($arr_layanan as $layanan_obj) {
+			if (strtolower($layanan_obj['nama_layanan']) == 'konsultasi dokter' || strtolower($layanan_obj['nama_layanan']) == 'registrasi awal') {
+				$prior = 1;
+			} else {
+				$prior = 0;
+			}
+
 			$layanan = new Layanan();
 			$layanan->kode_layanan = $layanan_obj['kode_layanan'];
 			$layanan->nama_layanan = $layanan_obj['nama_layanan'];
 			$layanan->tarif = $layanan_obj['tarif'];
 			$layanan->klinik_id = $user->klinik_id;
 			$layanan->created_by = $request->user_id;
-			$layanan->priority = 0;
+			$layanan->priority = $prior;
 			$layanan->save();
 			array_push($result, $layanan);
         }
