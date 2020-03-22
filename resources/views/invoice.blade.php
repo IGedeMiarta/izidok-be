@@ -175,13 +175,13 @@
                     <td>Potongan</td>
                     <td>
                         @if (!is_null($data['detail']->diskon))
-                            @if ($data['detail']->satuan_promo == 'rupiah')
+                            @if ($data['detail']->satuan_promo === 'rupiah')
                                 {{'Rp. '.number_format($data['detail']->diskon,0,'','.').',-'}}
-                            @elseif ($data['detail']->satuan_promo == 'percent')
+                            @elseif ($data['detail']->satuan_promo === 'percent')
                                 {{$data['detail']->diskon.'%'}}
-                            @else
-                                {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             @endif
+                        @else
+                            {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         @endif
                     </td>
                 </tr>

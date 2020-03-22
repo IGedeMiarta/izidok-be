@@ -303,9 +303,9 @@
                                                 {{'Rp. '.number_format($data['promo']->value,0,'','.').',-'}}
                                             @elseif ($data['promo']->satuan === 'percent')
                                                 {{$data['promo']->value.'%'}}
-                                            @else
-                                                {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             @endif
+                                        @else
+                                            {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         @endif
                                     </td>
                                 </tr>
