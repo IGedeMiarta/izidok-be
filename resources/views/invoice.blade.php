@@ -131,7 +131,7 @@
                 <div>{{$data['dokter']->email}}</div>
             </div>
             <div id="right-top">
-                <?php setlocale(LC_TIME, 'IND'); ?>
+                <?php setlocale(LC_TIME, 'id_ID'); ?>
                 <h2 class="name">INVOICE</h2>
                 <div>No. Invoice : {{$data['detail']->transactionNo}}</div>
                 <div>Tanggal Pembelian : {{strftime("%d %B %Y", strtotime($data['detail']->transactionDate))}}</div>
