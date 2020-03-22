@@ -9,6 +9,7 @@ use App\Constant;
 use App\Paket;
 use App\Addson;
 use App\User;
+use App\Promo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\PaketController;
