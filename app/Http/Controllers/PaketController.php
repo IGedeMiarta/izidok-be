@@ -421,7 +421,6 @@ class PaketController extends Controller
                 where('klinik_id',$klinikId)
                 ->where('status',0)
                 ->where('expired_pay','>',date('Y-m-d H:i:s'));
-            //dd($billWaiting->exists());
             if ($billWaiting->exists()) {
                 //Saat inisiasi, memilih ‘beli paket’, lalu ketika statusnya sedang menunggu pembayaran, dia ingin akses menu lain.
                 return response()->json([
