@@ -326,6 +326,13 @@ class PaketController extends Controller
     {
     }
 
+    public function deactivePackage()
+    {
+        KlinikSubscribe::where('expired_date','<=',date('Y-m-d H:i:s'))
+            ->where('status',1)
+            ->update(['status' => 0]);
+    }
+
     public function checkPackage(){
         $klinikId = Auth::user()->klinik_id;
         $paket = KlinikSubscribe::where('klinik_id',$klinikId)->where('status',1);
