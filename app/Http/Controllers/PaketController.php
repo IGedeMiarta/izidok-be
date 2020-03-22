@@ -355,7 +355,7 @@ class PaketController extends Controller
                     'message' => 'Masa Berlaku Paket Anda telah berakhir, silahkan lakukan pembelian untuk dapat melakukan aktivitas ini.',
                     'data' => $pkt,
                 ], 200);
-            }elseif (($pkt->limit <= 0 && $pkt->expired_date < date('Y-m-d H:i:s') && $billing->exists()) || ($pkt->limit == 0 && $pkt->expired_date > date('Y-m-d H:i:s') && $billing->exists())) {
+            }elseif (($pkt->limit <= 0 && $pkt->expired_date < date('Y-m-d H:i:s') && $billing->exists()) || ($pkt->limit == 0 && $pkt->expired_date > date('Y-m-d H:i:s') && $billing->exists()) || ($pkt->limit != 0 && $pkt->expired_date < date('Y-m-d H:i:s') && $billing->exists())) {
                 //Kuota habis, masa berlaku habis, sudah beli paket ATAU Kuota habis, masa berlaku masih ada, namun sudah beli paket
                 $bill = $billing->first();
                 $bill->used_status = 1;
