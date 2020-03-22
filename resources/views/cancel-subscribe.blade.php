@@ -255,7 +255,7 @@
                         <td>
                             <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok"/>
                             <h2>Pembayaran melalui {{$data['pg']->nama}} dibatalkan</h2>
-                            <?php setlocale(LC_TIME, 'IND'); ?>
+                            <?php //setlocale(LC_TIME, 'id_ID'); ?>
                             <p class="bold">Pembayaran Anda telah dibatalkan</p>
                             <p class="bold" style="color:red">Mohon untuk tidak membayar pembelian ini</p>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
@@ -265,7 +265,7 @@
                                 </tr>
                                 <tr>
                                     <td>Rp. {{number_format($data['pl']->transactionAmount,0,',','.')}},-</td>
-                                    <td>{{strftime("%A, %d %B %Y, %H:%M:%S", strtotime($data['pl']->transactionExpire))}}</td>
+                                    <td>{{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['pl']->transactionExpire)))}}</td>
                                 </tr>
                                 <tr>
                                     <td class="bold">Metode Pembayaran</td>
@@ -278,7 +278,7 @@
                             </table>
                             <br>
                             <p class="bold">Keterangan</p>
-                            <p>Pembayaran dibatalkan oleh {{$data['user']}} pada tanggal {{strftime("%A, %d %B %Y, %H:%M:%S", strtotime($data['now']))}}</p>
+                            <p>Pembayaran dibatalkan oleh {{$data['user']}} pada tanggal {{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['now'])))}}</p>
                             <hr>
                             <p class="bold">Detail Pembelian :</p>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
@@ -298,12 +298,14 @@
                                 <tr>
                                     <td>Potongan</td>
                                     <td class="align-right">
-                                        @if ($data['promo']->satuan === 'rupiah')
-                                            {{'Rp. '.number_format($data['promo']->value,0,'','.').',-'}}
-                                        @elseif ($data['promo']->satuan === 'percent')
-                                            {{$data['promo']->value.'%'}}
-                                        @else
-                                            {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        @if (!is_null($data['promo']))
+                                            @if ($data['promo']->satuan === 'rupiah')
+                                                {{'Rp. '.number_format($data['promo']->value,0,'','.').',-'}}
+                                            @elseif ($data['promo']->satuan === 'percent')
+                                                {{$data['promo']->value.'%'}}
+                                            @else
+                                                {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>

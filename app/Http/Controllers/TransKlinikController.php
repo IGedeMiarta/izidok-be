@@ -10,6 +10,7 @@ use App\Operator;
 use App\Pasien;
 use App\Klinik;
 use App\User;
+use App\DateFormat;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -308,15 +309,15 @@ class TransKlinikController extends Controller
         ->get();
 
         if(count($list)) {
-            setlocale(LC_TIME, 'IND');
+            //setlocale(LC_TIME, 'id_ID');
             foreach ($list as $l) {
                 $email_data = [
-                    'subject' => 'Jadwal Konsultasi Lanjutan_'.$l->nama_dokter.'_'.$this->convertDate(strftime('%a, %d %b %Y', strtotime($l->tgl_next_konsultasi))),
+                    'subject' => 'Jadwal Konsultasi Lanjutan_'.$l->nama_dokter.'_'.DateFormat::convertDate(strftime('%a, %d %b %Y', strtotime($l->tgl_next_konsultasi))),
                     'to' => $l->email_pasien,
                     'from' => env('MAIL_USERNAME'),
                     'nama_pasien' => $l->nama_pasien,
-                    'waktu_konsultasi' => $this->convertDate(strftime('%a, %d %b %Y', strtotime($l->waktu_konsultasi))),
-                    'next_konsultasi' => $this->convertDate(strftime('%a, %d %b %Y', strtotime($l->tgl_next_konsultasi))),
+                    'waktu_konsultasi' => DateFormat::convertDate(strftime('%a, %d %b %Y', strtotime($l->waktu_konsultasi))),
+                    'next_konsultasi' => DateFormat::convertDate(strftime('%a, %d %b %Y', strtotime($l->tgl_next_konsultasi))),
                     'nama_dokter' => $l->nama_dokter,
                     'alamat' => $l->alamat,
                     'nomor_telp' =>  $l->nomor_telp,
@@ -360,65 +361,4 @@ class TransKlinikController extends Controller
         ]);
     }
 
-    public function convertDate($date){
-      $data = explode(',', $date);
-      $hari = $data[0];
-
-      switch($hari){
-        case 'Sun':
-          $day = "Minggu";
-        break;
-     
-        case 'Mon':     
-          $day = "Senin";
-        break;
-     
-        case 'Tue':
-          $day = "Selasa";
-        break;
-     
-        case 'Wed':
-          $day = "Rabu";
-        break;
-     
-        case 'Thu':
-          $day = "Kamis";
-        break;
-     
-        case 'Fri':
-          $day = "Jumat";
-        break;
-     
-        case 'Sat':
-          $day = "Sabtu";
-        break;
-        
-        default:
-          $day = "Tidak di ketahui";   
-        break;
-      }
-
-      $tgl = trim(date('d-m-Y', strtotime($data[1])));
-      $bulan = array (
-        1 =>   'Januari',
-        'Februari',
-        'Maret',
-        'April',
-        'Mei',
-        'Juni',
-        'Juli',
-        'Agustus',
-        'September',
-        'Oktober',
-        'November',
-        'Desember'
-      );
-      $pecahkan = explode('-', $tgl);
-      
-      // variabel pecahkan 0 = tanggal
-      // variabel pecahkan 1 = bulan
-      // variabel pecahkan 2 = tahun
-     
-      return $day.', '.$pecahkan[0].' '. $bulan[ (int)$pecahkan[1] ].' '.$pecahkan[2];
-    }
 }

@@ -255,8 +255,8 @@
                         <td>
                             <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok"/>
                             <h2>Silahkan selesaikan pembayaran Anda!</h2>
-                            <?php setlocale(LC_TIME, 'IND'); ?>
-                            <p class="bold">Pembelian berhasil dilakukan pada tanggal {{strftime("%A, %d %B %Y, %H:%M:%S", strtotime($data['detail']->transactionDate))}}</p>
+                            <?php //setlocale(LC_TIME, 'id_ID'); ?>
+                            <p class="bold">Pembelian berhasil dilakukan pada tanggal {{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['detail']->transactionDate)))}}</p>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td class="bold">Total Pembayaran</td>
@@ -264,7 +264,7 @@
                                 </tr>
                                 <tr>
                                     <td>Rp. {{number_format($data['detail']->transactionAmount,0,'','.')}},-</td>
-                                    <td>{{strftime("%A, %d %B %Y, %H:%M:%S", strtotime($data['detail']->transactionExpire))}}</td>
+                                    <td>{{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['detail']->transactionExpire)))}}</td>
                                 </tr>
                                 <tr>
                                     <td class="bold">Metode Pembayaran</td>
@@ -312,12 +312,14 @@
                                 <tr>
                                     <td>Potongan</td>
                                     <td class="align-right">
-                                        @if ($data['detail']->satuan_promo === 'rupiah')
-                                            {{'Rp. '.number_format($data['detail']->diskon,0,'','.').',-'}}
-                                        @elseif ($data['detail']->satuan_promo === 'percent')
-                                            {{$data['detail']->diskon.'%'}}
-                                        @else
-                                            {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        @if (!is_null($data['detail']->diskon))
+                                            @if ($data['detail']->satuan_promo === 'rupiah')
+                                                {{'Rp. '.number_format($data['detail']->diskon,0,'','.').',-'}}
+                                            @elseif ($data['detail']->satuan_promo === 'percent')
+                                                {{$data['detail']->diskon.'%'}}
+                                            @else
+                                                {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>

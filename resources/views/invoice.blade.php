@@ -131,11 +131,11 @@
                 <div>{{$data['dokter']->email}}</div>
             </div>
             <div id="right-top">
-                <?php setlocale(LC_TIME, 'id_ID'); ?>
+                <?php //setlocale(LC_TIME, 'id_ID'); ?>
                 <h2 class="name">INVOICE</h2>
                 <div>No. Invoice : {{$data['detail']->transactionNo}}</div>
-                <div>Tanggal Pembelian : {{strftime("%d %B %Y", strtotime($data['detail']->transactionDate))}}</div>
-                <div>Tanggal Maksimal Pembayaran : {{strftime("%d %B %Y %H:%M:%S", strtotime($data['detail']->transactionExpire))}}</div>
+                <div>Tanggal Pembelian : {{App\DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($data['detail']->transactionDate)))}}</div>
+                <div>Tanggal Maksimal Pembayaran : {{App\DateFormat::ConvertDate(strftime("%A, %d %b %Y %H:%M:%S", strtotime($data['detail']->transactionExpire)))}}</div>
                 <div>Metode Pembayaran : {{$data['paygate']->nama}}</div>
                 <div class="status"> Status Pembayaran : <div class="lunas">{{$data['detail']->status_billing}}</div></div>
             </div>
@@ -174,12 +174,14 @@
                     <td colspan="2"></td>
                     <td>Potongan</td>
                     <td>
-                        @if ($data['detail']->satuan_promo == 'rupiah')
-                            {{'Rp. '.number_format($data['detail']->diskon,0,'','.').',-'}}
-                        @elseif ($data['detail']->satuan_promo == 'percent')
-                            {{$data['detail']->diskon.'%'}}
-                        @else
-                            {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        @if (!is_null($data['detail']->diskon))
+                            @if ($data['detail']->satuan_promo == 'rupiah')
+                                {{'Rp. '.number_format($data['detail']->diskon,0,'','.').',-'}}
+                            @elseif ($data['detail']->satuan_promo == 'percent')
+                                {{$data['detail']->diskon.'%'}}
+                            @else
+                                {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            @endif
                         @endif
                     </td>
                 </tr>
