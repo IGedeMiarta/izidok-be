@@ -278,7 +278,9 @@ class PasienController extends Controller
 			$dtaRm = json_decode(json_encode($rm->getAllKodePenyakitByPasien($request)), true);
 			$trans = TransKlinik::where('pasien_id',$request->id)->where('klinik_id',$klinikId)
 				->orderBy('id','desc')->first();
-			$pasien->anamnesa = $trans->anamnesa;
+			if (!is_null($trans)) {
+				$pasien->anamnesa = $trans->anamnesa;
+			}
 			
 			return response()->json([
 				'status' => true,
