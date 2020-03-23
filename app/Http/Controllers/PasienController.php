@@ -11,6 +11,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Spesialisasi;
 use App\Klinik;
+use App\TransKlinik;
 use Carbon\Carbon;
 use DB;
 use App\Http\Controllers\RekamMedisController;
@@ -275,7 +276,10 @@ class PasienController extends Controller
 			$rm = new RekamMedisController();
 			$request->pasien_id = $pasien->id;
 			$dtaRm = json_decode(json_encode($rm->getAllKodePenyakitByPasien($request)), true);
-
+			$trans = TransKlinik::where('pasien_id',$request->id)->where('klinik_id',$klinikId)
+				->orderBy('id','desc')->first();
+			$pasien->anamnesa = $trans->anamnesa;
+			
 			return response()->json([
 				'status' => true,
 				'message' => 'success',
