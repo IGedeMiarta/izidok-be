@@ -12,7 +12,6 @@
         img {
             border: none;
             -ms-interpolation-mode: bicubic;
-            width: 25%;
             margin-bottom: 5px;
         }
 
@@ -137,6 +136,7 @@
         ol li {
             list-style-position: outside;
             margin-left: 5px;
+            mso-special-format: bullet;
         }
 
         a {
@@ -241,125 +241,125 @@
     </head>
     <body class="">
         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
-        <tr>
-            <td>&nbsp;</td>
-            <td class="container">
-            <div class="content">
-                <!-- START CENTERED WHITE CONTAINER -->
-                <table role="presentation" class="main">
-                <!-- START MAIN CONTENT AREA -->
-                <tr>
-                    <td class="wrapper">
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                        <tr>
-                        <td>
-                            <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok"/>
-                            <h2>Silahkan selesaikan pembayaran Anda!</h2>
-                            <?php //setlocale(LC_TIME, 'id_ID'); ?>
-                            <p class="bold">Pembelian berhasil dilakukan pada tanggal {{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['detail']->transactionDate)))}}</p>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td class="bold">Total Pembayaran</td>
-                                    <td class="bold">Batas Waktu Pembayaran</td>
-                                </tr>
-                                <tr>
-                                    <td>Rp. {{number_format($data['detail']->transactionAmount,0,'','.')}},-</td>
-                                    <td>{{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['detail']->transactionExpire)))}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="bold">Metode Pembayaran</td>
-                                    <td class="bold">Kode Pembayaran/No. Virtual Account</td>
-                                </tr>
-                                <tr>
-                                    <td>{{$data['paygate']->nama}}</td>
-                                    <td>{{$data['detail']->customerAccount}}</td>
-                                </tr>
-                            </table>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="width:40%">
-                                <tr>
-                                    <td class="bold">Status Pembayaran</td>
-                                </tr>
-                                <tr>
-                                    <td class="border">{{$data['detail']->status_billing}}</td>
-                                </tr>
-                            </table>
-                            <br><br>
-                            <p class="bold">Langkah-langkah pembayaran {{$data['paygate']->nama}} :</p>
-                            @foreach($data['tutorial'] as $t)
-                                <p class="bold">{{$t->tipe}}</p>
-                                <ol>
-                                @foreach($t->desc as $key => $d)
-                                    <li>{{$d}}</li>
-                                @endforeach
-                                </ol>
-                            @endforeach
-                            <hr>
-                            <p class="bold">Detail Pembelian :</p>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td>No. Tagihan : <span style="color:blue">{{$data['detail']->transactionNo}}</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Paket {{$data['detail']->paket.' ('.$data['detail']->durasi_paket.' bulan)'}}</td>
-                                    <td class="align-right">Rp. {{number_format($data['detail']->amount_real,0,'','.')}},-</td>
-                                </tr>
-                                @if(!is_null($data['detail']->addson))
-                                <tr>
-                                    <td>Paket {{$data['detail']->addson}}</td>
-                                    <td class="align-right">Rp. {{number_format($data['detail']->harga_addson,0,'','.')}},-</td>
-                                </tr>
-                                @endif
-                                <tr>
-                                    <td>Potongan</td>
-                                    <td class="align-right">
-                                        @if (!is_null($data['detail']->diskon))
-                                            @if ($data['detail']->satuan_promo === 'rupiah')
-                                                {{'Rp. '.number_format($data['detail']->diskon,0,'','.').',-'}}
-                                            @elseif ($data['detail']->satuan_promo === 'percent')
-                                                {{$data['detail']->diskon.'%'}}
-                                            @endif
-                                        @else
-                                            {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Biaya Admin</td>
-                                    <td class="align-right">Rp. {{number_format($data['paygate']->biaya_admin,0,'','.')}},-</td>
-                                </tr>
-                            </table>
-                            <hr>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td>&nbsp;</td>
+                <td class="container">
+                    <div class="content">
+                        <!-- START CENTERED WHITE CONTAINER -->
+                        <table role="presentation" class="main">
+                            <!-- START MAIN CONTENT AREA -->
                             <tr>
-                                <td>Total Pembayaran</td>
-                                <td class="align-right">Rp. {{number_format($data['detail']->transactionAmount,0,'','.')}},-</td>
+                                <td class="wrapper">
+                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td>
+                                                <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="100" height="35" style="height: auto;">
+                                                <h2>Silahkan selesaikan pembayaran Anda!</h2>
+                                                <?php //setlocale(LC_TIME, 'id_ID'); ?>
+                                                <p class="bold">Pembelian berhasil dilakukan pada tanggal {{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['detail']->transactionDate)))}}</p>
+                                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                    <tr>
+                                                        <td class="bold">Total Pembayaran</td>
+                                                        <td class="bold">Batas Waktu Pembayaran</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Rp. {{number_format($data['detail']->transactionAmount,0,'','.')}},-</td>
+                                                        <td>{{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['detail']->transactionExpire)))}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="bold">Metode Pembayaran</td>
+                                                        <td class="bold">Kode Pembayaran/No. Virtual Account</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{$data['paygate']->nama}}</td>
+                                                        <td>{{$data['detail']->customerAccount}}</td>
+                                                    </tr>
+                                                </table>
+                                                <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="width:40%">
+                                                    <tr>
+                                                        <td class="bold">Status Pembayaran</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="border">{{$data['detail']->status_billing}}</td>
+                                                    </tr>
+                                                </table>
+                                                <br><br>
+                                                <p class="bold">Langkah-langkah pembayaran {{$data['paygate']->nama}} :</p>
+                                                @foreach($data['tutorial'] as $t)
+                                                    <p class="bold">{{$t->tipe}}</p>
+                                                    <ol>
+                                                    @foreach($t->desc as $key => $d)
+                                                        <li>{{$d}}</li>
+                                                    @endforeach
+                                                    </ol>
+                                                @endforeach
+                                                <hr>
+                                                <p class="bold">Detail Pembelian :</p>
+                                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                    <tr>
+                                                        <td>No. Tagihan : <span style="color:blue">{{$data['detail']->transactionNo}}</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Paket {{$data['detail']->paket.' ('.$data['detail']->durasi_paket.' bulan)'}}</td>
+                                                        <td class="align-right">Rp. {{number_format($data['detail']->amount_real,0,'','.')}},-</td>
+                                                    </tr>
+                                                    @if(!is_null($data['detail']->addson))
+                                                    <tr>
+                                                        <td>Paket {{$data['detail']->addson}}</td>
+                                                        <td class="align-right">Rp. {{number_format($data['detail']->harga_addson,0,'','.')}},-</td>
+                                                    </tr>
+                                                    @endif
+                                                    <tr>
+                                                        <td>Potongan</td>
+                                                        <td class="align-right">
+                                                            @if (!is_null($data['detail']->diskon))
+                                                                @if ($data['detail']->satuan_promo === 'rupiah')
+                                                                    {{'Rp. '.number_format($data['detail']->diskon,0,'','.').',-'}}
+                                                                @elseif ($data['detail']->satuan_promo === 'percent')
+                                                                    {{$data['detail']->diskon.'%'}}
+                                                                @endif
+                                                            @else
+                                                                {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Biaya Admin</td>
+                                                        <td class="align-right">Rp. {{number_format($data['paygate']->biaya_admin,0,'','.')}},-</td>
+                                                    </tr>
+                                                </table>
+                                                <hr>
+                                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td>Total Pembayaran</td>
+                                                    <td class="align-right">Rp. {{number_format($data['detail']->transactionAmount,0,'','.')}},-</td>
+                                                </tr>
+                                                </table>
+                                                <hr>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
                             </tr>
-                            </table>
-                            <hr>
-                        </td>
-                        </tr>
-                    </table>
-                    </td>
-                </tr>
-                <!-- END MAIN CONTENT AREA -->
-                </table>
-                <!-- END CENTERED WHITE CONTAINER -->
-                <!-- START FOOTER -->
-                <div class="footer">
-                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <td class="content-block">
-                            <span>Email dibuat secara otomatis. Mohon untuk tidak mengirimkan balasan ke email ini.</span>
-                            <br>customercare@medlinx.co.id, contact center : 021-723-7982
-                        </td>
-                    </tr>
-                </table>
-                </div>
-                <!-- END FOOTER -->
-            </div>
-            </td>
-            <td>&nbsp;</td>
-        </tr>
+                            <!-- END MAIN CONTENT AREA -->
+                        </table>
+                        <!-- END CENTERED WHITE CONTAINER -->
+                        <!-- START FOOTER -->
+                        <div class="footer">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="content-block">
+                                    <span>Email dibuat secara otomatis. Mohon untuk tidak mengirimkan balasan ke email ini.</span>
+                                    <br>customercare@medlinx.co.id, contact center : 021-723-7982
+                                </td>
+                            </tr>
+                        </table>
+                        </div>
+                        <!-- END FOOTER -->
+                    </div>
+                </td>
+                <td>&nbsp;</td>
+            </tr>
         </table>
     </body>
 </html>

@@ -3,7 +3,7 @@
     <head>
         <meta name="viewport" content="width=device-width" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Konfirmasi Pembayaran</title>
+        <title>Pembatalan Berlangganan</title>
         <style>
         /* -------------------------------------
             GLOBAL RESETS
@@ -12,7 +12,6 @@
         img {
             border: none;
             -ms-interpolation-mode: bicubic;
-            width: 25%;
             margin-bottom: 5px;
         }
 
@@ -244,105 +243,105 @@
         <tr>
             <td>&nbsp;</td>
             <td class="container">
-            <div class="content">
-                <!-- START CENTERED WHITE CONTAINER -->
-                <table role="presentation" class="main">
-                <!-- START MAIN CONTENT AREA -->
-                <tr>
-                    <td class="wrapper">
+                <div class="content">
+                    <!-- START CENTERED WHITE CONTAINER -->
+                    <table role="presentation" class="main">
+                        <!-- START MAIN CONTENT AREA -->
+                        <tr>
+                            <td class="wrapper">
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td>
+                                            <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="100" height="35" style="height: auto;">
+                                            <h2>Pembayaran melalui {{$data['pg']->nama}} dibatalkan</h2>
+                                            <?php //setlocale(LC_TIME, 'id_ID'); ?>
+                                            <p class="bold">Pembayaran Anda telah dibatalkan</p>
+                                            <p class="bold" style="color:red">Mohon untuk tidak membayar pembelian ini</p>
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td class="bold">Total Pembayaran</td>
+                                                    <td class="bold">Batas Waktu Pembayaran</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Rp. {{number_format($data['pl']->transactionAmount,0,',','.')}},-</td>
+                                                    <td>{{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['pl']->transactionExpire)))}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="bold">Metode Pembayaran</td>
+                                                    <td class="bold">Kode Pembayaran/No. Virtual Account</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{$data['pg']->nama}}</td>
+                                                    <td>{{$data['pl']->customerAccount}}</td>
+                                                </tr>
+                                            </table>
+                                            <br>
+                                            <p class="bold">Keterangan</p>
+                                            <p>Pembayaran dibatalkan oleh {{$data['user']}} pada tanggal {{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['now'])))}}</p>
+                                            <hr>
+                                            <p class="bold">Detail Pembelian :</p>
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td>No. Tagihan : <span style="color:blue">{{$data['pl']->transactionNo}}</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Paket {{$data['paket']->nama.' ('.$data['bill']->paket_bln.' bulan)'}}</td>
+                                                    <td class="align-right">Rp. {{number_format($data['bill']->amount_real,0,'','.')}},-</td>
+                                                </tr>
+                                                @if(!is_null($data['addson']))
+                                                <tr>
+                                                    <td>Paket {{$data['addson']->nama}}</td>
+                                                    <td class="align-right">Rp. {{number_format($data['addson']->harga,0,'','.')}},-</td>
+                                                </tr>
+                                                @endif
+                                                <tr>
+                                                    <td>Potongan</td>
+                                                    <td class="align-right">
+                                                        @if (!is_null($data['promo']))
+                                                            @if ($data['promo']->satuan === 'rupiah')
+                                                                {{'Rp. '.number_format($data['promo']->value,0,'','.').',-'}}
+                                                            @elseif ($data['promo']->satuan === 'percent')
+                                                                {{$data['promo']->value.'%'}}
+                                                            @endif
+                                                        @else
+                                                            {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Biaya Admin</td>
+                                                    <td class="align-right">Rp. {{number_format($data['pg']->biaya_admin,0,'','.')}},-</td>
+                                                </tr>
+                                            </table>
+                                            <hr>
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td>Total Pembayaran</td>
+                                                <td class="align-right">Rp. {{number_format($data['pl']->transactionAmount,0,'','.')}},-</td>
+                                            </tr>
+                                            </table>
+                                            <hr>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- END MAIN CONTENT AREA -->
+                    </table>
+                    <!-- END CENTERED WHITE CONTAINER -->
+                    <!-- START FOOTER -->
+                    <div class="footer">
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                         <tr>
-                        <td>
-                            <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok"/>
-                            <h2>Pembayaran melalui {{$data['pg']->nama}} dibatalkan</h2>
-                            <?php //setlocale(LC_TIME, 'id_ID'); ?>
-                            <p class="bold">Pembayaran Anda telah dibatalkan</p>
-                            <p class="bold" style="color:red">Mohon untuk tidak membayar pembelian ini</p>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td class="bold">Total Pembayaran</td>
-                                    <td class="bold">Batas Waktu Pembayaran</td>
-                                </tr>
-                                <tr>
-                                    <td>Rp. {{number_format($data['pl']->transactionAmount,0,',','.')}},-</td>
-                                    <td>{{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['pl']->transactionExpire)))}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="bold">Metode Pembayaran</td>
-                                    <td class="bold">Kode Pembayaran/No. Virtual Account</td>
-                                </tr>
-                                <tr>
-                                    <td>{{$data['pg']->nama}}</td>
-                                    <td>{{$data['pl']->customerAccount}}</td>
-                                </tr>
-                            </table>
-                            <br>
-                            <p class="bold">Keterangan</p>
-                            <p>Pembayaran dibatalkan oleh {{$data['user']}} pada tanggal {{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['now'])))}}</p>
-                            <hr>
-                            <p class="bold">Detail Pembelian :</p>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td>No. Tagihan : <span style="color:blue">{{$data['pl']->transactionNo}}</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Paket {{$data['paket']->nama.' ('.$data['bill']->paket_bln.' bulan)'}}</td>
-                                    <td class="align-right">Rp. {{number_format($data['bill']->amount_real,0,'','.')}},-</td>
-                                </tr>
-                                @if(!is_null($data['addson']))
-                                <tr>
-                                    <td>Paket {{$data['addson']->nama}}</td>
-                                    <td class="align-right">Rp. {{number_format($data['addson']->harga,0,'','.')}},-</td>
-                                </tr>
-                                @endif
-                                <tr>
-                                    <td>Potongan</td>
-                                    <td class="align-right">
-                                        @if (!is_null($data['promo']))
-                                            @if ($data['promo']->satuan === 'rupiah')
-                                                {{'Rp. '.number_format($data['promo']->value,0,'','.').',-'}}
-                                            @elseif ($data['promo']->satuan === 'percent')
-                                                {{$data['promo']->value.'%'}}
-                                            @endif
-                                        @else
-                                            {{'-'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Biaya Admin</td>
-                                    <td class="align-right">Rp. {{number_format($data['pg']->biaya_admin,0,'','.')}},-</td>
-                                </tr>
-                            </table>
-                            <hr>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                            <tr>
-                                <td>Total Pembayaran</td>
-                                <td class="align-right">Rp. {{number_format($data['pl']->transactionAmount,0,'','.')}},-</td>
-                            </tr>
-                            </table>
-                            <hr>
-                        </td>
+                            <td class="content-block">
+                                <span>Email dibuat secara otomatis. Mohon untuk tidak mengirimkan balasan ke email ini.</span>
+                                <br>customercare@medlinx.co.id, contact center : 021-723-7982
+                            </td>
                         </tr>
                     </table>
-                    </td>
-                </tr>
-                <!-- END MAIN CONTENT AREA -->
-                </table>
-                <!-- END CENTERED WHITE CONTAINER -->
-                <!-- START FOOTER -->
-                <div class="footer">
-                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <td class="content-block">
-                            <span>Email dibuat secara otomatis. Mohon untuk tidak mengirimkan balasan ke email ini.</span>
-                            <br>customercare@medlinx.co.id, contact center : 021-723-7982
-                        </td>
-                    </tr>
-                </table>
+                    </div>
+                    <!-- END FOOTER -->
                 </div>
-                <!-- END FOOTER -->
-            </div>
             </td>
             <td>&nbsp;</td>
         </tr>
