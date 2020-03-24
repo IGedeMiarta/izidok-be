@@ -68,7 +68,7 @@ class PembayaranController extends Controller
           ->where('pasien.nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
           ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
           ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
-          ->where('pembayaran.status', 'like', "{$request->status_pembayaran}%")
+          ->where('pembayaran.status', 'like', "{$request->status}%")
           ->where('pembayaran.klinik_id', $user->klinik_id)
           ->orderBy($column, $order)
           ->paginate($request->limit);
