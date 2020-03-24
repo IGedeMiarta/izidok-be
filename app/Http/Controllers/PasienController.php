@@ -260,7 +260,7 @@ class PasienController extends Controller
 				$q->select('id', 'provinsi_nama');
 			},
 			'kota' => function($q) {
-				$q->select('id', 'nama');
+                $q->select('id', 'nama', 'provinsi_id');
 			}
 		])->where('id',$request->id)->where('klinik_id',$klinikId)->first();
 
@@ -281,7 +281,7 @@ class PasienController extends Controller
 			if (!is_null($trans)) {
 				$pasien->anamnesa = $trans->anamnesa;
 			}
-			
+
 			return response()->json([
 				'status' => true,
 				'message' => 'success',
