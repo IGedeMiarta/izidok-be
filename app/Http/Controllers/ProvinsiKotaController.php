@@ -22,7 +22,8 @@ class ProvinsiKotaController extends Controller
 
 	public function getCityByProvince($id)
 	{
-		$city = Kota::where('provinsi_id', $id)->get();
+        $city = Kota::where('provinsi_id', $id)->get();
+        $data['provinsi_id'] = $id;
 		$data['kota'] = $city;
 		if(count($city) != 0)
 		{
