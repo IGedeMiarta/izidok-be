@@ -62,6 +62,7 @@ class PembayaranController extends Controller
             DB::raw("CONCAT(pasien.nama,' (',DATE_FORMAT(pasien.tanggal_lahir, '%d-%m-%Y'),')') as nama"),
             'pasien.jenis_kelamin',
             'pembayaran.status',
+            'pembayaran.created_at'
           ])
           ->leftJoin('trans_klinik', 'pembayaran.transklinik_id', '=', 'trans_klinik.id')
           ->leftJoin('pasien', 'trans_klinik.pasien_id', '=', 'pasien.id')
@@ -69,6 +70,7 @@ class PembayaranController extends Controller
           ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
           ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
           ->where('pembayaran.status', 'like', "{$request->status}%")
+          ->whereDate('pembayaran.created_at','like', "{$request->tanggal_pembayaran}%")
           ->where('pembayaran.klinik_id', $user->klinik_id)
           ->orderBy($column, $order)
           ->paginate($request->limit);
