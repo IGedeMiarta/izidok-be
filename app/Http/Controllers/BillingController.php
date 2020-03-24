@@ -35,6 +35,35 @@ class BillingController extends Controller
             $order = $request->order;
         }
 
+        $zero = "Menunggu Pembayaran";
+        $one = "Lunas";
+        $two = "Gagal";
+        $three = "Batal";
+		$status = '';
+
+		if(!empty($request->status_text)) {
+            $waiting = $paid = $cancel = false;
+			if (stripos($zero, $request->status_text) !== false) {
+				$waiting = true;
+			}
+			if (stripos($one, $request->status_text) !== false) {
+				$paid = true;
+            }
+            if (stripos($two, $request->status_text) !== false) {
+				$failed = true;
+            }
+            if (stripos($three, $request->status_text) !== false) {
+				$cancel = true;
+            }
+            //dd($waiting);
+
+			if($waiting) $status = 0;
+            elseif($paid) $status = 1;
+            elseif($failed) $status = 2;
+            elseif($cancel) $status = 3;
+        }
+        //dd($status);
+
         $billing = Billing::select([
             'billing.id',
             'no_invoice AS nomor_tagihan',
@@ -51,7 +80,7 @@ class BillingController extends Controller
         ->where('paket.nama', 'like', "%{$request->produk}%")
         ->where('paket_bln', 'like', "%{$request->periode_berlaku}%")
         ->where('amount_disc', 'like', "%{$request->total_pembayaran}%")
-        ->where('billing.status', 'like', "%{$request->status}%")
+        ->where('billing.status', 'like', "%{$status}%")
         ->orderBy($column, $order);
 
         if(!empty($request->tanggal_bayar)) {
