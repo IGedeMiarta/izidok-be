@@ -287,66 +287,66 @@
     </head>
     <body class="">
         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
-        <tr>
-            <td>&nbsp;</td>
-            <td class="container">
-            <div class="content">
-                <!-- START CENTERED WHITE CONTAINER -->
-                <table role="presentation" class="main">
-                <!-- START MAIN CONTENT AREA -->
-                <tr>
-                    <td class="wrapper">
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td>&nbsp;</td>
+                <td class="container">
+                <div class="content">
+                    <!-- START CENTERED WHITE CONTAINER -->
+                    <table role="presentation" class="main">
+                        <!-- START MAIN CONTENT AREA -->
                         <tr>
-                        <td>
-                            <table width="300" border="0" align="center" cellpadding="0" cellspacing="0" ">
-                                <tr>
-                                    <td align="center" valign="top">
-                                        <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="200" height=""/></a>
-                                    </td>
-                                </tr>
-                            </table>
-                            <br>
-                            <h2>Hai {{@$name}},</h2>
-                            <p>Mohon klik link berikut untuk mereset password Anda!</p>
-                            <br>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td class="btn btn-primary" style="box-sizing: border-box; width: 100%; background-color: #3498db; border-radius: 5px; text-align: center;">
-                                        <a style="background-color: #3498db; border: solid 1px #3498db; border-radius: 5px; box-sizing: border-box; color: #ffffff; cursor: pointer; display: block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none; text-transform: capitalize; text-align: center;" href="{{@$activation_url}}" target="_blank">Reset Password</a>
-                                    </td>
-                                </tr>
-                            </table>
-                            <hr><br>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td style="word-break:break-all">Jika Anda kesulitan mengklik tombol 'Reset Password', copy dan paste URL <br>di bawah ke dalam browser Anda:</td>
-                                </tr>
-                                <tr>
-                                    <td style="word-break:break-all">{{@$activation_url}}</td>
-                                </tr>
-                            </table>
-                            <br><br>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td>Terima kasih,</td>
-                                </tr>
-                                <tr>
-                                    <td>Tim izidok</td>
-                                </tr>
-                            </table>
-                        </td>
+                            <td class="wrapper">
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td>
+                                            <table width="300" border="0" align="center" cellpadding="0" cellspacing="0" ">
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="200" height=""/></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <br>
+                                            <h2>Hai {{@$name}},</h2>
+                                            <p>Mohon klik link berikut untuk mereset password Anda!</p>
+                                            <br>
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td class="btn btn-primary" style="box-sizing: border-box; width: 100%; background-color: #3498db; border-radius: 5px; text-align: center;">
+                                                        <a style="background-color: #3498db; border: solid 1px #3498db; border-radius: 5px; box-sizing: border-box; color: #ffffff; cursor: pointer; display: block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none; text-transform: capitalize; text-align: center;" href="{{@$activation_url}}" target="_blank">Reset Password</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <hr><br>
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td style="word-break:break-all">Jika Anda kesulitan mengklik tombol 'Reset Password', copy dan paste URL <br>di bawah ke dalam browser Anda:</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-break:break-all">{{@$activation_url}}</td>
+                                                </tr>
+                                            </table>
+                                            <br><br>
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td>Terima kasih,</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Tim izidok</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
                         </tr>
+                        <!-- END MAIN CONTENT AREA -->
                     </table>
-                    </td>
-                </tr>
-                <!-- END MAIN CONTENT AREA -->
-                </table>
-                <!-- END CENTERED WHITE CONTAINER -->
-            </div>
-            </td>
-            <td>&nbsp;</td>
-        </tr>
+                    <!-- END CENTERED WHITE CONTAINER -->
+                </div>
+                </td>
+                <td>&nbsp;</td>
+            </tr>
         </table>
     </body>
 </html>
