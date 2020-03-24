@@ -57,7 +57,7 @@
 			</tr>
 		</table>
 		<br style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px;">
-			<p align="right" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">{{date("d F Y", strtotime($p->created_time))}}
+			<p align="right" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px;">{{App\DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($p->created_time)))}}
 			</p><p class="signature" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px; text-align: right; margin: 30px 0px 0px 0px;">{{Auth::user()->nama}}
 			@endforeach
 		</p><p class="footer1" style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 6px; height: 3px; padding: 0px 10px 0px 10px; text-align: center; margin: 50px 0px 15px 0px;">**********</p>

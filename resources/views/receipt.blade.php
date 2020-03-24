@@ -110,7 +110,7 @@
         </tr>
     </table>
     <br>
-        <p align="right">{{date("d F Y", strtotime($p->created_time))}} </td>
+        <p align="right">{{App\DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($p->created_time)))}}</td>
         <p class="signature">{{Auth::user()->nama}}</td>
         @endforeach
     <p class="footer">**********</p>
