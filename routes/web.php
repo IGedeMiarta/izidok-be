@@ -60,6 +60,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->group(['middleware' => ['auth','singdev']], function () use ($router) {
         //user
         $router->get('/user/finish', 'UserController@isFirstLogin');
+        $router->post('/user/skip_asisten', 'UserController@skipAsisten');
         $router->get('/user/{id}', 'UserController@show');
         $router->put('/user/{id}', 'UserController@update');
         $router->post('/user/upload-foto/{id}', 'UserController@uploadFotoProfile');
