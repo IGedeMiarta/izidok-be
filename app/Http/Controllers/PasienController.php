@@ -118,10 +118,10 @@ class PasienController extends Controller
 			'tensi_sistole' => 'integer',
 			'tensi_diastole' => 'integer',
 			'nadi' => 'integer',
-			//'suhu' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
+			'suhu' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
 			'respirasi' => 'integer',
 			'tinggi_badan' => 'integer',
-			//'berat_badan' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
+			'berat_badan' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
 			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15|nullable'
 		]);
 
@@ -176,10 +176,10 @@ class PasienController extends Controller
 		$pasien->tensi_sistole = $request->input('tensi_sistole');
 		$pasien->tensi_diastole = $request->input('tensi_diastole');
 		$pasien->nadi = $request->input('nadi');
-		$pasien->suhu = $request->input('suhu');
+		$pasien->suhu = str_replace(',','.',$request->input('suhu'));
 		$pasien->respirasi = $request->input('respirasi');
 		$pasien->tinggi_badan = $request->input('tinggi_badan');
-		$pasien->berat_badan = $request->input('berat_badan');
+		$pasien->berat_badan = str_replace(',','.',$request->input('berat_badan'));
         $pasien->user_id = $request->user_id;
 
         $jenis_faskes = "";
@@ -380,10 +380,10 @@ class PasienController extends Controller
 		$pasien->tensi_sistole = $request->input('tensi_sistole');
 		$pasien->tensi_diastole = $request->input('tensi_diastole');
 		$pasien->nadi = $request->input('nadi');
-		$pasien->suhu = $request->input('suhu');
+		$pasien->suhu = str_replace(',','.',$request->input('suhu'));
 		$pasien->respirasi = $request->input('respirasi');
 		$pasien->tinggi_badan = $request->input('tinggi_badan');
-		$pasien->berat_badan = $request->input('berat_badan');
+		$pasien->berat_badan = str_replace(',','.',$request->input('berat_badan'));
 		$pasien->nomor_hp_penanggung_jawab = $request->input('nomor_hp_penanggung_jawab');
 		$pasien->hubungan_pasien = $request->input('hubungan_pasien');
 		$status = $pasien->save();

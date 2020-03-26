@@ -55,14 +55,12 @@ class BillingController extends Controller
             if (stripos($three, $request->status_text) !== false) {
 				$cancel = true;
             }
-            //dd($waiting);
 
 			if($waiting) $status = 0;
             elseif($paid) $status = 1;
             elseif($failed) $status = 2;
             elseif($cancel) $status = 3;
         }
-        //dd($status);
 
         $billing = Billing::select([
             'billing.id',
