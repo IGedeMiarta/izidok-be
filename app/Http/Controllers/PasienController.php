@@ -118,10 +118,10 @@ class PasienController extends Controller
 			'tensi_sistole' => 'integer',
 			'tensi_diastole' => 'integer',
 			'nadi' => 'integer',
-			'suhu' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
+			//'suhu' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
 			'respirasi' => 'integer',
 			'tinggi_badan' => 'integer',
-			'berat_badan' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
+			//'berat_badan' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
 			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15|nullable'
 		]);
 
@@ -181,7 +181,7 @@ class PasienController extends Controller
 		$pasien->tinggi_badan = $request->input('tinggi_badan');
 		$pasien->berat_badan = $request->input('berat_badan');
         $pasien->user_id = $request->user_id;
-        dd($pasien);
+
         $jenis_faskes = "";
 		if ($klinik->tipe_faskes == Constant::TIPE_KLINIK) {
 			$jenis_faskes = Constant::TIPE_FASKES_KLINIK;
