@@ -205,7 +205,7 @@ class UserController extends Controller
 
                 if (is_null($user->klinik->spesialisasi_id)) {
                     $position = 'spesialisasi';
-                } elseif (!$op) {
+                } elseif (!$op && $user->is_skip_asisten == 0) {
                     $position = 'operator';
                 } elseif (!$trf) {
                     $position = 'tarif';
@@ -641,6 +641,21 @@ class UserController extends Controller
 
             return response()->json(['status' => true, 'message' => 'First login changed']);
         }
+    }
+
+    public function skipAsisten()
+    {
+        $user = Auth::user();
+
+	    if (!empty($user)) {
+            $usr = User::find($user->id);
+            $usr->is_skip_asisten = 1;
+            $usr->save();
+
+            return response()->json(['status' => true, 'message' => 'User decided to skip input asisten']);
+        }
+
+        return response()->json(['status' => false, 'message' => 'User not found']);
     }
 
     public function createRoles()
