@@ -199,7 +199,7 @@
         </table>
     </main>
         <footer>
-        customercare@medlinx.co.id, contact center : 021-723-7982
+            customercare@izidok.id, contact center : 021-723-7982
         </footer>
     </body>
 </html>

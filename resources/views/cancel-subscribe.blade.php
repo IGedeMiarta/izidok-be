@@ -335,7 +335,7 @@
                         <tr>
                             <td class="content-block">
                                 <span>Email dibuat secara otomatis. Mohon untuk tidak mengirimkan balasan ke email ini.</span>
-                                <br>customercare@medlinx.co.id, contact center : 021-723-7982
+                                <br>customercare@izidok.id, contact center : 021-723-7982
                             </td>
                         </tr>
                     </table>
