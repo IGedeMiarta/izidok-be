@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Paygate;
+use App\PaygateLog;
 use App\Billing;
 use App\PayflagLog;
 use App\Constant;
@@ -97,7 +98,7 @@ class PayFlagController extends Controller
                     break;
                     case 3:
                         $payStatus = '05';
-                        $payMessage = 'Transaction Cancelled';
+                        $payMessage = 'Transaction has been cancelled';
                     break;
                     default:
                         $payStatus = '01';
@@ -108,11 +109,21 @@ class PayFlagController extends Controller
                 return response()->json($this->payFlagResponse($request, $payStatus, $payMessage), 200);
             }
 
+            $pglog = PaygateLog::select('customerAccount')->where('transactionNo', $request->transactionNo)->first();
+
+            if($pglog) {
+                return response()->json($this->payFlagResponse($request, '01', 'Invalid transactionNo (02)'), 200);
+            }
+
+            if($pglog->customerAccount != $request->customerAccount) {
+                return response()->json($this->payFlagResponse($request, '01', 'Invalid VA Number'), 200);
+            }
+
             $payment_date = new Carbon($request->transactionDate);
             $payment_expired = $billing->expired_pay;
 
             if($payment_date > $payment_expired) {
-                return response()->json($this->payFlagResponse($request, '04', 'Transaction Expired'), 200);
+                return response()->json($this->payFlagResponse($request, '04', 'Transaction has been expired'), 200);
             }
 
             if($billing->amount_pay == $request->transactionAmount) {
