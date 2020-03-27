@@ -15,7 +15,7 @@ class PaygateLog extends Model
     protected $fillable = [
 		'channelId','serviceCode','currency','transactionNo','transactionAmount',
 		'transactionDate','transactionExpire','description','customerAccount',
-		'customerName','authCode','rc','created_by'
+		'customerName','authCode','rc','created_by','insertId'
 	];
     protected $dates = ['deleted_at'];
 }
