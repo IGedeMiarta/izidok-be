@@ -254,7 +254,7 @@ class PaketController extends Controller
                 'id' => $pg->id,
                 'nama' => $pg->nama,
                 'biaya_admin' => $pg->biaya_admin,
-                'logo' => url('/paygate/'.$pg->logo),
+                'logo' => 'https://dev-api.izidok.id/paygate/'.$p->logo,
             ];
 
             $user = Auth::user();
