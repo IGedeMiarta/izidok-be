@@ -375,8 +375,8 @@ class PaketController extends Controller
                 $newPaket->paket_id = $bill->paket_id;
                 $newPaket->addson_id = $bill->addson_id;
                 $newPaket->limit = strtolower($pkg->limit) != 'unlimited' ? $bill->paket_bln * $pkg->limit : '9999999999';
-                $newPaket->started_date = DateFormat::ConvertDate(strftime("%A, %d %b %Y"));
-                $newPaket->expired_date = DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime("+ ".$bill->paket_bln." month")));
+                $newPaket->started_date = date('Y-m-d H:i:s');
+                $newPaket->expired_date = date('Y-m-d H:i:s', strtotime("+ ".$bill->paket_bln." month"));
                 $newPaket->status = '1';
                 $newPaket->created_by = Auth::user()->id;
                 $newPaket->save();
@@ -417,8 +417,8 @@ class PaketController extends Controller
                 $newPaket->paket_id = $bill->paket_id;
                 $newPaket->addson_id = $bill->addson_id;
                 $newPaket->limit = strtolower($pkg->limit) != 'unlimited' ? $bill->paket_bln * $pkg->limit : '9999999999';
-                $newPaket->started_date = DateFormat::ConvertDate(strftime("%A, %d %b %Y"));
-                $newPaket->expired_date = DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime("+ ".$bill->paket_bln." month")));
+                $newPaket->started_date = date('Y-m-d H:i:s');
+                $newPaket->expired_date = date('Y-m-d H:i:s', strtotime("+ ".$bill->paket_bln." month"));
                 $newPaket->status = '1';
                 $newPaket->created_by = Auth::user()->id;
                 $newPaket->save();
