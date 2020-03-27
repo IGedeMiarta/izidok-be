@@ -59,7 +59,7 @@ class PaketController extends Controller
                 'nama' => $p->nama,
                 'biaya_admin' => $p->biaya_admin,
                 //'logo' => url('/paygate/'.$p->logo),
-                'logo' => 'https://dev-api.izidok.id/paygate/bca.png',
+                'logo' => 'https://dev-api.izidok.id/paygate/'.$p->logo,
             ];
         }
 
