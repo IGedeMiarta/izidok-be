@@ -402,7 +402,7 @@ class PaketController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Masa Berlaku Paket Anda telah berakhir, silahkan lakukan pembelian untuk dapat melakukan aktivitas ini.',
-                    'data' => $pkt,
+                    'data' => $pkt_exp,
                 ], 200);
             } elseif (($pkt_exp->limit <= 0 && $pkt_exp->expired_date < date('Y-m-d H:i:s') && $billing->exists()) || ($pkt_exp->limit == 0 && $pkt_exp->expired_date > date('Y-m-d H:i:s') && $billing->exists())) {
                 $bill = $billing->first();
