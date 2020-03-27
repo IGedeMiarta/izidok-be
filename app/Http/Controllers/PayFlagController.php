@@ -41,12 +41,24 @@ class PayFlagController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json($this->payFlagResponse($request, '03', 'Invalid Parameter'), 200);
+                return response()->json($this->payFlagResponse($request, '01', 'Invalid Parameter'), 200);
+            }
+
+            if($request->currency != 'IDR') {
+                return response()->json($this->payFlagResponse($request, '01', 'Invalid Currency'), 200);
+            }
+
+            if($request->transactionStatus != '00') {
+                return response()->json($this->payFlagResponse($request, '01', 'Invalid Transaction Status'), 200);
             }
 
             $pg = Paygate::select('secretkey')
                 ->where('channel_id', $request->channelId)
                 ->first();
+            
+            if(!$pg) {
+                return response()->json($this->payFlagResponse($request, '01', 'Invalid channelId'), 200);
+            }
 
             $authCode = [
                 $request->transactionNo,
@@ -58,12 +70,16 @@ class PayFlagController extends Controller
             ];
 
             if($request->authCode != hash("sha256", implode('', $authCode))) {
-                return response()->json($this->payFlagResponse($request, '03', 'Invalid Auth Code'), 200);
+                return response()->json($this->payFlagResponse($request, '01', 'Invalid Auth Code'), 200);
             }
 
             $billing = Billing::select('expired_pay', 'amount_disc', 'amount_pay','status')
                 ->where('no_invoice', $request->transactionNo)
                 ->first();
+            
+            if(!$billing) {
+                return response()->json($this->payFlagResponse($request, '01', 'Invalid transactionNo'), 200);
+            }
 
             // 0 = waiting
             // 1 = success
@@ -132,6 +148,9 @@ class PayFlagController extends Controller
 
                 DB::rollBack();
                 return response()->json($this->payFlagResponse($request, '01', 'Failed DB'), 200);
+            }
+            else {
+                return response()->json($this->payFlagResponse($request, '01', 'Invalid Transaction Amount'), 200);
             }
 
             return response()->json($this->payFlagResponse($request, '01', 'Failed'), 200);
