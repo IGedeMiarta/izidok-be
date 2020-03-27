@@ -132,7 +132,7 @@ class TransKlinikController extends Controller
       'nik' => 'string',
       'jenis_kelamin' => 'required|integer|min:0|max:1',
       'nomor_telp' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
-      'tinggi_badan' => 'integer',
+      'tinggi_badan' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
       'berat_badan' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
       'suhu' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
       'tensi_sistole' => 'integer',
