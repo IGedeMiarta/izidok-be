@@ -15,7 +15,8 @@ class PayflagLog extends Model
     protected $fillable = [
 		'channelId','currency','transactionNo','transactionAmount',
 		'transactionDate','channelType','transactionStatus','transactionMessage',
-		'customerAccount','flagType','insertId','authCode','paymentStatus','paymentMessage'
+		'customerAccount','flagType','insertId','authCode','paymentStatus','paymentMessage',
+		'paymentReffId', 'additionalData'
 	];
 }
 

@@ -186,6 +186,7 @@ class PaygateController extends Controller
         curl_close($ch);
 
         $req['rc'] = $response['insertStatus'];
+        $req['insertId'] = $response['insertId'];
         $req['created_by'] = $user->id;
         PaygateLog::create($req);
 
@@ -232,6 +233,7 @@ class PaygateController extends Controller
         curl_close($ch);
 
         $req['rc'] = $response['insertStatus'];
+        $req['insertId'] = $response['insertId'];
         $req['created_by'] = $user->id;
         PaygateLog::create($req);
 
