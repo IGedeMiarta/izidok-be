@@ -28,9 +28,9 @@ class PayFlagController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'channelId' => 'required|string|exists:paygate,channel_id',
-                'currency' => 'required|in:IDR',
-                'transactionNo' => 'required|exists:billing,no_invoice',
+                'channelId' => 'required',
+                'currency' => 'required',
+                'transactionNo' => 'required',
                 'transactionAmount' => 'required',
                 'channelType' => 'required',
                 'transactionStatus' => 'required',
