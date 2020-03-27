@@ -12,6 +12,7 @@ use App\Dokter;
 use App\Operator;
 use App\User;
 use App\KlinikSubscribe;
+use App\DateFormat;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use DB;
@@ -414,7 +415,7 @@ class PaketController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Paket Anda '.$pkg->nama.' telah OTOMATIS Aktif mulai dari tanggal '.$newPaket->started_date.' hingga '.$newPaket->expired_date.'!',
+                'message' => 'Paket Anda '.$pkg->nama.' telah OTOMATIS Aktif mulai dari tanggal '.DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($newPaket->started_date))).' hingga '.DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($newPaket->expired_date))).'!',
                 'data' => $newPaket,
             ], 200);
         } else {
