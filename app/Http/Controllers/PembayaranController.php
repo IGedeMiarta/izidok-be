@@ -436,6 +436,7 @@ class PembayaranController extends Controller
         ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
         ->where('pasien.tanggal_lahir', 'like', "%{$request->tanggal_lahir}%")
         ->where('pasien.nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
+        ->where('pembayaran.total_net', 'like', "%{$request->jumlah_transaksi}%")
         ->where('pembayaran.klinik_id', $user->klinik_id)
         ->where('pembayaran.status', Constant::LUNAS);
 
