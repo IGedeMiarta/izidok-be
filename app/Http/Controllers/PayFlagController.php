@@ -163,7 +163,8 @@ class PayFlagController extends Controller
             'currency' => $request->currency,
             'paymentStatus' => $status,
             'paymentMessage' => $message,
-            'flagType' => $request->flagType
+            'flagType' => $request->flagType,
+            'paymentReffId' => $request->paymentReffId
         ];
     }
 }
