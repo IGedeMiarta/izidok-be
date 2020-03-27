@@ -185,7 +185,7 @@ class TransKlinikController extends Controller
     #update pasien
     $pasien = Pasien::find($request->pasien_id);
     if ($pasien) {
-      $pasien->tinggi_badan = $request->tinggi_badan;
+      $pasien->tinggi_badan = str_replace(',','.',$request->tinggi_badan);
       $pasien->berat_badan = str_replace(',','.',$request->berat_badan);
       $pasien->suhu = str_replace(',','.',$request->suhu);
       $pasien->tensi_sistole = $request->tensi_sistole;

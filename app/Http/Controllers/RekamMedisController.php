@@ -316,7 +316,7 @@ class RekamMedisController extends Controller
         $anamnesa->nadi = ($request->nadi) ? $request->nadi : $pasien->nadi;
         $anamnesa->suhu = ($request->suhu) ? str_replace(',','.',$request->suhu) : $pasien->suhu;
         $anamnesa->respirasi = ($request->respirasi) ? $request->respirasi : $pasien->respirasi;
-        $anamnesa->tinggi_badan = ($request->tinggi_badan) ? $request->tinggi_badan : $pasien->tinggi_badan;
+        $anamnesa->tinggi_badan = ($request->tinggi_badan) ? str_replace(',','.',$request->tinggi_badan) : $pasien->tinggi_badan;
         $anamnesa->berat_badan = ($request->berat_badan) ? str_replace(',','.',$request->berat_badan) : $pasien->berat_badan;
         $anamnesa->notes = $request->anamnesa_text;
         $anamnesa->is_draw = $request->anamnesa_is_draw;

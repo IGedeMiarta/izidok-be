@@ -178,7 +178,7 @@ class PasienController extends Controller
 		$pasien->nadi = $request->input('nadi');
 		$pasien->suhu = str_replace(',','.',$request->input('suhu'));
 		$pasien->respirasi = $request->input('respirasi');
-		$pasien->tinggi_badan = $request->input('tinggi_badan');
+		$pasien->tinggi_badan = str_replace(',','.',$request->input('tinggi_badan'));
 		$pasien->berat_badan = str_replace(',','.',$request->input('berat_badan'));
         $pasien->user_id = $request->user_id;
 
@@ -382,7 +382,7 @@ class PasienController extends Controller
 		$pasien->nadi = $request->input('nadi');
 		$pasien->suhu = str_replace(',','.',$request->input('suhu'));
 		$pasien->respirasi = $request->input('respirasi');
-		$pasien->tinggi_badan = $request->input('tinggi_badan');
+		$pasien->tinggi_badan = str_replace(',','.',$request->input('tinggi_badan'));
 		$pasien->berat_badan = str_replace(',','.',$request->input('berat_badan'));
 		$pasien->nomor_hp_penanggung_jawab = $request->input('nomor_hp_penanggung_jawab');
 		$pasien->hubungan_pasien = $request->input('hubungan_pasien');
