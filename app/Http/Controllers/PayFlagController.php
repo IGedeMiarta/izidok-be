@@ -109,7 +109,7 @@ class PayFlagController extends Controller
                 return response()->json($this->payFlagResponse($request, $payStatus, $payMessage), 200);
             }
 
-            $pglog = PaygateLog::select('customerAccount')->where('transactionNo', $request->transactionNo)->first();
+            $pglog = PaygateLog::select('customerAccount', 'insertId')->where('transactionNo', $request->transactionNo)->first();
 
             if($pglog) {
                 return response()->json($this->payFlagResponse($request, '01', 'Invalid transactionNo (02)'), 200);
@@ -117,6 +117,10 @@ class PayFlagController extends Controller
 
             if($pglog->customerAccount != $request->customerAccount) {
                 return response()->json($this->payFlagResponse($request, '01', 'Invalid VA Number'), 200);
+            }
+
+            if($pglog->insertId != $request->insertId) {
+                return response()->json($this->payFlagResponse($request, '01', 'Invalid InsertId'), 200);
             }
 
             $payment_date = new Carbon($request->transactionDate);
