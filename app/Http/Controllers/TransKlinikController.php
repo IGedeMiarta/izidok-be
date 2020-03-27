@@ -87,7 +87,8 @@ class TransKlinikController extends Controller
             'nadi',
             'suhu',
             'tinggi_badan',
-            'berat_badan'
+            'berat_badan',
+            'respirasi',
           ])
           ->join('pasien', 'pasien.id', '=', 'trans_klinik.pasien_id')
           ->where(DB::raw('date(waktu_konsultasi)'), $consultation_time)
@@ -102,7 +103,7 @@ class TransKlinikController extends Controller
           ->paginate($request->limit);
 
         $data['role'] = $user->roles->first()->name;
-    		$data['trans_klinik'] = $trans_klinik;
+    	$data['trans_klinik'] = $trans_klinik;
 
 		if (!$trans_klinik) {
 			return response()->json([
