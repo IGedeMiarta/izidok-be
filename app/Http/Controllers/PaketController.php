@@ -375,15 +375,15 @@ class PaketController extends Controller
                 $newPaket->paket_id = $bill->paket_id;
                 $newPaket->addson_id = $bill->addson_id;
                 $newPaket->limit = strtolower($pkg->limit) != 'unlimited' ? $bill->paket_bln * $pkg->limit : '9999999999';
-                $newPaket->started_date = date('Y-m-d H:i:s');
-                $newPaket->expired_date = date('Y-m-d H:i:s', strtotime("+ ".$bill->paket_bln." month"));
+                $newPaket->started_date = DateFormat::ConvertDate(strftime("%A, %d %b %Y"));
+                $newPaket->expired_date = DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime("+ ".$bill->paket_bln." month")));
                 $newPaket->status = '1';
                 $newPaket->created_by = Auth::user()->id;
                 $newPaket->save();
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Paket Anda '.$pkg->nama.' telah OTOMATIS Aktif mulai dari tanggal '.DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($newPaket->started_date))).' hingga '.DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($newPaket->expired_date))).'!',
+                    'message' => 'Paket Anda '.$pkg->nama.' telah OTOMATIS Aktif mulai dari tanggal '.$newPaket->started_date.' hingga '.$newPaket->expired_date.'!',
                     'data' => $newPaket,
                 ], 200);
             }elseif ($pkt->limit <= 0 && $pkt->expired_date > date('Y-m-d H:i:s') && !$billing->exists()) {
@@ -417,15 +417,15 @@ class PaketController extends Controller
                 $newPaket->paket_id = $bill->paket_id;
                 $newPaket->addson_id = $bill->addson_id;
                 $newPaket->limit = strtolower($pkg->limit) != 'unlimited' ? $bill->paket_bln * $pkg->limit : '9999999999';
-                $newPaket->started_date = date('Y-m-d H:i:s');
-                $newPaket->expired_date = date('Y-m-d H:i:s', strtotime("+ ".$bill->paket_bln." month"));
+                $newPaket->started_date = DateFormat::ConvertDate(strftime("%A, %d %b %Y"));
+                $newPaket->expired_date = DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime("+ ".$bill->paket_bln." month")));
                 $newPaket->status = '1';
                 $newPaket->created_by = Auth::user()->id;
                 $newPaket->save();
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Paket Anda '.$pkg->nama.' telah OTOMATIS Aktif mulai dari tanggal '.DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($newPaket->started_date))).' hingga '.DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($newPaket->expired_date))).'!',
+                    'message' => 'Paket Anda '.$pkg->nama.' telah OTOMATIS Aktif mulai dari tanggal '.$newPaket->started_date.' hingga '.$newPaket->expired_date.'!',
                     'data' => $newPaket,
                 ], 200);
             }
