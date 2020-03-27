@@ -395,7 +395,7 @@ class PaketController extends Controller
                 ], 200);
             }
         } elseif ($paket_exp->exists()) {
-            $pkt_exp = $paket_exp->latest();
+            $pkt_exp = $paket_exp->latest()->first();
 
             if ($pkt_exp->limit > 0 && $pkt_exp->expired_date <= date('Y-m-d H:i:s') && !$billing->exists()) {
                 //Kuota masih ada, masa berlaku habis (kuota hangus), belum beli paket.
