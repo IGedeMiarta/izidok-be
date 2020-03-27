@@ -111,7 +111,7 @@ class PayFlagController extends Controller
 
             $pglog = PaygateLog::select('customerAccount', 'insertId')->where('transactionNo', $request->transactionNo)->first();
 
-            if($pglog) {
+            if(!$pglog) {
                 return response()->json($this->payFlagResponse($request, '01', 'Invalid transactionNo (02)'), 200);
             }
 
