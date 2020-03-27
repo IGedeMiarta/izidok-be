@@ -394,30 +394,41 @@ class PaketController extends Controller
                     'data' => $pkt,
                 ], 200);
             }
-        } elseif ($paket_exp->exists() && $billing->exists()) {
-            $bill = $billing->first();
-            $bill->used_status = 1;
-            $bill->update();
+        } elseif ($paket_exp->exists()) {
+            $pkt_exp = $paket_exp->latest();
 
-            $pkg = Paket::find($bill->paket_id);
+            if ($pkt_exp->limit > 0 && $pkt_exp->expired_date <= date('Y-m-d H:i:s') && !$billing->exists()) {
+                //Kuota masih ada, masa berlaku habis (kuota hangus), belum beli paket.
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Masa Berlaku Paket Anda telah berakhir, silahkan lakukan pembelian untuk dapat melakukan aktivitas ini.',
+                    'data' => $pkt,
+                ], 200);
+            } elseif (($pkt_exp->limit <= 0 && $pkt_exp->expired_date < date('Y-m-d H:i:s') && $billing->exists()) || ($pkt_exp->limit == 0 && $pkt_exp->expired_date > date('Y-m-d H:i:s') && $billing->exists())) {
+                $bill = $billing->first();
+                $bill->used_status = 1;
+                $bill->update();
 
-            $newPaket = new KlinikSubscribe();
-            $newPaket->billing_id = $bill->id;
-            $newPaket->klinik_id = $klinikId;
-            $newPaket->paket_id = $bill->paket_id;
-            $newPaket->addson_id = $bill->addson_id;
-            $newPaket->limit = strtolower($pkg->limit) != 'unlimited' ? $bill->paket_bln * $pkg->limit : '9999999999';
-            $newPaket->started_date = date('Y-m-d H:i:s');
-            $newPaket->expired_date = date('Y-m-d H:i:s', strtotime("+ ".$bill->paket_bln." month"));
-            $newPaket->status = '1';
-            $newPaket->created_by = Auth::user()->id;
-            $newPaket->save();
+                $pkg = Paket::find($bill->paket_id);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Paket Anda '.$pkg->nama.' telah OTOMATIS Aktif mulai dari tanggal '.DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($newPaket->started_date))).' hingga '.DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($newPaket->expired_date))).'!',
-                'data' => $newPaket,
-            ], 200);
+                $newPaket = new KlinikSubscribe();
+                $newPaket->billing_id = $bill->id;
+                $newPaket->klinik_id = $klinikId;
+                $newPaket->paket_id = $bill->paket_id;
+                $newPaket->addson_id = $bill->addson_id;
+                $newPaket->limit = strtolower($pkg->limit) != 'unlimited' ? $bill->paket_bln * $pkg->limit : '9999999999';
+                $newPaket->started_date = date('Y-m-d H:i:s');
+                $newPaket->expired_date = date('Y-m-d H:i:s', strtotime("+ ".$bill->paket_bln." month"));
+                $newPaket->status = '1';
+                $newPaket->created_by = Auth::user()->id;
+                $newPaket->save();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Paket Anda '.$pkg->nama.' telah OTOMATIS Aktif mulai dari tanggal '.DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($newPaket->started_date))).' hingga '.DateFormat::ConvertDate(strftime("%A, %d %b %Y", strtotime($newPaket->expired_date))).'!',
+                    'data' => $newPaket,
+                ], 200);
+            }
         } else {
             $billWaiting = Billing::
                 where('klinik_id',$klinikId)
