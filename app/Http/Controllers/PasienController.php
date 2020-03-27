@@ -120,7 +120,7 @@ class PasienController extends Controller
 			'nadi' => 'integer',
 			'suhu' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
 			'respirasi' => 'integer',
-			'tinggi_badan' => 'integer',
+			'tinggi_badan' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
 			'berat_badan' => 'regex:/^(\d+(?:[\,]\d{1,2})?)$/',
 			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15|nullable'
 		]);
