@@ -47,7 +47,7 @@ class BillingController extends Controller
 		$status = '';
 
 		if(!empty($request->status_text)) {
-            $waiting = $paid = $cancel = false;
+            $waiting = $paid = $cancel = $failed = false;
 			if (stripos($zero, $request->status_text) !== false) {
 				$waiting = true;
 			}
