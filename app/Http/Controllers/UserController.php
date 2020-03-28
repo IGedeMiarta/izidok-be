@@ -113,7 +113,7 @@ class UserController extends Controller
             return response()->json(['status' => false, 'message' => 'update user failed...']);
         }
 
-        $user->fp_base64a = base64_encode(file_get_contents($request->file('foto_profile')));
+        $user->fp_base64 = base64_encode(file_get_contents($request->file('foto_profile')));
 
         return response()->json([
             'status' => true,
