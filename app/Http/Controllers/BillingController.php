@@ -31,8 +31,13 @@ class BillingController extends Controller
             $column = 'id';
             $order = 'desc';
         } else {
-            $column = $request->column;
-            $order = $request->order;
+            if ($request->column == 'status_text') {
+                $column = 'billing.status';
+                $order = $request->order;
+            }else{
+                $column = $request->column;
+                $order = $request->order;
+            }
         }
 
         $zero = "Menunggu Pembayaran";
