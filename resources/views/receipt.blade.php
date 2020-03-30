@@ -101,7 +101,7 @@
             <td align="right">{{number_format($p->total)}}</td>
         </tr>
         <tr>
-            <td>POTONGAN</td>
+            <td>DISKON</td>
             <td align="right">{{number_format($p->potongan)}} %</td>
         </tr>
         <tr>
