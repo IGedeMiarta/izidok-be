@@ -36,6 +36,16 @@ class Klinik extends Model implements Auditable
         return $this->belongsTo(Spesialisasi::class, 'spesialisasi_id');
     }
 
+    public function provinsiDetail()
+    {
+        return $this->belongsTo(Provinsi::class, 'provinsi');
+    }
+
+    public function kotaDetail()
+    {
+        return $this->belongsTo(Kota::class, 'kota');
+    }
+
     public function layanan()
     {
         return $this->hasMany('App\Layanan', 'klinik_id', 'id');
