@@ -13,4 +13,9 @@ class Kota extends Model
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+
+    public function klinik()
+    {
+        return $this->hasOne(Klinik::class, 'kota');
+    }
 }

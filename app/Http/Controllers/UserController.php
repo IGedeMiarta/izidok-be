@@ -37,6 +37,8 @@ class UserController extends Controller
     public function show($id = null)
     {
         $user = User::with('klinik')->find($id);
+        $user->klinik->provinsiDetail;
+        $user->klinik->kotaDetail;
         $user->klinik->spesialisasi;
 
         if (!$user) {
