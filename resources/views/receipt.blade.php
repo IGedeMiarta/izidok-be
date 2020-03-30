@@ -5,7 +5,7 @@
 	}
 	*{
 		font-family: 'Courier New', Courier, monospace;
-		font-size: 14px;
+		font-size: 12px;
 		line-height: 6px;
 	}
     p{
