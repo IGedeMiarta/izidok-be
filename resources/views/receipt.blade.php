@@ -12,9 +12,6 @@
 		height: 3px;
 		padding: 0px 10px 0px 10px;
 	}
-    span{
-        float: right;
-    }
     hr{
         width: 95%
     }
@@ -25,6 +22,8 @@
 	th, td{
         height: 20px;
 		padding: 5px 10px 5px 10px;
+        word-wrap: normal;
+        line-height: 15px;
 	}
 	.main{
 		width: 90mm;
@@ -42,6 +41,9 @@
         font-weight: bold;
         text-align: center;
         margin-top: 20px;
+    }
+    .right{
+        float: right;
     }
     .signature{
         text-align: right;
@@ -80,7 +82,7 @@
         <p align="right">DISCHARGE TIME : {{date("d M,Y H:i:s", strtotime($p->discharge_time))}}</p>
     <hr>
         <p>Nama Layanan</p>
-        <p>Qty x Harga Layanan <span>Subtotal Layanan</span></p>
+        <p>Qty x Harga Layanan <span class="right">Subtotal Layanan</span></p>
     <hr>
     <table>
         <?php $i = 1; ?>
