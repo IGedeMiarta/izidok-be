@@ -10,6 +10,7 @@ use App\Reference;
 use App\Activation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use DB;
 
 class OperatorController extends Controller
 {
@@ -17,7 +18,7 @@ class OperatorController extends Controller
 
 	public function __construct(){
 		$this->user = Auth::user();
-    }
+  }
 
   public function index(Request $request)
   {
@@ -25,11 +26,21 @@ class OperatorController extends Controller
     $operator = new Operator;
 
     if (!$user->hasRole(Constant::SUPER_ADMIN)) {
-        $operator = $operator->select('id', 'nama', 'user_id')
-            ->withAndWhereHas('user', function ($data) use ($user) {
-                $data->select('id', 'nama', 'email', 'nomor_telp');
-                $data->where('users.klinik_id', $user->klinik_id);
-        });
+        $operator = $operator->select(
+            'operator.id',
+            'users.id AS user_id',
+            'users.nama',
+            'users.email',
+            'users.nomor_telp',
+            'audits.event',
+            DB::raw("DATE_FORMAT(audits.created_at, '%d-%m-%Y %H:%i:%s') AS last_active")
+        )
+        ->leftJoin('users', 'operator.user_id', '=', 'users.id')
+        ->leftJoin('audits', function ($join) {
+            $join->on('users.id', '=', 'audits.user_id')
+                ->whereRaw('audits.created_at IN (select MAX(created_at) FROM audits WHERE audits.event = "logout" GROUP BY user_id)');
+        })
+        ->where('users.klinik_id', $user->klinik_id);
     }
 
     $operator = $operator->paginate($request->limit);
@@ -55,9 +66,19 @@ class OperatorController extends Controller
     $this->validate($request, [
       'nama' => 'required|string',
       'email' => 'required|email',
-      'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
+      'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
       'password' => 'required|confirmed|min:6',
     ]);
+
+    $email = User::where('email', $request->email)->orderBy('id', 'desc')->get();
+    if (app('App\Http\Controllers\UserController')->isUserInvalid($email) === false) {
+        return response()->json(['status' => false, 'message' => 'Email telah digunakan!']);
+    }
+
+    $phone = User::where('nomor_telp', $request->nomor_telp)->orderBy('id', 'desc')->get();
+    if ((app('App\Http\Controllers\UserController')->isUserInvalid($phone) === false)) {
+        return response()->json(['status' => false, 'message' => 'Nomor telepon telah digunakan!']);
+    }
 
     $logged_user = $this->user;
 
@@ -95,7 +116,7 @@ class OperatorController extends Controller
 
     $email_data = [
       'subject' => 'Operator Login Data',
-      'from' => 'izidok.dev@gmail.com',
+      'from' => env('MAIL_USERNAME'),
       'to' => [$current_user_email],
       'doctor_name' => $current_user_name,
       'name' => $request->nama,
@@ -324,5 +345,22 @@ class OperatorController extends Controller
       }
 
       return false;
+  }
+
+  public function checkAvailableOp(){
+    $user = $this->user;
+
+    $op = Operator::where('created_by',$user->id)->where('deleted_at',null)->exists();
+
+    if ($op) {
+      return response()->json([
+        'status' => false,
+        'message' => 'Klinik sudah memiliki Asisten Dokter'
+      ]);
+    }
+    return response()->json([
+      'status' => true,
+      'message' => 'Klinik belum memiliki Asisten Dokter'
+    ]);
   }
 }

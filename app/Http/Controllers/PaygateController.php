@@ -9,6 +9,7 @@ use App\Constant;
 use App\Paket;
 use App\Addson;
 use App\User;
+use App\Promo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\PaketController;
@@ -26,7 +27,7 @@ class PaygateController extends Controller
      */
     public function index()
     {
-        $paygate = Paygate::all();
+        $paygate = Paygate::where('status',1)->get();
 
         foreach ($paygate as $key => $p) {
             $pg[] = [
@@ -65,14 +66,16 @@ class PaygateController extends Controller
 
     public function store(Request $request){
         $user = Auth::user();
-        $klinikId = $user->id;
+        $klinikId = $user->klinik_id;
         $noInvoice = substr('IZD'.date('ymdHis').rand(), 0,18);
         $now = date('Y-m-d H:i:s');
         $expPay = date('Y-m-d H:i:s', strtotime($now."+1 days"));
+        $pg = Paygate::find($request->pg_id);
+        $amount_pay = $pg->biaya_admin + $request->amount_disc;
 
         $dataPg = [
             'no_invoice' => $noInvoice,
-            'amount' => $request->amount_disc,
+            'amount' => $amount_pay,
             'trans_date' => $now,
             'expired_pay' => $expPay,
             'desc' => 'Pembelian Paket '.$request->paket_id.($request->addson_id ? ' dan Paket Adds-on '.$request->addson_id : ''),
@@ -99,17 +102,18 @@ class PaygateController extends Controller
                 $bill->expired_pay = $expPay;
                 $bill->amount_disc = $request->amount_disc;
                 $bill->amount_real = $request->amount_real;
+                $bill->amount_pay = $amount_pay;
                 $bill->created_by = $user->id;
                 $bill->created_at = $now;
                 $bill->save();
 
                 $pktCtrl = new PaketController();
-                $dtlPmbyrn = $pktCtrl->detailPembayaran($id)->getData();
+                $dtlPmbyrn = $pktCtrl->detailPembayaran($bill->id)->getData();
 
                 $email_data = [
                     'subject' => 'Pembayaran izidok',
                     'to' => [$user->email],
-                    'from' => 'izidok.dev@gmail.com',
+                    'from' => env('MAIL_USERNAME'),
                     'data' => (array) $dtlPmbyrn->data
                 ];
 
@@ -117,7 +121,8 @@ class PaygateController extends Controller
                     return response()->json([
                         'status' => true,
                         'message' => 'email konfirmasi pembayaran sudah dibuat',
-                        'data' => $user->email
+                        'data' => $user->email,
+                        'billing_id' => $bill->id
                     ]);
                 }
             } catch (\Exception $e) {
@@ -149,11 +154,11 @@ class PaygateController extends Controller
             $ca = substr($user->nomor_telp, -11);
         } else {
             $ca = $user->nomor_telp;
-            for ($i=strlen($user->nomor_telp); $i < 11; $i++) { 
+            for ($i=strlen($user->nomor_telp); $i < 11; $i++) {
                 $ca = '0'.$ca;
             }
         }
-        
+
         $custAcc = $pg->company_code.$ca;
 
         $req = [
@@ -181,6 +186,7 @@ class PaygateController extends Controller
         curl_close($ch);
 
         $req['rc'] = $response['insertStatus'];
+        $req['insertId'] = $response['insertId'];
         $req['created_by'] = $user->id;
         PaygateLog::create($req);
 
@@ -195,11 +201,11 @@ class PaygateController extends Controller
             $ca = substr($user->nomor_telp, -10);
         } else {
             $ca = $user->nomor_telp;
-            for ($i=strlen($user->nomor_telp); $i < 10; $i++) { 
+            for ($i=strlen($user->nomor_telp); $i < 10; $i++) {
                 $ca = '0'.$ca;
             }
         }
-        
+
         $custAcc = $pg->company_code.$ca;
 
         $req = [
@@ -227,6 +233,7 @@ class PaygateController extends Controller
         curl_close($ch);
 
         $req['rc'] = $response['insertStatus'];
+        $req['insertId'] = $response['insertId'];
         $req['created_by'] = $user->id;
         PaygateLog::create($req);
 
@@ -240,6 +247,7 @@ class PaygateController extends Controller
         $pg = Paygate::find($bil->pg_id);
         $pkt = Paket::find($bil->paket_id);
         $adds = !is_null($bil->addson_id) ? Addson::find($bil->addson_id) : null;
+        $promo = Promo::find($bil->promo_id);
 
         $req = [
             'channelId' => $pl->channelId,
@@ -266,11 +274,18 @@ class PaygateController extends Controller
             $pl->cancel_rc = $response['transactionStatus'];
             $pl->update();
 
+            $bil->status = 3;
+            $bil->cancel_by = is_null(Auth::user()) ? 0 : Auth::user()->id;
+            $bil->cancel_date = date('Y-m-d H:i:s');
+            $bil->update();
+
             $data = [
+                'bill' => $bil,
                 'pg' => $pg,
                 'pl' => $pl,
                 'paket' => $pkt,
                 'addson' => is_null($adds) ? null : $adds,
+                'promo' => $promo,
                 'user' => is_null(Auth::user()) ? 'sistem' : 'pengguna',
                 'now' => date('Y-m-d H:i:s'),
             ];
@@ -278,7 +293,7 @@ class PaygateController extends Controller
             $email_data = [
                 'subject' => 'Pembatalan Pembayaran izidok',
                 'to' => [$user->email],
-                'from' => 'izidok.dev@gmail.com',
+                'from' => env('MAIL_USERNAME'),
                 'data' => $data
             ];
 
@@ -302,12 +317,30 @@ class PaygateController extends Controller
             $pl->cancel_rc = $response['transactionStatus'];
             $pl->update();
 
+            $bil->status = 3;
+            $bil->cancel_by = is_null(Auth::user()) ? 0 : Auth::user()->id;
+            $bil->cancel_date = date('Y-m-d H:i:s');
+            $bil->update();
+
             return response()->json([
                 'success' => false,
                 'message' => 'failed',
                 'data' => $response,
             ], 200);
         }
-        
+    }
+
+    public function cronCancel(){
+        $data = Billing::where('status',0)
+            ->where('pay_date',null)
+            ->where('expired_pay','<=',date('Y-m-d H:i:s'))
+            ->where('cancel_date',null)
+            ->get();
+        if (count($data) > 0) {
+            foreach ($data as $key => $d) {
+                $pgl = PaygateLog::where('transactionNo',$d['no_invoice'])->first();
+                $cancel = $this->cancel($pgl['id']);
+            }
+        }
     }
 }

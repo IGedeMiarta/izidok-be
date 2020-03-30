@@ -20,6 +20,7 @@
         "nordsoftware/lumen-cors": "^3.1",
         "owen-it/laravel-auditing": "^9.3",
         "rap2hpoutre/fast-excel": "^1.3",
+        "seguce92/laravel-dompdf": "^2.3",
         "spatie/laravel-permission": "^3.3"
     },
     "require-dev": {

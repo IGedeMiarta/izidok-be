@@ -35,7 +35,7 @@ class LayananController extends Controller
             $order = $request->order;
         }
 
-        $layanan = Layanan::select('id', 'kode_layanan', 'nama_layanan', 'tarif')
+        $layanan = Layanan::select('id', 'kode_layanan', 'nama_layanan', 'tarif','priority')
             ->where('kode_layanan', 'like', "%{$request->kode_layanan}%")
             ->where('nama_layanan', 'like', "%{$request->nama_layanan}%")
             ->where('tarif', 'like', "%{$request->tarif}%")
@@ -58,6 +58,17 @@ class LayananController extends Controller
 			'message' => 'success',
 			'data' => $data
 		], 201);
+	}
+
+	public function getAllLayanan(Request $request){
+		$user = $this->user;
+		$data['layanan']['data'] = Layanan::select('id', 'kode_layanan', 'nama_layanan', 'tarif','priority')
+			->where('klinik_id', $user->klinik_id)->get();
+		return response()->json([
+			'success' => true,
+			'message' => 'success',
+			'data' => $data
+		], 200);
 	}
 
 	public function store(Request $request)
@@ -83,19 +94,21 @@ class LayananController extends Controller
 		$result = array();
 
 		foreach ($arr_layanan as $layanan_obj) {
+			if (strtolower($layanan_obj['nama_layanan']) == 'konsultasi dokter' || strtolower($layanan_obj['nama_layanan']) == 'registrasi awal') {
+				$prior = 1;
+			} else {
+				$prior = 0;
+			}
+
 			$layanan = new Layanan();
 			$layanan->kode_layanan = $layanan_obj['kode_layanan'];
 			$layanan->nama_layanan = $layanan_obj['nama_layanan'];
 			$layanan->tarif = $layanan_obj['tarif'];
 			$layanan->klinik_id = $user->klinik_id;
 			$layanan->created_by = $request->user_id;
+			$layanan->priority = $prior;
 			$layanan->save();
 			array_push($result, $layanan);
-        }
-
-        $user = Auth::user();
-	    if (!empty($user) && $user->is_first_login !== 0) {
-            $user->update(['is_first_login' => 0]);
         }
 
         $data['layanan'] = $result;
@@ -245,6 +258,13 @@ class LayananController extends Controller
 						'data' => ''
 					]);
 				} else {
+					if ($layanan->priority == 1 && ($layanan->nama_layanan != $request->nama_layanan)) {
+						return response()->json([
+							'status' => false,
+							'message' => "nama Layanan tidak dapat diubah",
+							'data' => ''
+						]);
+					}
 					$layanan->nama_layanan = $request->nama_layanan;
 					$layanan->kode_layanan = $request->kode_layanan;
 					$layanan->tarif = $request->tarif;
@@ -281,6 +301,13 @@ class LayananController extends Controller
 					'data' => ''
 				]);
 			} else {
+				if ($layanan->priority == 1 && ($layanan->nama_layanan != $request->nama_layanan)) {
+					return response()->json([
+						'status' => false,
+						'message' => "nama Layanan tidak dapat diubah",
+						'data' => ''
+					]);
+				}
 				$layanan->nama_layanan = $request->nama_layanan;
 				$layanan->kode_layanan = $request->kode_layanan;
 				$layanan->tarif = $request->tarif;
@@ -297,7 +324,8 @@ class LayananController extends Controller
 	public function delete($id = null)
 	{
 		$layanan = Layanan::find($id);
-		$user = $this->user;
+        $user = $this->user;
+        $count_layanan = Layanan::where('klinik_id', $user->klinik_id)->count();
 
 		if ($user->cant('updateOrDelete', $layanan)) {
 			abort(403);
@@ -306,10 +334,21 @@ class LayananController extends Controller
 		if (empty($layanan)) {
 			return response()->json([
 				'status' => false,
-				'data' => '',
 				'message' => 'layanan not found'
-			]);
+            ]);
+        } elseif ($count_layanan < 3) {
+            return response()->json([
+				'status' => false,
+				'message' => 'Data tarif minimal 2'
+            ]);
 		} else {
+			if ($layanan->priority == 1) {
+				return response()->json([
+					'status' => false,
+					'message' => "Layanan tidak dapat dihapus",
+					'data' => ''
+				]);
+			}
 			$nama = $layanan->nama_layanan;
 			$layanan->delete();
 			return response()->json([

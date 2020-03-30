@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constant;
-use App\Operator;
+use App\Billing;
 use Illuminate\Http\Request;
 use App\Pasien;
 use App\Pembayaran;
@@ -16,86 +16,59 @@ class DashboardController extends Controller
 {
 	public function getPasien(Request $request)
 	{
-		$this->validate($request, [
-			'type' => 'required|string',
-			'from' => 'required|date_format:Y-m-d',
-			'to' => 'required|date_format:Y-m-d',
-		]);
+        $user = User::find($request->user_id);
 
-		$user_id = $request->user_id;
-		$type = $request->type;
-		$from = null;
-		$to = null;
+        $today_queue = TransKlinik::where('klinik_id', $user->klinik_id)
+            ->whereDate('waktu_konsultasi', Carbon::today())
+            ->where('status', '!=', Constant::TRX_BATAL)
+            ->count();
 
-		if ($type === Constant::DATE_RANGE) {
-			$from = $request->from;
-			$to = $request->to;
+        $new_patient = Pasien::where('klinik_id', $user->klinik_id)
+            ->whereDate('created_at', Carbon::today())
+            ->count();
 
-			$result = $this->pasienRangeDate($user_id, $from, $to);
-			return response()->json(['status' => true, 'data' => $result]);
-		}
+        $last_queue = TransKlinik::where('klinik_id', $user->klinik_id)
+            ->whereDate('waktu_konsultasi', Carbon::today())
+            ->where('status', Constant::TRX_KONSULTASI)
+            ->value('nomor_antrian');
 
-		if ($type === Constant::MIGGUAN) {
-			$result =  $this->pasienWeekly($user_id);
+        $cancel_queue = TransKlinik::where('klinik_id', $user->klinik_id)
+            ->whereDate('waktu_konsultasi', Carbon::today())
+            ->where('status', Constant::TRX_BATAL)
+            ->count();
 
-			return response()->json(['status' => true, 'data' => $result]);
-		}
+        $today_income = Pembayaran::where('klinik_id', $user->klinik_id)
+            ->whereDate('updated_at', Carbon::today())
+			->where('status', Constant::LUNAS)
+            ->sum('total_net');
 
-		if ($type === Constant::BULANAN) {
-			$result = $this->pasienMonthly($user_id);
-			return response()->json(['status' => true, 'data' => $result]);
-		}
+        $package_active = Billing::select([
+            'billing.id',
+            'nama AS nama_paket',
+            DB::raw("CONCAT('(', paket_bln, '-bulan-berlangganan)') AS durasi_paket"),
+            DB::raw("DATE_FORMAT(expired_date, '%d-%m-%Y, %H:%i:%s') AS habis_berlaku"),
+            DB::raw("DATEDIFF(expired_date, NOW()) AS sisa_hari"),
+            'klinik_subscribe.limit AS sisa_kouta'
+        ])
+        ->join('paket', 'billing.paket_id', '=', 'paket.id')
+        ->join('klinik_subscribe', 'klinik_subscribe.billing_id', '=', 'billing.id' )
+        ->where('billing.klinik_id', $user->klinik_id)
+        ->where('klinik_subscribe.status', Constant::PACKAGE_ACTIVE)
+        ->first();
 
-		if ($type === Constant::TAHUNAN) {
-			$result = $this->pasienAnnual($user_id);
-			return response()->json(['status' => true, 'data' => $result]);
-		}
+        $data['pasien_hari_ini'] = $today_queue;
+        $data['pasien_baru_hari_ini'] = $new_patient;
+        $data['nomor_antrian_saat_ini'] = $last_queue;
+        $data['pasien_batal_hari_ini'] = $cancel_queue;
+        $data['total_pendapatan_hari_ini'] = 'Rp. '.number_format($today_income, 0, ',', '.').',-';
+        $data['paket_berlangganan'] = $package_active;
 
-		return response()->json(['status' => false, 'message' => 'something went wrong...'], 422);
-	}
-
-	private function pasienRangeDate($user_id, $from, $to)
-	{
-		$pasien_baru = Pasien::where('user_id', $user_id)
-			->whereBetween('created_at', [$from, $to])
-			->get();
-		return $pasien_baru;
-	}
-
-	private function pasienWeekly($user_id)
-	{
-		$start_week = Carbon::now()->startOfWeek();
-		$end_week = Carbon::now()->endOfWeek();
-
-		$pasien_baru = Pasien::where('user_id', $user_id)
-			->whereBetween('created_at', [$start_week, $end_week])
-			->get()
-			->groupBy(function ($date) {
-				return Carbon::parse($date->created_at)->format('d');
-			});
-		return $pasien_baru;
-	}
-
-	private function pasienMonthly($user_id)
-	{
-		$pasien_baru = Pasien::where('user_id', $user_id)
-			->get()
-			->groupBy(function ($date) {
-				return Carbon::parse($date->created_at)->format('m');
-			});
-
-		return $pasien_baru;
-	}
-
-	private function pasienAnnual($user_id)
-	{
-		$pasien_baru = Pasien::where('user_id', $user_id)
-			->get()
-			->groupBy(function ($date) {
-				return Carbon::parse($date->created_at)->format('Y');
-			});
-		return $pasien_baru;
-	}
+		return response()->json([
+			'success' => true,
+			'message' => 'success',
+			'data' => $data
+		], 200);
+    }
 
 	public function getPasienRawatJalan(Request $request)
 	{
@@ -152,7 +125,7 @@ class DashboardController extends Controller
 			->where('created_by', $request->user_id)
 			->where('status', Constant::LUNAS)
 			->get();
-		
+
 		$total = 0;
 		foreach ($pembayaran as $item) {
 			$total += $item->detail->sum('tarif');
@@ -194,7 +167,7 @@ class DashboardController extends Controller
 		$from = $request->from;
 		$to = $request->to;
 
-		#sum pasien 
+		#sum pasien
 		if ($type === Constant::SUM_PASIEN) {
 			return $this->pasienTotal($user_id, $from, $to);
 		}

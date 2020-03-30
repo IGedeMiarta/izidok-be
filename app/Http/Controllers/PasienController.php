@@ -11,8 +11,10 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Spesialisasi;
 use App\Klinik;
+use App\TransKlinik;
 use Carbon\Carbon;
 use DB;
+use App\Http\Controllers\RekamMedisController;
 
 class PasienController extends Controller
 {
@@ -91,35 +93,36 @@ class PasienController extends Controller
 	{
 		$this->validate($request, [
             'nama' => 'required|string',
-            'jenis_identitas' => 'string',
-			'nik' => 'string',
+            'jenis_identitas' => 'string|nullable',
+			'nik' => 'string|nullable',
 			'tempat_lahir' => 'string',
 			'tanggal_lahir' => 'required|date_format:Y-m-d',
 			'jenis_kelamin' => 'required|integer',
-			'golongan_darah' => 'string',
+			'golongan_darah' => 'string|nullable',
 			'alamat_rumah' => 'required|string',
 			//'rt' => 'string',
 			//'rw' => 'string',
 			//'kelurahan' => 'string',
             //'kecamatan' => 'string',
-            'provinsi' => 'integer',
-            'kota' =>  'integer',
-			'status_perkawinan' => 'string',
+            'provinsi' => 'integer|nullable',
+            'kota' =>  'integer|nullable',
+			'status_perkawinan' => 'string|nullable',
 			//'pekerjaan' => 'string',
 			'nomor_hp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|max:30',
 			//'nama_penjamin' => 'string',
 			//'nomor_polis_asuransi' => 'string',
 			//'nomor_member_asuransi' => 'string',
-			'email' => 'string',
-			'nama_penanggung_jawab' => 'string',
+			'email' => 'string|nullable',
+            'nama_penanggung_jawab' => 'string|nullable',
+            'hubungan_pasien' => 'string|nullable',
 			'tensi_sistole' => 'integer',
 			'tensi_diastole' => 'integer',
 			'nadi' => 'integer',
-			'suhu' => 'integer',
+			'suhu' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
 			'respirasi' => 'integer',
-			'tinggi_badan' => 'integer',
-			'berat_badan' => 'integer',
-			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15'
+			'tinggi_badan' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
+			'berat_badan' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
+			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15|nullable'
 		]);
 
         $dob = $request->tanggal_lahir;
@@ -167,16 +170,17 @@ class PasienController extends Controller
 		//$pasien->nomor_polis_asuransi = $request->input('nomor_polis_asuransi');
 		//$pasien->nomor_member_asuransi = $request->input('nomor_member_asuransi');
 		$pasien->email = $request->input('email');
-		$pasien->nama_penanggung_jawab = $request->input('nama_penanggung_jawab');
+        $pasien->nama_penanggung_jawab = $request->input('nama_penanggung_jawab');
+        $pasien->hubungan_pasien = $request->input('hubungan_pasien');
 		$pasien->nomor_hp_penanggung_jawab = $request->input('nomor_hp_penanggung_jawab');
 		$pasien->tensi_sistole = $request->input('tensi_sistole');
 		$pasien->tensi_diastole = $request->input('tensi_diastole');
 		$pasien->nadi = $request->input('nadi');
-		$pasien->suhu = $request->input('suhu');
+		$pasien->suhu = str_replace(',','.',$request->input('suhu'));
 		$pasien->respirasi = $request->input('respirasi');
-		$pasien->tinggi_badan = $request->input('tinggi_badan');
-		$pasien->berat_badan = $request->input('berat_badan');
-		$pasien->user_id = $request->user_id;
+		$pasien->tinggi_badan = str_replace(',','.',$request->input('tinggi_badan'));
+		$pasien->berat_badan = str_replace(',','.',$request->input('berat_badan'));
+        $pasien->user_id = $request->user_id;
 
         $jenis_faskes = "";
 		if ($klinik->tipe_faskes == Constant::TIPE_KLINIK) {
@@ -250,25 +254,39 @@ class PasienController extends Controller
 
 	public function show(Request $request)
 	{
+		$klinikId = Auth::user()->klinik_id;
 		$pasien = Pasien::with([
 			'provinsi' => function($q) {
 				$q->select('id', 'provinsi_nama');
 			},
 			'kota' => function($q) {
-				$q->select('id', 'nama');
+                $q->select('id', 'nama', 'provinsi_id');
 			}
-		])->find($request->id);
+		])->where('id',$request->id)->where('klinik_id',$klinikId)->first();
+
+
 		if (empty($pasien)) {
 			return response()->json([
 				'status' => false,
 				'message' => "pasien not found",
-				'data' => ''
+				'data' => '',
+				'data_rm' => false,
 			]);
 		} else {
+			$rm = new RekamMedisController();
+			$request->pasien_id = $pasien->id;
+			$dtaRm = json_decode(json_encode($rm->getAllKodePenyakitByPasien($request)), true);
+			$trans = TransKlinik::where('pasien_id',$request->id)->where('klinik_id',$klinikId)
+				->orderBy('id','desc')->first();
+			if (!is_null($trans)) {
+				$pasien->anamnesa = $trans->anamnesa;
+			}
+
 			return response()->json([
 				'status' => true,
+				'message' => 'success',
 				'data' => $pasien,
-				'message' => 'success'
+				'data_rm' => $dtaRm['original']['success'],
 			]);
 		}
 	}
@@ -362,11 +380,12 @@ class PasienController extends Controller
 		$pasien->tensi_sistole = $request->input('tensi_sistole');
 		$pasien->tensi_diastole = $request->input('tensi_diastole');
 		$pasien->nadi = $request->input('nadi');
-		$pasien->suhu = $request->input('suhu');
+		$pasien->suhu = str_replace(',','.',$request->input('suhu'));
 		$pasien->respirasi = $request->input('respirasi');
-		$pasien->tinggi_badan = $request->input('tinggi_badan');
-		$pasien->berat_badan = $request->input('berat_badan');
+		$pasien->tinggi_badan = str_replace(',','.',$request->input('tinggi_badan'));
+		$pasien->berat_badan = str_replace(',','.',$request->input('berat_badan'));
 		$pasien->nomor_hp_penanggung_jawab = $request->input('nomor_hp_penanggung_jawab');
+		$pasien->hubungan_pasien = $request->input('hubungan_pasien');
 		$status = $pasien->save();
 
 		if (!$status) {
@@ -581,7 +600,7 @@ class PasienController extends Controller
         $klinikId = Auth::user()->klinik_id;
         $identity = Pasien::where('nik', $request->nik)->where('klinik_id', $klinikId)->exists();
 
-        if ($identity) {
+        if ($identity && (!is_null($request->nik) || !empty($request->nik))) {
             return response()->json(['status' => false, 'message' => 'identity is already in use!!']);
         } else {
             return response()->json(['status' => true, 'message' => 'identity valid']);

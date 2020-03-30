@@ -10,6 +10,7 @@ use App\Operator;
 use App\Pasien;
 use App\Klinik;
 use App\User;
+use App\DateFormat;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -72,7 +73,7 @@ class TransKlinikController extends Controller
 
         $trans_klinik = TransKlinik::select([
             'trans_klinik.id',
-            DB::raw("DATE_FORMAT(waktu_konsultasi, '%d-%m-%Y') as waktu_konsultasi"),
+            'waktu_konsultasi',
             'nomor_antrian',
             'status',
             'extend',
@@ -86,10 +87,11 @@ class TransKlinikController extends Controller
             'nadi',
             'suhu',
             'tinggi_badan',
-            'berat_badan'
+            'berat_badan',
+            'respirasi',
           ])
           ->join('pasien', 'pasien.id', '=', 'trans_klinik.pasien_id')
-          ->where('waktu_konsultasi', $consultation_time)
+          ->where(DB::raw('date(waktu_konsultasi)'), $consultation_time)
           ->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
           ->where('status', 'like', "%{$request->status}%")
           ->where('trans_klinik.klinik_id', $user->klinik_id)
@@ -101,7 +103,7 @@ class TransKlinikController extends Controller
           ->paginate($request->limit);
 
         $data['role'] = $user->roles->first()->name;
-		$data['trans_klinik'] = $trans_klinik;
+    	$data['trans_klinik'] = $trans_klinik;
 
 		if (!$trans_klinik) {
 			return response()->json([
@@ -130,9 +132,9 @@ class TransKlinikController extends Controller
       'nik' => 'string',
       'jenis_kelamin' => 'required|integer|min:0|max:1',
       'nomor_telp' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
-      'tinggi_badan' => 'integer',
-      'berat_badan' => 'integer',
-      'suhu' => 'integer',
+      'tinggi_badan' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
+      'berat_badan' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
+      'suhu' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
       'tensi_sistole' => 'integer',
       'tensi_diastole' => 'integer',
       'nadi' => 'integer',
@@ -174,7 +176,7 @@ class TransKlinikController extends Controller
     $trans_klinik->pasien_id = $request->pasien_id;
     $trans_klinik->klinik_id = $user->klinik_id;
     $trans_klinik->created_by = $request->user_id;
-    $trans_klinik->waktu_konsultasi = $consultation_time;
+    $trans_klinik->waktu_konsultasi = Carbon::now();
     $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id, $consultation_time);
     $trans_klinik->anamnesa = $request->anamnesis;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
@@ -183,9 +185,9 @@ class TransKlinikController extends Controller
     #update pasien
     $pasien = Pasien::find($request->pasien_id);
     if ($pasien) {
-      $pasien->tinggi_badan = $request->tinggi_badan;
-      $pasien->berat_badan = $request->berat_badan;
-      $pasien->suhu = $request->suhu;
+      $pasien->tinggi_badan = str_replace(',','.',$request->tinggi_badan);
+      $pasien->berat_badan = str_replace(',','.',$request->berat_badan);
+      $pasien->suhu = str_replace(',','.',$request->suhu);
       $pasien->tensi_sistole = $request->tensi_sistole;
       $pasien->tensi_diastole = $request->tensi_diastole;
       $pasien->nadi = $request->nadi;
@@ -257,7 +259,7 @@ class TransKlinikController extends Controller
   public function getNextOrderNumber($klinik_id, $consultation_time)
   {
     $trans_klinik = TransKlinik::where('klinik_id', $klinik_id)
-      ->where('waktu_konsultasi', $consultation_time)
+      ->where(DB::raw('date(waktu_konsultasi)'), $consultation_time)
       ->orderBy('nomor_antrian', 'desc')->first();
 
     $number = 1;
@@ -272,10 +274,12 @@ class TransKlinikController extends Controller
 
     public function verifyConsultationDate($pasien_id, $klinik_id, $consultation_time)
     {
+        $status = [Constant::TRX_BATAL, Constant::TRX_SELESAI];
+
         $exist = TransKlinik::where('pasien_id', $pasien_id)
             ->where('klinik_id', '=', $klinik_id)
-            ->where('waktu_konsultasi', '=', $consultation_time)
-            ->where('status', '!=', Constant::TRX_BATAL)
+            ->where(DB::raw('date(waktu_konsultasi)'), '=', $consultation_time)
+            ->whereNotIn('status', $status)
             ->exists();
 
         if ($exist) {
@@ -283,6 +287,57 @@ class TransKlinikController extends Controller
         }
 
         return false;
+    }
+
+    public function emailReminder()
+    {
+        $list = TransKlinik::select([
+            'trans_klinik.id',
+            'waktu_konsultasi',
+            'tgl_next_konsultasi',
+            'users.nama AS nama_dokter',
+            'users.nomor_telp',
+            'users.email',
+            'pasien.nama AS nama_pasien',
+            'pasien.email AS email_pasien',
+            'klinik.alamat'
+        ])
+        ->join('users', 'trans_klinik.examination_by', '=', 'users.id')
+        ->join('pasien', 'trans_klinik.pasien_id', '=', 'pasien.id')
+        ->join('klinik', 'trans_klinik.klinik_id', '=', 'klinik.id')
+        ->where('reminder', Constant::REMIND)
+        ->whereDate('tgl_next_konsultasi', Carbon::tomorrow())
+        ->get();
+
+        if(count($list)) {
+            //setlocale(LC_TIME, 'id_ID');
+            foreach ($list as $l) {
+                $email_data = [
+                    'subject' => 'Jadwal Konsultasi Lanjutan_'.$l->nama_dokter.'_'.DateFormat::convertDate(strftime('%a, %d %b %Y', strtotime($l->tgl_next_konsultasi))),
+                    'to' => $l->email_pasien,
+                    'from' => env('MAIL_USERNAME'),
+                    'nama_pasien' => $l->nama_pasien,
+                    'waktu_konsultasi' => DateFormat::convertDate(strftime('%a, %d %b %Y', strtotime($l->waktu_konsultasi))),
+                    'next_konsultasi' => DateFormat::convertDate(strftime('%a, %d %b %Y', strtotime($l->tgl_next_konsultasi))),
+                    'nama_dokter' => $l->nama_dokter,
+                    'alamat' => $l->alamat,
+                    'nomor_telp' =>  $l->nomor_telp,
+                    'email' => $l->email
+                ];
+                \sendEmail($email_data, Constant::EMAIL_REMINDER);
+                $trans_klinik = TransKlinik::find($l->id);
+                $trans_klinik->update(['reminder' => 2]);
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Email berhasil dikirim',
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email list kosong',
+            ]);
+        }
     }
 
     public function moveQueue()
@@ -306,4 +361,5 @@ class TransKlinikController extends Controller
             'data' => $queue,
         ]);
     }
+
 }

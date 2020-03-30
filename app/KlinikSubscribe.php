@@ -2,10 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
 
-class Subscribe extends Model
+class KlinikSubscribe extends Model
 {
     protected $table = 'klinik_subscribe';
     public $timestamps = true;

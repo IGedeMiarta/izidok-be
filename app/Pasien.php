@@ -5,13 +5,18 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
+// use App\Izicrypt\IzicryptModelTrait;
 
 class Pasien extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
+    // use IzicryptModelTrait;
 
     protected $table = 'pasien';
     public $timestamps = true;
+
+    // public $encrypted = ['nama', 'nik', 'rw'];
+    // public $encrypted_except = true;
 
     use SoftDeletes;
 

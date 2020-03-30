@@ -14,6 +14,7 @@ use App\Operator;
 use App\Klinik;
 use App\Dokter;
 use App\Layanan;
+use App\Billing;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
@@ -35,7 +36,9 @@ class UserController extends Controller
 
     public function show($id = null)
     {
-        $user = User::with('roles')->find($id);
+        $user = User::with('klinik')->find($id);
+        $user->klinik->spesialisasi;
+
         if (!$user) {
             return response()->json(['status' => false]);
         } else {
@@ -110,7 +113,12 @@ class UserController extends Controller
             return response()->json(['status' => false, 'message' => 'update user failed...']);
         }
 
-        return response()->json(['status' => true, 'data' => $user]);
+        $user->fp_base64 = base64_encode(file_get_contents($request->file('foto_profile')));
+
+        return response()->json([
+            'status' => true,
+            'data' => $user,
+        ]);
 
     }
 
@@ -198,13 +206,16 @@ class UserController extends Controller
                 $first_login = true;
                 $op = Operator::where('created_by',$user->id)->exists();
                 $trf = Layanan::where('klinik_id',$user->klinik->id)->exists();
+                $pkt = Billing::where('klinik_id',$user->klinik->id)->exists();
 
                 if (is_null($user->klinik->spesialisasi_id)) {
                     $position = 'spesialisasi';
-                } elseif (!$op) {
+                } elseif (!$op && $user->is_skip_asisten == 0) {
                     $position = 'operator';
                 } elseif (!$trf) {
                     $position = 'tarif';
+                } elseif (!$pkt) {
+                    $position = 'subscribe';
                 }
             } else {
                 $first_login = false;
@@ -283,7 +294,6 @@ class UserController extends Controller
     {
         $email = $request->input('email');
         $user = User::where('email', '=', $email)->orderBy('id', 'desc')->first();
-
         if (empty($user)) {
             return response()->json([
                 'status' => false,
@@ -292,25 +302,8 @@ class UserController extends Controller
         }
         else
         {
-            $all_activation = Activation::where("user_id","=",$user->id)->get();
-            $flag = 0;
-            foreach ($all_activation as $row)
-            {
-                if($row->status == 1)
-                {
-                    $flag = 1;
-                }
-            }
-
-            if($flag == 0)
-            {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'User has not been activated'
-                ]);
-            }
-            else
-            {
+            $cekDok = Dokter::where('user_id',$user->id)->exists();
+            if (!$cekDok) {
                 $all_forgot = ForgotPassword::where("user_id", "=", $user->id)->get();
                 foreach ($all_forgot as $forgot) {
                     $forgot->delete();
@@ -331,7 +324,7 @@ class UserController extends Controller
                     'message' => 'Click link below to reset your password: \n ' . $forgot_url,
                     'activation_url' => $forgot_url,
                     'to' => [$forgot_password->email],
-                    'from' => 'izidok.dev@gmail.com',
+                    'from' => env('MAIL_USERNAME'),
                     'name' =>  $current_user_name,
                 ];
 
@@ -342,8 +335,59 @@ class UserController extends Controller
                         'data' => $forgot_password
                     ]);
                 }
-            }
+            }else{
+                $all_activation = Activation::where("user_id","=",$user->id)->get();
+                $flag = 0;
+                foreach ($all_activation as $row)
+                {
+                    if($row->status == 1)
+                    {
+                        $flag = 1;
+                    }
+                }
 
+                if($flag == 0)
+                {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'User has not been activated'
+                    ]);
+                }
+                else
+                {
+                    $all_forgot = ForgotPassword::where("user_id", "=", $user->id)->get();
+                    foreach ($all_forgot as $forgot) {
+                        $forgot->delete();
+                    }
+
+                    $forgot_password = new ForgotPassword();
+                    $forgot_password->token = base64_encode(str_random(40));
+                    $forgot_password->user_id = $user->id;
+                    $forgot_password->email = $email;
+                    $forgot_password->expired_at = date('Y-m-d H:i:s', strtotime('+7 days'));
+                    $forgot_password->save();
+
+                    $forgot_url = url(env('APP_PREFIX', 'api/v1') . '/check_forgot/' . $forgot_password->token);
+                    $current_user_name = User::select('nama')->where('id', $user->id)->value('nama');
+
+                    $email_data = [
+                        'subject' => 'Forgot Password',
+                        'message' => 'Click link below to reset your password: \n ' . $forgot_url,
+                        'activation_url' => $forgot_url,
+                        'to' => [$forgot_password->email],
+                        'from' => env('MAIL_USERNAME'),
+                        'name' =>  $current_user_name,
+                    ];
+
+                    if (\sendEmail($email_data, Constant::FORGOT_EMAIL_TEMPLATE)) {
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'forgot password telah dibuat',
+                            'data' => $forgot_password
+                        ]);
+                    }
+                }
+            }
             // Mail::raw('You can reset password by klik :'.url('/api/v1/forgot_password/'.$forgot_password->token), function($msg) use ($request){
             //     $msg->subject('Hi reset your password');
             //     $msg->to([$request->email]);
@@ -498,7 +542,7 @@ class UserController extends Controller
 
         $email_data = [
             'subject' => 'Konfirmasi Akun izidok',
-            'from' => 'izidok.dev@gmail.com',
+            'from' => env('MAIL_USERNAME'),
             'to' => [$user->email],
             'activation_url' => $data['activation_url'],
             'name' => $user->nama,
@@ -534,7 +578,7 @@ class UserController extends Controller
 
         $email_data = [
             'subject' => 'Operator Login Data',
-            'from' => 'izidok.dev@gmail.com',
+            'from' => env('MAIL_USERNAME'),
             'to' => [$doctor->email],
             'doctor_name' => $doctor->nama,
             'name' => $operator->nama,
@@ -592,6 +636,31 @@ class UserController extends Controller
 
             return true;
         }
+    }
+
+    public function isFirstLogin()
+    {
+        $user = Auth::user();
+	    if (!empty($user) && $user->is_first_login !== 0) {
+            $user->update(['is_first_login' => 0]);
+
+            return response()->json(['status' => true, 'message' => 'First login changed']);
+        }
+    }
+
+    public function skipAsisten()
+    {
+        $user = Auth::user();
+
+	    if (!empty($user)) {
+            $usr = User::find($user->id);
+            $usr->is_skip_asisten = 1;
+            $usr->save();
+
+            return response()->json(['status' => true, 'message' => 'User decided to skip input asisten']);
+        }
+
+        return response()->json(['status' => false, 'message' => 'User not found']);
     }
 
     public function createRoles()

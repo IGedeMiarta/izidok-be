@@ -18,6 +18,9 @@ $router->get('/key', function () {
     return str_random(32);
 });
 
+// $router->get('encrypt', 'ExampleController@encrypt');
+// $router->get('decrypt', 'ExampleController@decrypt');
+
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->get('/email/verify', 'UserController@verifyEmail');
     $router->get('/username/verify', 'UserController@verifyUsername');
@@ -29,6 +32,9 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     //provinsi kota
     $router->get('/province', ['uses' => 'ProvinsiKotaController@getProvince']);
     $router->get('/getcitybyprovince/{id}', ['uses' => 'ProvinsiKotaController@getCityByProvince']);
+
+    //engagement
+    $router->get('/email/reminder', ['uses' => 'TransKlinikController@emailReminder']);
 
     //registration
     // $router->post('/user', 'UserController@store');
@@ -53,12 +59,14 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
     $router->group(['middleware' => ['auth','singdev']], function () use ($router) {
         //user
+        $router->get('/user/finish', 'UserController@isFirstLogin');
+        $router->post('/user/skip_asisten', 'UserController@skipAsisten');
+        $router->get('/user/{id}', 'UserController@show');
         $router->put('/user/{id}', 'UserController@update');
         $router->post('/user/upload-foto/{id}', 'UserController@uploadFotoProfile');
         $router->post('/change_password', 'UserController@changePassword');
         $router->group(['middleware' => ['role:super_admin|admin_klinik']], function () use ($router) {
             $router->get('/user', 'UserController@index');
-            $router->get('/user/{id}', 'UserController@show');
             $router->delete('/user/{id}', 'UserController@delete');
         });
 
@@ -83,6 +91,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/operator/{id}', ['middleware' => 'permission:read-operator', 'uses' => 'OperatorController@show']);
         $router->put('/operator/{id}', ['middleware' => 'permission:update-operator', 'uses' => 'OperatorController@update']);
         $router->delete('/operator/{id}', ['middleware' => 'permission:delete-operator', 'uses' => 'OperatorController@delete']);
+        $router->get('/checkavailop', ['middleware' => 'permission:create-operator', 'uses' => 'OperatorController@checkAvailableOp']);
 
         //dokter
         $router->get('/dokter', ['uses' => 'DokterController@index']);
@@ -105,6 +114,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         //layanan
         $router->group(['middleware' => ['role:dokter_praktek|admin_klinik|super_admin|operator']], function () use ($router) {
             $router->get('/layanan', 'LayananController@index');
+            $router->get('/getalllayanan', 'LayananController@getAllLayanan');
             $router->post('/layanan', 'LayananController@store');
             $router->get('/layanan/{id}', 'LayananController@show');
             $router->put('/layanan/{id}', 'LayananController@update');
@@ -136,7 +146,10 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->group(['middleware' => ['role:dokter_praktek|dokter_klinik']], function () use ($router) {
             $router->get('/rekam_medis', 'RekamMedisController@index');
             $router->post('/rekam_medis', 'RekamMedisController@store');
+            $router->get('/rekam_medis/kode_penyakit', 'RekamMedisController@getAllKodePenyakitByKlinik');
             $router->get('/rekam_medis/{id}', 'RekamMedisController@show');
+            $router->get('/rekam_medis/pasien/{pasien_id}', 'RekamMedisController@getRekamMedisByPasien');
+            $router->get('/rekam_medis/pasien/kode_penyakit/{pasien_id}', 'RekamMedisController@getAllKodePenyakitByPasien');
         });
 
         //organ
@@ -162,14 +175,29 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/pembayaran', ['uses' => 'PembayaranController@index']);
         $router->post('/pembayaran', ['uses' => 'PembayaranController@store']);
         $router->post('/pembayaran/detail', ['uses' => 'PembayaranController@addDetail']);
+        $router->get('/pembayaran/pendapatan/', ['uses' => 'PembayaranController@laporanPendapatan']);
         $router->get('/pembayaran/{id}', ['uses' => 'PembayaranController@show']);
         $router->put('/pembayaran/{id}', ['uses' => 'PembayaranController@update']);
         $router->delete('/pembayaran/{id}', ['uses' => 'PembayaranController@delete']);
+        $router->get('/pembayaran/struk/{id}', ['uses' => 'PembayaranController@receipt']);
+        $router->get('/pembayaran/pasien-email/{id}', ['uses' => 'PembayaranController@getPasienEmailByPembayaranId']);
+
+        //billing
+        $router->group(['middleware' => ['role:dokter_praktek|admin_klinik']], function () use ($router) {
+            $router->get('/billing', ['uses' => 'BillingController@index']);
+            $router->get('/billing/package/', ['uses' => 'BillingController@packageList']);
+            $router->get('/billing/package-expired/', ['uses' => 'BillingController@packageListExpired']);
+            $router->get('/billing/package-active/', ['uses' => 'BillingController@packageActive']);
+            $router->get('/billing/package-unpaid/', ['uses' => 'BillingController@packageUnpaid']);
+            $router->get('/billing/package/{id}', ['uses' => 'BillingController@packageDetails']);
+        });
 
         //paket
         $router->get('/paket', ['uses' => 'PaketController@index']);
         $router->get('/paket/{id}', ['uses' => 'PaketController@show']);
         $router->get('/detailpembayaran/{id}', ['uses' => 'PaketController@detailPembayaran']);
+        $router->get('/invoice/{id}', ['uses' => 'PaketController@generatePdfInvoice']);
+        $router->get('/cekPaket', ['uses' => 'PaketController@checkPackage']);
 
         //adds-on
         $router->get('/addson', ['uses' => 'PaketController@getAddson']);
@@ -188,6 +216,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     });
     //subscribe
     $router->delete('/cancelsubscribe/{id}', ['uses' => 'PaygateController@cancel']);
+    $router->get('/croncancel', ['uses' => 'PaygateController@cronCancel']);
+    $router->get('/crondeactivepackage', ['uses' => 'PaketController@deactivePackage']);
 
     $router->get('/image', function (Request $request) {
         $file = Storage::cloud()->get($request->path);

@@ -70,14 +70,29 @@ class Constant
 	const KATEGORI_UMUM = "10";
 	const KATEGORI_GIGI = "20";
 	const TIPE_FASKES_DOKTER_PRAKTIK = "10";
-	const TIPE_FASKES_KLINIK = "20";
+    const TIPE_FASKES_KLINIK = "20";
+
+    #rekam medis
+    const REMIND = '1';
+    const EMAIL_REMINDER = 'email-reminder';
 
 	#status pembayaran
 	const DRAFT = 'DRAFT';
 	const BELUM_LUNAS = 'BELUM LUNAS';
-	const LUNAS = 'LUNAS';
+    const LUNAS = 'LUNAS';
+
+    #pembayaran
+    const EMAIL_RECEIPT = 'email-receipt';
 
 	#subscribe
 	const PAYMENT_CONFIRMATION = 'payment-confirmation';
-	const CANCEL_SUBSCRIBE = 'cancel-subscribe';
+    const CANCEL_SUBSCRIBE = 'cancel-subscribe';
+
+    #billing
+    const BILLING_UNPAID = 0;
+    const BILLING_SUCCESS = 1;
+    const BILLING_UNUSED = 0;
+
+    #package
+    const PACKAGE_ACTIVE = 1;
 }

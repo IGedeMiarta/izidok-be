@@ -53,13 +53,23 @@ class KlinikController extends Controller
         $rules = [
             //'tipe_faskes' => 'required|min:1:max:2',
             'nama_klinik' => 'required|string',
-            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15',
+            'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
             'email' => 'required|email',
             //'username' => 'required|string',
             'password' => 'required|confirmed|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             //'alamat' => 'string',
             //'foto_profile' => 'file|max:5000',
         ];
+
+        $email = User::where('email', $request->email)->orderBy('id', 'desc')->get();
+        if (app('App\Http\Controllers\UserController')->isUserInvalid($email) === false) {
+            return response()->json(['status' => false, 'message' => 'Email telah digunakan!']);
+        }
+
+        $phone = User::where('nomor_telp', $request->nomor_telp)->orderBy('id', 'desc')->get();
+        if ((app('App\Http\Controllers\UserController')->isUserInvalid($phone) === false)) {
+            return response()->json(['status' => false, 'message' => 'Nomor telepon telah digunakan!']);
+        }
 
         $activation_url = Reference::where('key', Constant::VERIFY_EMAIL)->first();
 
@@ -128,7 +138,7 @@ class KlinikController extends Controller
 
         $email_data = [
             'subject' => 'Konfirmasi Akun izidok',
-            'from' => 'izidok.dev@gmail.com',
+            'from' => env('MAIL_USERNAME'),
             'to' => [$user->email],
             'activation_url' => $data['activation_url'],
             'name' => $user->nama,

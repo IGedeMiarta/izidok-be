@@ -7,17 +7,21 @@ use Illuminate\Support\Facades\Storage;
 use App\RekamMedis;
 use App\TransKlinik;
 use App\Pasien;
+use App\Klinik;
 use App\Anamnesa;
 use App\Constant;
 use App\Diagnosa;
 use App\Pembayaran;
 use App\DetailPembayaran;
+use App\KlinikSubscribe;
+use App\KodePenyakit;
 use App\Layanan;
 use App\PemeriksaanFisik;
 use App\PemeriksaanPenunjang;
 use App\TataLaksana;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class RekamMedisController extends Controller
 {
@@ -64,18 +68,20 @@ class RekamMedisController extends Controller
 
         $rekam_medis = RekamMedis::select([
             'rekam_medis.id',
+            'pasien.id as pasien_id',
             'rekam_medis.nomor_rekam_medis',
-            'pasien.nama',
+            DB::raw("CONCAT(pasien.nama,' (',DATE_FORMAT(pasien.tanggal_lahir, '%d-%m-%Y'),')') as nama"),
             'pasien.jenis_kelamin',
             'pasien.nomor_hp'
           ])
           ->leftJoin('trans_klinik', 'rekam_medis.transklinik_id', '=', 'trans_klinik.id')
           ->leftJoin('pasien', 'trans_klinik.pasien_id', '=', 'pasien.id')
-          ->where('pasien.nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}")
+          ->where('pasien.nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
           ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
           ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
           ->where('pasien.nomor_hp', 'like', "%{$request->nomor_hp}%")
           ->where('rekam_medis.created_by', $user->id)
+          ->groupBy('pasien.id')
           ->orderBy($column, $order)
           ->paginate($request->limit);
 
@@ -116,17 +122,139 @@ class RekamMedisController extends Controller
         }
     }
 
-    private function getRekamMedisByPasien($request)
+    /**
+     * Get all kode_penyakit by pasien
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getAllKodePenyakitByPasien(Request $request)
+    {
+        $rekam_medis = DB::table('rekam_medis')
+            ->select([
+                'diagnosa.kode_penyakit_id',
+            ])
+            ->join('trans_klinik', 'trans_klinik.id', '=', 'rekam_medis.transklinik_id')
+            ->join('diagnosa', 'diagnosa.id', '=', 'rekam_medis.diagnosa_id')
+            ->where('trans_klinik.pasien_id', $request->pasien_id)
+            ->get();
+
+        $kode_penyakits = [];
+        foreach($rekam_medis as $rm) {
+            $kode_penyakits = array_merge(
+                $kode_penyakits,
+                explode(',', substr($rm->kode_penyakit_id, 1, strlen($rm->kode_penyakit_id)-2))
+            );
+        }
+        $kode_penyakits = array_unique($kode_penyakits);
+
+        $kode_penyakits = KodePenyakit::select('id', 'kode', 'description')->whereIn('id', $kode_penyakits);
+
+        if (!$kode_penyakits->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'data not found',
+                'data' => null
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $kode_penyakits->get()
+        ]);
+    }
+
+    /**
+     * Get all kode_penyakit by klinik
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getAllKodePenyakitByKlinik(Request $request)
+    {
+        $user = User::find($request->user_id);
+
+        $rekam_medis = DB::table('rekam_medis')
+            ->select(['diagnosa.kode_penyakit_id'])
+            ->join('trans_klinik', 'trans_klinik.id', '=', 'rekam_medis.transklinik_id')
+            ->join('diagnosa', 'diagnosa.id', '=', 'rekam_medis.diagnosa_id')
+            ->where('trans_klinik.klinik_id', $user->klinik_id)
+            ->get();
+
+        $kode_penyakits = [];
+        foreach($rekam_medis as $rm) {
+            $kode_penyakits = array_merge(
+                $kode_penyakits,
+                explode(',', substr($rm->kode_penyakit_id, 1, strlen($rm->kode_penyakit_id)-2))
+            );
+        }
+
+        $kode_penyakits = array_unique($kode_penyakits);
+        $kode_penyakits = KodePenyakit::select('id', 'kode', 'description')
+            ->whereIn('id', $kode_penyakits)
+            ->where('description', 'like', "%{$request->search}%");
+
+        if (!$kode_penyakits->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'data not found',
+                'data' => null
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $kode_penyakits->get()
+        ]);
+    }
+
+
+    public function getRekamMedisByPasien(Request $request)
     {
         $rekam_medis = RekamMedis::whereHas('transKlinik', function ($data) use ($request) {
             $data->where('pasien_id', $request->pasien_id);
         })
+        ->with('pemeriksaan_fisik')
+        ->with('diagnosa')
         ->where('created_by', $this->user->id)
-        ->with(['transKlinik.pasien', 'transKlinik.examinationBy'])->paginate($request->limit);
+        ->orderBy('id', 'desc');
+        if($request->kode_penyakit_id){
+            $rekam_medis = $rekam_medis->whereHas('diagnosa', function ($data) use ($request) {
+                $data->where('kode_penyakit_id','like',"%{$request->kode_penyakit_id},%")
+                ->orWhere('kode_penyakit_id','like',"%,{$request->kode_penyakit_id}%")
+                ->orWhere('kode_penyakit_id','like',"%[{$request->kode_penyakit_id}]%");
+            });
+        }
+        $rekam_medis = $rekam_medis->paginate(4);
+
+        foreach ($rekam_medis as $rm) {
+            $item['id'] = $rm->diagnosa->id;
+            $item['kode_penyakit_id'] = $rm->diagnosa->kode_penyakit_id;
+            $disease_code = KodePenyakit::select('id', 'kode', 'description')->find(substr($rm->diagnosa->kode_penyakit_id, 1, strpos($rm->diagnosa->kode_penyakit_id, ',')-1));
+            $item['kode_penyakit'] = str_limit($disease_code->description, 27);
+            $item['notes'] = $rm->diagnosa->notes;
+            $item['is_draw'] = $rm->diagnosa->is_draw;
+            $item['draw_path'] = $rm->diagnosa->draw_path;
+            $item['created_by'] =$rm->diagnosa->created_by;
+            $item['concat'] = $item['kode_penyakit'] . ' - ' . date('Y-m-d', strtotime($rm->created_at));
+            $rm->diagnosa_result = (object) $item;
+        }
 
         $data['rekam_medis'] = $rekam_medis;
 
-        return $data;
+        if (count($rekam_medis) > 0) {
+            return response()->json([
+                'success' => true,
+                'message' => 'success',
+                'data' => $data
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data not found'
+            ], 404);
+        }
     }
 
     public function store(Request $request)
@@ -134,13 +262,17 @@ class RekamMedisController extends Controller
         $rules = [
             'kode_penyakit' => 'required|array',
             'next_konsultasi' => 'required|integer',
-            'organ_id' => 'required|integer',
+            // 'organ_id' => 'required|integer',
             'transklinik_id' => 'required|integer',
         ];
 
-        if (!$request->pemeriksaan_is_draw) {
-            $rules['pemeriksaan_text'] = 'required';
+        if (!$request->anamnesa_is_draw) {
+            $rules['anamnesa_text'] = 'required';
         }
+
+        // if (!$request->pemeriksaan_is_draw) {
+        //     $rules['pemeriksaan_text'] = 'required';
+        // }
 
         if (!$request->diagnosa_is_draw) {
             $rules['diagnosa_text'] = 'required';
@@ -157,9 +289,24 @@ class RekamMedisController extends Controller
          */
 
         #update transaksi klinik
+        $date_from = date('Y-m-d');
+        $date_from = strtotime($date_from);
+        $date_to = date('Y-m-d', strtotime(date('Y-m-d')."+".$request->next_konsultasi." days"));
+        $date_to = strtotime($date_to);
+        $days = 0;
+        for ($i=$date_from; $i<$date_to; $i+=86400) {
+            $days += 1;
+        }
+
         $trans_klinik = TransKlinik::find($request->transklinik_id);
-        $trans_klinik->durasi_konsultasi = $request->next_konsultasi;
+        $trans_klinik->durasi_konsultasi = $days;
+        $trans_klinik->tgl_next_konsultasi = $request->durasi_konsultasi == 99 ? date('Y-m-d') : date('Y-m-d', strtotime($request->tgl_next_konsultasi)); //99 = tidak memilih jadwal next konsultasi
+        $trans_klinik->reminder = $request->email_konsultasi ? '1' : '0';
         $trans_klinik->save();
+
+        if ($request->email_konsultasi) {
+            Pasien::where('id',$request->pasien_id)->update(['email' => $request->email_konsultasi]);
+        }
 
         #get data pasien, insert anamnesa
         $pasien = $trans_klinik->pasien;
@@ -167,13 +314,13 @@ class RekamMedisController extends Controller
         $anamnesa->tensi_sistole = ($request->tensi_sistole) ? $request->tensi_sistole : $pasien->tensi_sistole;
         $anamnesa->tensi_diastole = ($request->tensi_diastole) ? $request->tensi_diastole : $pasien->tensi_diastole;
         $anamnesa->nadi = ($request->nadi) ? $request->nadi : $pasien->nadi;
-        $anamnesa->suhu = ($request->suhu) ? $request->suhu : $pasien->suhu;
+        $anamnesa->suhu = ($request->suhu) ? str_replace(',','.',$request->suhu) : $pasien->suhu;
         $anamnesa->respirasi = ($request->respirasi) ? $request->respirasi : $pasien->respirasi;
-        $anamnesa->tinggi_badan = ($request->tinggi_badan) ? $request->tinggi_badan : $pasien->tinggi_badan;
-        $anamnesa->berat_badan = ($request->berat_badan) ? $request->berat_badan : $pasien->berat_badan;
+        $anamnesa->tinggi_badan = ($request->tinggi_badan) ? str_replace(',','.',$request->tinggi_badan) : $pasien->tinggi_badan;
+        $anamnesa->berat_badan = ($request->berat_badan) ? str_replace(',','.',$request->berat_badan) : $pasien->berat_badan;
         $anamnesa->notes = $request->anamnesa_text;
         $anamnesa->is_draw = $request->anamnesa_is_draw;
-        $anamnesa->draw_path = \uploadToCloud('anamnesa', $request->anamnesa_draw)['url'];
+        $anamnesa->draw_path = $request->anamnesa_is_draw ? \uploadToCloud('anamnesa', $request->anamnesa_draw)['url'] : null;
         $anamnesa->created_by = $request->user_id;
         $anamnesa->save();
 
@@ -186,7 +333,7 @@ class RekamMedisController extends Controller
         $diagnosa->kode_penyakit_id = json_encode($arr_penyakit);
         $diagnosa->notes = $request->diagnosa_text;
         $diagnosa->is_draw = $request->diagnosa_is_draw;
-        $diagnosa->draw_path = \uploadToCloud('diagnosa', $request->diagnosa_draw)['url'];
+        $diagnosa->draw_path = $request->diagnosa_is_draw ? \uploadToCloud('diagnosa', $request->diagnosa_draw)['url'] : null;
         $diagnosa->created_by = $request->user_id;
         $diagnosa->save();
 
@@ -195,7 +342,7 @@ class RekamMedisController extends Controller
         $pemeriksaan_fisik->organ_id = $request->organ_id;
         $pemeriksaan_fisik->notes = $request->pemeriksaan_text;
         $pemeriksaan_fisik->is_draw = $request->pemeriksaan_is_draw;
-        $pemeriksaan_fisik->draw_path = \uploadToCloud('pemeriksaan', $request->pemeriksaan_draw)['url'];
+        $pemeriksaan_fisik->draw_path = $request->pemeriksaan_is_draw ? \uploadToCloud('pemeriksaan', $request->pemeriksaan_draw)['url'] : null;
         $pemeriksaan_fisik->created_by = $request->user_id;
         $pemeriksaan_fisik->save();
 
@@ -203,7 +350,7 @@ class RekamMedisController extends Controller
         $tata_laksana = new TataLaksana();
         $tata_laksana->notes = $request->tatalaksana_text;
         $tata_laksana->is_draw = $request->tatalaksana_is_draw;
-        $tata_laksana->draw_path = \uploadToCloud('tatalaksana', $request->tatalaksana_draw)['url'];
+        $tata_laksana->draw_path = $request->tatalaksana_is_draw ? \uploadToCloud('tatalaksana', $request->tatalaksana_draw)['url'] : null;
         $tata_laksana->created_by = $request->user_id;
         $tata_laksana->save();
 
@@ -211,7 +358,7 @@ class RekamMedisController extends Controller
         $p_penunjang = new PemeriksaanPenunjang();
         $p_penunjang->notes = $request->pemeriksaan_penunjang_text;
         $p_penunjang->is_draw = $request->pemeriksaan_penunjang_is_draw;
-        $p_penunjang->draw_path = \uploadToCloud('pemeriksaan_penunjang', $request->pemeriksaan_penunjang_draw)['url'];
+        $p_penunjang->draw_path = $request->pemeriksaan_penunjang_is_draw ? \uploadToCloud('pemeriksaan_penunjang', $request->pemeriksaan_penunjang_draw)['url'] : null;
         $p_penunjang->files = json_encode($request->pemeriksaan_penunjang);
         $p_penunjang->created_by = $request->user_id;
         $p_penunjang->save();
@@ -229,9 +376,14 @@ class RekamMedisController extends Controller
         $status = $rekam_medis->save();
 
         #insert pembayaran
+        $klinikId = $trans_klinik->klinik_id;
+        $kode_faskes = Klinik::where('id', $klinikId)->value('kode_faskes');
+        $noInvoice = substr($kode_faskes.date(".y-md.His").rand(), 0,24);
+
         $pembayaran = new Pembayaran();
         $pembayaran->transklinik_id = $request->transklinik_id;
         $pembayaran->klinik_id = $trans_klinik->klinik_id;
+        $pembayaran->no_invoice = $noInvoice;
         $pembayaran->status = Constant::BELUM_LUNAS;
         $pembayaran->created_by = $request->user_id;
         $pembayaran->save();
@@ -254,11 +406,39 @@ class RekamMedisController extends Controller
 
         $data['rekam_medis'] = $rekam_medis;
 
-        if ($status) {
+        $newPembayaran = Pembayaran::select('id')
+            ->where('transklinik_id', $request->transklinik_id)
+            ->orderByDesc('id')
+            ->first();
+        $data['pembayaran'] = ['id' => $newPembayaran->id];
+
+        $remaining_quota = KlinikSubscribe::select([
+            'klinik_subscribe.id',
+            'nama AS nama_paket',
+            'klinik_subscribe.limit AS sisa_qouta',
+            'klinik_subscribe.paket_id',
+            'expired_date',
+            'status'
+        ])
+        ->join('paket', 'klinik_subscribe.paket_id', '=', 'paket.id')
+        ->where('status', Constant::PACKAGE_ACTIVE)
+        ->where('klinik_id', $klinikId)
+        ->first();
+
+        if (empty($remaining_quota->sisa_qouta)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Qouta telah habis',
+            ], 200);
+        } else if (!empty($remaining_quota->sisa_qouta)) {
+            if ($remaining_quota->paket_id != 4) {
+                KlinikSubscribe::where('id', $remaining_quota->id)->decrement('limit');
+            }
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'data' => $data
+                'data' => $data,
+                'kuota' => $remaining_quota,
             ], 201);
         } else {
             return response()->json([
@@ -272,8 +452,14 @@ class RekamMedisController extends Controller
     public function show(Request $request)
     {
         $rekam_medis = RekamMedis::where('id', $request->id)
-            ->with(['anamnesa', 'diagnosa', 'pemeriksaan_fisik', 'pemeriksaan_penunjang', 'tatalaksana'])
+            ->with(['transklinik:id,durasi_konsultasi,tgl_next_konsultasi', 'anamnesa', 'diagnosa', 'pemeriksaan_fisik', 'pemeriksaan_penunjang', 'tatalaksana'])
             ->first();
+
+        $arr_kode_penyakit = [];
+        $kdPenyakitId = !empty($rekam_medis->diagnosa->kode_penyakit_id) ? substr($rekam_medis->diagnosa->kode_penyakit_id, 1,-1) : null;
+        $arr_kode_penyakit = KodePenyakit::select('id', 'kode', 'description')->whereIn('id', explode(',', $kdPenyakitId))->get();
+        $rekam_medis->kode_diagnosa = (object) $arr_kode_penyakit;
+
         if (empty($rekam_medis)) {
             return response()->json([
                 'status' => false,
@@ -303,7 +489,7 @@ class RekamMedisController extends Controller
                 ]);
             }
 
-            $res = uploadToCloud('pemeriksaan_penunjang', $item);
+            $res = \uploadToCloud('pemeriksaan_penunjang', $item);
 
             $data['name'] = $key;
             $data['url'] = $res['url'];
