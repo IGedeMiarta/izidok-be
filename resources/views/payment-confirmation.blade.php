@@ -253,7 +253,7 @@
                                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                         <tr>
                                             <td>
-                                                <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="100" height="35" style="height: auto;">
+                                                <img src="https://api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="100" height="35" style="height: auto;">
                                                 <h2>Silahkan selesaikan pembayaran Anda!</h2>
                                                 <?php //setlocale(LC_TIME, 'id_ID'); ?>
                                                 <p class="bold">Pembelian berhasil dilakukan pada tanggal {{App\DateFormat::ConvertDate(strftime("%a, %d %b %Y, %H:%M:%S", strtotime($data['detail']->transactionDate)))}}</p>

@@ -60,7 +60,7 @@ class PaketController extends Controller
                 'nama' => $p->nama,
                 'biaya_admin' => $p->biaya_admin,
                 //'logo' => url('/paygate/'.$p->logo),
-                'logo' => 'https://dev-api.izidok.id/paygate/'.$p->logo,
+                'logo' => 'https://api.izidok.id/paygate/'.$p->logo,
             ];
         }
 
@@ -254,7 +254,7 @@ class PaketController extends Controller
                 'id' => $pg->id,
                 'nama' => $pg->nama,
                 'biaya_admin' => $pg->biaya_admin,
-                'logo' => 'https://dev-api.izidok.id/paygate/'.$pg->logo,
+                'logo' => 'https://api.izidok.id/paygate/'.$pg->logo,
             ];
 
             $user = Auth::user();

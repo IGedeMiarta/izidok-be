@@ -302,7 +302,7 @@
                                             <table width="300" border="0" align="center" cellpadding="0" cellspacing="0" ">
                                                 <tr>
                                                     <td align="center" valign="top">
-                                                        <img src="https://beta-api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="200" height=""/></a>
+                                                        <img src="https://api.izidok.id/api/v1/image?path=logo/Logo-izidok-blue.png" alt="logo-izidok" width="200" height=""/></a>
                                                     </td>
                                                 </tr>
                                             </table>
