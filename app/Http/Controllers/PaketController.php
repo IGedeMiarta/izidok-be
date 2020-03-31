@@ -330,9 +330,16 @@ class PaketController extends Controller
 
     public function deactivePackage()
     {
-        KlinikSubscribe::where('expired_date','<=',date('Y-m-d H:i:s'))
+        $data = KlinikSubscribe::select('klinik_id',DB::raw('count(*) as jml'))
             ->where('status',1)
-            ->update(['status' => 0]);
+            ->groupBy('klinik_id')
+            ->havingRaw('count(*) > 1')
+            ->get();
+
+        foreach ($data as $key => $d) {
+            dd($d);
+        }
+            // ->update(['status' => 0]);
     }
 
     public function checkPackage(){
