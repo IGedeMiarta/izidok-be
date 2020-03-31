@@ -337,9 +337,13 @@ class PaketController extends Controller
             ->get();
 
         foreach ($data as $key => $d) {
-            dd($d);
+            $update = KlinikSubscribe::where('klinik_id',$d['klinik_id'])
+                ->where('status',1)->get();
+            foreach ($update as $key => $up) {
+                KlinikSubscribe::where('expired_date','<=',date('Y-m-d H:i:s'))
+                ->update(['status' => 0]);
+            }
         }
-            // ->update(['status' => 0]);
     }
 
     public function checkPackage(){
