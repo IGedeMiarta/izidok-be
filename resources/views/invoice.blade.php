@@ -125,7 +125,7 @@
     <main>
         <div id="details" class="clearfix">
             <div id="left-top">
-                <img src="{{asset('upload/images/logo-izidok.png')}}" alt="logo-izidok" width="15%"/>
+                <img src="{{public_path('upload/images/logo-izidok.png')}}" alt="logo-izidok" width="15%"/>
                 <div>{{$data['dokter']->nama}}</div>
                 <div>No. Handphone : {{$data['dokter']->nomor_telp}}</div>
                 <div>{{$data['dokter']->email}}</div>
