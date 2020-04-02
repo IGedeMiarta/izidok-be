@@ -99,7 +99,7 @@ class PaygateController extends Controller
             $pktBln = 10;
         }
 
-        $amount_real = $paket->harga * $request->paket_bln;
+        $amount_real = $paket->harga * $pktBln;
         if (is_null($request->promo_id)) {
             $amount_disc = $amount_real;
         }else{
