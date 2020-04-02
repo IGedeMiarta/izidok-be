@@ -17,8 +17,10 @@ use App\Http\Controllers\PaketController;
 class PaygateController extends Controller
 {
     public function __construct(){
-        $this->url_ins = 'https://simpg.sprintasia.net/PaymentRegister';
-        $this->url_void = 'https://simpg.sprintasia.net/PostAuth';
+        // $this->url_ins = 'https://simpg.sprintasia.net/PaymentRegister';
+        // $this->url_void = 'https://simpg.sprintasia.net/PostAuth';
+        $this->url_ins = 'https://pay.sprintasia.net/PaymentRegister';
+        $this->url_void = 'https://pay.sprintasia.net/PostAuth';
     }
     /**
      * Display a listing of the resource.
@@ -71,6 +73,44 @@ class PaygateController extends Controller
         $now = date('Y-m-d H:i:s');
         $expPay = date('Y-m-d H:i:s', strtotime($now."+1 days"));
         $pg = Paygate::find($request->pg_id);
+        $paket = Paket::find($request->paket_id);
+        $promo = Promo::find($request->promo_id);
+
+        if (!$paket) {
+            return response()->json([
+                'success' => false,
+                'message' => 'failed',
+                'data' => 'paket tidak ditemukan',
+            ], 200);
+        }
+
+        $pkt = [1,12];
+        if (!in_array($request->paket_bln, $pkt)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'failed',
+                'data' => 'Jumlah Bulan tidak diizinkan',
+            ], 200);
+        }
+
+        if ($request->paket_bln == 1) {
+            $pktBln = 1;
+        }else{
+            $pktBln = 10;
+        }
+
+        $amount_real = $paket->harga * $request->paket_bln;
+        if (is_null($request->promo_id)) {
+            $amount_disc = $amount_real;
+        }else{
+            if ($promo->satuan == 'percent') {
+                $prm = $promo->value/100;
+                $amount_disc = $amount_real - ($amount_real * $prm);
+            }else{
+                $amount_disc = $amount_real - $prm;
+            }
+        }
+
         $amount_pay = $pg->biaya_admin + $request->amount_disc;
 
         $dataPg = [
@@ -100,8 +140,8 @@ class PaygateController extends Controller
                 $bill->addson_id = $request->addson_id;
                 $bill->no_invoice = $noInvoice;
                 $bill->expired_pay = $expPay;
-                $bill->amount_disc = $request->amount_disc;
-                $bill->amount_real = $request->amount_real;
+                $bill->amount_disc = $amount_disc;
+                $bill->amount_real = $amount_real;
                 $bill->amount_pay = $amount_pay;
                 $bill->created_by = $user->id;
                 $bill->created_at = $now;
