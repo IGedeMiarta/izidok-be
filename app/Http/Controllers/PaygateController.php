@@ -84,7 +84,8 @@ class PaygateController extends Controller
             ], 200);
         }
 
-        if ($request->paket_bln != 1 || $request->paket_bln != 12) {
+        $pkt = [1,12];
+        if (!in_array($request->paket_bln, $pkt)) {
             return response()->json([
                 'success' => false,
                 'message' => 'failed',
@@ -133,8 +134,8 @@ class PaygateController extends Controller
                 $bill->addson_id = $request->addson_id;
                 $bill->no_invoice = $noInvoice;
                 $bill->expired_pay = $expPay;
-                $bill->amount_disc = $request->amount_disc;
-                $bill->amount_real = $request->amount_real;
+                $bill->amount_disc = $amount_disc;
+                $bill->amount_real = $amount_real;
                 $bill->amount_pay = $amount_pay;
                 $bill->created_by = $user->id;
                 $bill->created_at = $now;
