@@ -73,6 +73,37 @@ class PaygateController extends Controller
         $now = date('Y-m-d H:i:s');
         $expPay = date('Y-m-d H:i:s', strtotime($now."+1 days"));
         $pg = Paygate::find($request->pg_id);
+        $paket = Paket::find($request->paket_id);
+        $promo = Promo::find($request->promo_id);
+
+        if (!$paket) {
+            return response()->json([
+                'success' => false,
+                'message' => 'failed',
+                'data' => 'paket tidak ditemukan',
+            ], 200);
+        }
+
+        if ($request->paket_bln != 1 || $request->paket_bln != 12) {
+            return response()->json([
+                'success' => false,
+                'message' => 'failed',
+                'data' => 'Jumlah Bulan tidak diizinkan',
+            ], 200);
+        }
+
+        $amount_real = $paket->harga * $request->paket_bln;
+        if (is_null($request->promo_id)) {
+            $amount_disc = $amount_real;
+        }else{
+            if ($promo->satuan == 'percent') {
+                $prm = $promo->value/100;
+                $amount_disc = $amount_real - ($amount_real * $prm);
+            }else{
+                $amount_disc = $amount_real - $prm;
+            }
+        }
+
         $amount_pay = $pg->biaya_admin + $request->amount_disc;
 
         $dataPg = [
