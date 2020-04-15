@@ -63,12 +63,12 @@ class TransKlinikController extends Controller
         }
 
         if(empty($request->waktu_konsultasi)) {
-            $consultation_time = Carbon::today();
+            $consultation_time = date('Y-m-d');
         } else {
             $consultation_time = $request->waktu_konsultasi;
         }
 
-        //$consultation_date = [$consultation_time, date('Y-m-d', strtotime('-1 day', strtotime($consultation_time)))];
+        $previous_time = date('Y-m-d', strtotime('-1 day', strtotime($consultation_time)));
         $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI];
 
         $trans_klinik = TransKlinik::select([
@@ -89,18 +89,22 @@ class TransKlinikController extends Controller
             'tinggi_badan',
             'berat_badan',
             'respirasi',
-          ])
-          ->join('pasien', 'pasien.id', '=', 'trans_klinik.pasien_id')
-          ->where(DB::raw('date(waktu_konsultasi)'), $consultation_time)
-          ->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
-          ->where('status', 'like', "%{$request->status}%")
-          ->where('trans_klinik.klinik_id', $user->klinik_id)
-          ->whereIn('status', $status)
-          ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
-          ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
-          ->where('pasien.nomor_hp', 'like', "%{$request->nomor_hp}%")
-          ->orderBy($column, $order)
-          ->paginate($request->limit);
+        ])
+        ->join('pasien', 'pasien.id', '=', 'trans_klinik.pasien_id')
+        ->whereDate('waktu_konsultasi', $consultation_time)
+        ->orWhere(function($query) use ($previous_time) {
+            $query->whereDate('waktu_konsultasi', $previous_time)
+                ->where('extend', 1);
+        })
+        ->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
+        ->where('status', 'like', "%{$request->status}%")
+        ->where('trans_klinik.klinik_id', $user->klinik_id)
+        ->whereIn('status', $status)
+        ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
+        ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
+        ->where('pasien.nomor_hp', 'like', "%{$request->nomor_hp}%")
+        ->orderBy($column, $order)
+        ->paginate($request->limit);
 
         $data['role'] = $user->roles->first()->name;
     	$data['trans_klinik'] = $trans_klinik;
