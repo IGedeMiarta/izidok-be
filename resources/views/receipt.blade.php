@@ -108,7 +108,7 @@
                 <td align="right">{{number_format($p->potongan)}} </td>
             @endif
             @if($p->potongan < 100)
-                <td align="right">{{number_format($p->potongan)}} %</td>
+                <td align="right">{{$p->potongan}} %</td>
             @endif
         </tr>
         <tr>
