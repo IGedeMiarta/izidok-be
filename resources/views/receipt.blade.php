@@ -104,7 +104,12 @@
         </tr>
         <tr>
             <td>DISKON</td>
-            <td align="right">{{number_format($p->potongan)}} %</td>
+            @if($p->potongan > 100)
+                <td align="right">{{number_format($p->potongan)}} </td>
+            @endif
+            @if($p->potongan < 100)
+                <td align="right">{{number_format($p->potongan)}} %</td>
+            @endif
         </tr>
         <tr>
             <td style="font-weight: bold">TOTAL NETT</td>
