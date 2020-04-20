@@ -95,7 +95,7 @@ class PembayaranController extends Controller
       'transklinik_id' => 'required|integer',
       'klinik_id' => 'required|integer',
       'jaminan' => 'required|in:UMUM,ASURANSI',
-      'potongan' => 'between:0,99.99',
+      'potongan' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
       'status' => 'required|string',
       'detail_pembayaran' => 'required|array',
       'detail_pembayaran[*].kode_layanan' => 'required|string',
