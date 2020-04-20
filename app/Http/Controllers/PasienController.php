@@ -124,7 +124,7 @@ class PasienController extends Controller
 			'berat_badan' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
             'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15|nullable',
             'alergi_kondisi_khusus' => 'string|nullable',
-            'relasi_dengan_dokter' => 'string|nullable'
+            'keterangan_lain' => 'string|nullable'
 		]);
 
         $dob = $request->tanggal_lahir;
@@ -183,7 +183,7 @@ class PasienController extends Controller
 		$pasien->tinggi_badan = str_replace(',','.',$request->input('tinggi_badan'));
 		$pasien->berat_badan = str_replace(',','.',$request->input('berat_badan'));
         $pasien->alergi_kondisi_khusus = $request->input('alergi_kondisi_khusus');
-        $pasien->relasi_dengan_dokter = $request->input('relasi_dengan_dokter');
+        $pasien->keterangan_lain = $request->input('keterangan_lain');
         $pasien->user_id = $request->user_id;
 
         $jenis_faskes = "";
@@ -391,7 +391,7 @@ class PasienController extends Controller
 		$pasien->nomor_hp_penanggung_jawab = $request->input('nomor_hp_penanggung_jawab');
 		$pasien->hubungan_pasien = $request->input('hubungan_pasien');
         $pasien->alergi_kondisi_khusus = $request->input('alergi_kondisi_khusus');
-        $pasien->relasi_dengan_dokter = $request->input('relasi_dengan_dokter');
+        $pasien->keterangan_lain = $request->input('keterangan_lain');
 		$status = $pasien->save();
 
 		if (!$status) {

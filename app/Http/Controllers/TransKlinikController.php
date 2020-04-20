@@ -143,7 +143,7 @@ class TransKlinikController extends Controller
       'tensi_diastole' => 'integer',
       'nadi' => 'integer',
       'alergi_kondisi_khusus' => 'string|nullable',
-      'relasi_dengan_dokter' => 'string|nullable'
+      'keterangan_lain' => 'string|nullable'
     ]);
 
     #klinik exist?
@@ -198,7 +198,7 @@ class TransKlinikController extends Controller
       $pasien->tensi_diastole = $request->tensi_diastole;
       $pasien->nadi = $request->nadi;
       $pasien->alergi_kondisi_khusus = $request->alergi_kondisi_khusus;
-      $pasien->relasi_dengan_dokter = $request->relasi_dengan_dokter;
+      $pasien->keterangan_lain = $request->keterangan_lain;
       $pasien->save();
     }
 
