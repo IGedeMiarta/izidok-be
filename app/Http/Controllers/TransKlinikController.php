@@ -124,7 +124,7 @@ class TransKlinikController extends Controller
 		], 201);
 	}
 
-  public function store(Request $request)
+  public function store(Request $request, $array = [])
   {
     $this->validate($request, [
       'pasien_id' => 'required|integer',
@@ -142,6 +142,8 @@ class TransKlinikController extends Controller
       'tensi_sistole' => 'integer',
       'tensi_diastole' => 'integer',
       'nadi' => 'integer',
+      'alergi_kondisi_khusus' => 'string|nullable',
+      'keterangan_lain' => 'string|nullable'
     ]);
 
     #klinik exist?
@@ -195,6 +197,8 @@ class TransKlinikController extends Controller
       $pasien->tensi_sistole = $request->tensi_sistole;
       $pasien->tensi_diastole = $request->tensi_diastole;
       $pasien->nadi = $request->nadi;
+      $pasien->alergi_kondisi_khusus = $request->alergi_kondisi_khusus;
+      $pasien->keterangan_lain = $request->keterangan_lain;
       $pasien->save();
     }
 
