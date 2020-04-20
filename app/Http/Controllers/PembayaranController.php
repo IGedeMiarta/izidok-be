@@ -112,7 +112,7 @@ class PembayaranController extends Controller
     $pembayaran->klinik_id = $request->klinik_id;
     $pembayaran->no_invoice = $noInvoice;
     $pembayaran->jaminan = $request->jaminan;
-    $pembayaran->potongan =  $request->input('potongan');
+    $pembayaran->potongan =  '10.5';
     $pembayaran->status = $request->status;
     $pembayaran->created_by = $request->user_id;
     $pembayaran->save();
