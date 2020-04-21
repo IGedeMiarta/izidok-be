@@ -160,9 +160,9 @@ class TransKlinikController extends Controller
 
     $pasien_id = $request->pasien_id;
     $klinik_id = $request->klinik_id;
-    $consultation_time = Carbon::today();
+    $consultation_date = Carbon::today();
 
-    if ($this->verifyConsultationDate($pasien_id, $klinik_id, $consultation_time)) {
+    if ($this->verifyConsultationDate($pasien_id, $klinik_id, $consultation_date)) {
         return response()->json(['status' => false, 'message' => 'Patient already registered']);
     }
 
@@ -183,7 +183,7 @@ class TransKlinikController extends Controller
     $trans_klinik->klinik_id = $user->klinik_id;
     $trans_klinik->created_by = $request->user_id;
     $trans_klinik->waktu_konsultasi = Carbon::now();
-    $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id, $consultation_time);
+    $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id, $consultation_date);
     $trans_klinik->anamnesa = $request->anamnesis;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
     $trans_klinik->save();
@@ -264,12 +264,12 @@ class TransKlinikController extends Controller
     }
   }
 
-    public function getNextOrderNumber($klinik_id, $consultation_time)
+    public function getNextOrderNumber($klinik_id, $consultation_date)
     {
         $number = 1;
 
         $trans_klinik = TransKlinik::where('klinik_id', $klinik_id)
-            ->whereDate('waktu_konsultasi', $consultation_time)
+            ->whereDate('waktu_konsultasi', $consultation_date)
             ->orderBy('nomor_antrian', 'desc')
             ->first();
 
@@ -286,13 +286,13 @@ class TransKlinikController extends Controller
         }
     }
 
-    public function verifyConsultationDate($pasien_id, $klinik_id, $consultation_time)
+    public function verifyConsultationDate($pasien_id, $klinik_id, $consultation_date)
     {
         $status = [Constant::TRX_BATAL, Constant::TRX_SELESAI];
 
         $exist = TransKlinik::where('pasien_id', $pasien_id)
             ->where('klinik_id', '=', $klinik_id)
-            ->where(DB::raw('date(waktu_konsultasi)'), '=', $consultation_time)
+            ->whereDate('waktu_konsultasi',  $consultation_date)
             ->whereNotIn('status', $status)
             ->exists();
 
