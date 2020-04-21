@@ -275,7 +275,10 @@ class TransKlinikController extends Controller
 
         if (!$trans_klinik) {
             return $number;
-        } elseif ($trans_klinik->created_at->addHours(4) >= Carbon::now() === true) {
+        } elseif ($trans_klinik->extend === 0 && $trans_klinik->created_at->addHours(4) >= Carbon::now() === true) {
+            $number = $trans_klinik->nomor_antrian + 1;
+            return $number;
+        } elseif ($trans_klinik->extend === 1 && $trans_klinik->updated_at->addHours(4) >= Carbon::now() === true) {
             $number = $trans_klinik->nomor_antrian + 1;
             return $number;
         } else {
