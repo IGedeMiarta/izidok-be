@@ -354,7 +354,6 @@ class TransKlinikController extends Controller
         $status = [Constant::TRX_MENUNGGU];
 
         $queue = TransKlinik::where('klinik_id', $klinikId)
-            ->whereDate('waktu_konsultasi', Carbon::today())
             ->whereIn('status', $status)
             ->where('extend', 0)
             ->count();
@@ -379,7 +378,6 @@ class TransKlinikController extends Controller
         $status = [Constant::TRX_MENUNGGU];
 
         $queue = TransKlinik::where('klinik_id', $klinikId)
-            ->whereDate('waktu_konsultasi', Carbon::today())
             ->whereIn('status', $status)
             ->get();
 
