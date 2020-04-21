@@ -351,18 +351,19 @@ class TransKlinikController extends Controller
     public function checkQueue()
     {
         $klinikId = Auth::user()->klinik_id;
-        $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI];
+        $status = [Constant::TRX_MENUNGGU];
 
         $queue = TransKlinik::where('klinik_id', $klinikId)
             ->whereDate('waktu_konsultasi', Carbon::today())
             ->whereIn('status', $status)
             ->where('extend', 0)
-            ->exists();
+            ->count();
 
-        if ($queue) {
+        if ($queue > 0) {
             return response()->json([
                 'status' => true,
                 'message' => 'queue exist',
+                'data' => $queue
             ]);
         } else {
             return response()->json([
@@ -375,7 +376,7 @@ class TransKlinikController extends Controller
     public function moveQueue()
     {
         $klinikId = Auth::user()->klinik_id;
-        $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI];
+        $status = [Constant::TRX_MENUNGGU];
 
         $queue = TransKlinik::where('klinik_id', $klinikId)
             ->whereDate('waktu_konsultasi', Carbon::today())
