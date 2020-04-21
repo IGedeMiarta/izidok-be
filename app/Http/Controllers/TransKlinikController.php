@@ -264,7 +264,7 @@ class TransKlinikController extends Controller
     }
   }
 
-    public function getNextOrderNumber($klinik_id = 1 , $consultation_time = '2020-04-21')
+    public function getNextOrderNumber($klinik_id, $consultation_time)
     {
         $number = 1;
 
