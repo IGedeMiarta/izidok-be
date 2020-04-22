@@ -435,10 +435,6 @@ class PembayaranController extends Controller
             date('Y-m-d', strtotime($request->from)),
             date('Y-m-d', strtotime($request->to))
         ])
-        ->orWhere(function($query) use ($request) {
-            $query->whereDate('waktu_konsultasi', date('Y-m-d', strtotime('-1 day', strtotime($request->from))))
-                ->where('extend', 1);
-        })
         ->whereDate('waktu_konsultasi', 'like', "%{$request->waktu_konsultasi}%")
         ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
         ->where('pasien.tanggal_lahir', 'like', "%{$request->tanggal_lahir}%")
