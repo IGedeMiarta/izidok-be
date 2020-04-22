@@ -97,7 +97,6 @@ class PembayaranController extends Controller
       'jaminan' => 'required|in:UMUM,ASURANSI',
       'potongan' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
       'status' => 'required|string',
-      'jenis_potongan' => 'required|string',
       'detail_pembayaran' => 'required|array',
       'detail_pembayaran[*].kode_layanan' => 'required|string',
       'detail_pembayaran[*].nama_layanan' => 'required|string',
@@ -271,7 +270,7 @@ class PembayaranController extends Controller
     $pembayaran->total = $request->total;
     $pembayaran->total_net = $request->total_nett;
     $pembayaran->potongan = $request->potongan;
-    $pembayaran->jenis_potongan =  $request->jenis_potongan_;
+    $pembayaran->jenis_potongan = $request->jenis_potongan;
     $pembayaran->updated_at = date('Y-m-d H:i:s');
     $pembayaran->update();
 
