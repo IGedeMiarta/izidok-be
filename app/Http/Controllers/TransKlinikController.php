@@ -63,12 +63,12 @@ class TransKlinikController extends Controller
         }
 
         if(empty($request->waktu_konsultasi)) {
-            $consultation_time = date('Y-m-d');
+            $consultation_date = date('Y-m-d');
         } else {
-            $consultation_time = $request->waktu_konsultasi;
+            $consultation_date = $request->waktu_konsultasi;
         }
 
-        $previous_time = date('Y-m-d', strtotime('-1 day', strtotime($consultation_time)));
+        $previous_date = date('Y-m-d', strtotime('-1 day', strtotime($consultation_date)));
         $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI];
 
         $trans_klinik = TransKlinik::select([
@@ -91,10 +91,10 @@ class TransKlinikController extends Controller
             'respirasi',
         ])
         ->join('pasien', 'pasien.id', '=', 'trans_klinik.pasien_id')
-        ->whereDate('waktu_konsultasi', $consultation_time)
-        ->orWhere(function($query) use ($previous_time) {
-            $query->whereDate('waktu_konsultasi', $previous_time)
-                ->where('extend', 1);
+        ->whereDate('waktu_konsultasi', $consultation_date)
+        ->orWhere(function($query) use ($previous_date) {
+            $query->whereDate('waktu_konsultasi', $previous_date)
+                ->where('status', Constant::TRX_MENUNGGU);
         })
         ->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
         ->where('status', 'like', "%{$request->status}%")
