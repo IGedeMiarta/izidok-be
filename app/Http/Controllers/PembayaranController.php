@@ -113,6 +113,7 @@ class PembayaranController extends Controller
     $pembayaran->no_invoice = $noInvoice;
     $pembayaran->jaminan = $request->jaminan;
     $pembayaran->potongan =  $request->potongan;
+    $pembayaran->jenis_potongan =  $request->jenis_potongan_;
     $pembayaran->status = $request->status;
     $pembayaran->created_by = $request->user_id;
     $pembayaran->save();
@@ -269,6 +270,7 @@ class PembayaranController extends Controller
     $pembayaran->total = $request->total;
     $pembayaran->total_net = $request->total_nett;
     $pembayaran->potongan = $request->potongan;
+    $pembayaran->jenis_potongan =  $request->jenis_potongan_;
     $pembayaran->updated_at = date('Y-m-d H:i:s');
     $pembayaran->update();
 
@@ -299,6 +301,7 @@ class PembayaranController extends Controller
             'rekam_medis.created_at AS discharge_time',
             'total',
             'potongan',
+            'jenis_potongan',
             'total_net',
             'kota.nama AS kota'
         ])
