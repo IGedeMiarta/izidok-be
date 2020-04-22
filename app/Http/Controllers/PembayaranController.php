@@ -97,6 +97,7 @@ class PembayaranController extends Controller
       'jaminan' => 'required|in:UMUM,ASURANSI',
       'potongan' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
       'status' => 'required|string',
+      'jenis_potongan' => 'required|string',
       'detail_pembayaran' => 'required|array',
       'detail_pembayaran[*].kode_layanan' => 'required|string',
       'detail_pembayaran[*].nama_layanan' => 'required|string',
