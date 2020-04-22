@@ -37,7 +37,7 @@ class TransKlinikController extends Controller
 		}
 
         if(empty($request->column) && empty($request->order)) {
-            $column = 'id';
+            $column = 'waktu_konsultasi';
             $order = 'asc';
         } else {
             $column = $request->column;
