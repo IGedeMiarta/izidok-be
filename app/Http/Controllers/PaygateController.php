@@ -211,7 +211,7 @@ class PaygateController extends Controller
             'transactionDate' => $data['trans_date'],
             'transactionExpire' => $data['expired_pay'],
             'description' => $data['desc'],
-            'itemDetails' => $data['desc'],
+            'itemDetails' => $data['no_invoice'],
             'customerAccount' => $custAcc,
             'customerName' => $user->nama,
             'authCode' => hash("sha256",$data['no_invoice'].$data['amount'].$pg->channel_id.$pg->secretkey)
