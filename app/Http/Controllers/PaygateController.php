@@ -206,7 +206,7 @@ class PaygateController extends Controller
             'serviceCode' => '1083',
             'currency' => 'IDR',
             'transactionNo' => $data['no_invoice'],
-            'transactionAmount' => $data['amount'],
+            'transactionFee' => $data['amount'],
             'transactionDate' => $data['trans_date'],
             'transactionExpire' => $data['expired_pay'],
             'description' => $data['desc'],
