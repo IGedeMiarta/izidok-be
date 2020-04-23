@@ -203,6 +203,7 @@ class PaygateController extends Controller
 
         $req = [
             'channelId' => $pg->channel_id,
+            'serviceCode' => '1083',
             'currency' => 'IDR',
             'transactionNo' => $data['no_invoice'],
             'transactionAmount' => $data['amount'],
