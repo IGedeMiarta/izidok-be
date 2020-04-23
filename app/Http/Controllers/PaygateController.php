@@ -122,7 +122,7 @@ class PaygateController extends Controller
         ];
 
         if ($request->pg_id == 1) {
-            return false;
+            $res = $this->bayarind($dataPg);
         } elseif ($request->pg_id == 2) {
             $res = $this->bcaVa($dataPg);
         } else {
@@ -184,6 +184,52 @@ class PaygateController extends Controller
                 'data' => $res,
             ], 200);
         }
+    }
+
+    public function bayarind($data){
+        $user = Auth::user();
+        $pg = Paygate::find(1);
+
+        if (strlen($user->nomor_telp) > 11) {
+            $ca = substr($user->nomor_telp, -11);
+        } else {
+            $ca = $user->nomor_telp;
+            for ($i=strlen($user->nomor_telp); $i < 11; $i++) {
+                $ca = '0'.$ca;
+            }
+        }
+
+        $custAcc = $pg->company_code.$ca;
+
+        $req = [
+            'channelId' => $pg->channel_id,
+            'currency' => 'IDR',
+            'transactionNo' => $data['no_invoice'],
+            'transactionAmount' => $data['amount'],
+            'transactionDate' => $data['trans_date'],
+            'transactionExpire' => $data['expired_pay'],
+            'description' => $data['desc'],
+            'customerAccount' => $custAcc,
+            'customerName' => $user->nama,
+            'authCode' => hash("sha256",$data['no_invoice'].$data['amount'].$pg->channel_id.$pg->secretkey)
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->url_ins);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($req));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_POST,1);
+        $response = json_decode(curl_exec($ch), true);
+        curl_close($ch);
+
+        $req['rc'] = $response['insertStatus'];
+        $req['insertId'] = $response['insertId'];
+        $req['created_by'] = $user->id;
+        PaygateLog::create($req);
+
+        return $response;
     }
 
     public function bcaVa($data){
