@@ -17,10 +17,10 @@ use App\Http\Controllers\PaketController;
 class PaygateController extends Controller
 {
     public function __construct(){
-        // $this->url_ins = 'https://simpg.sprintasia.net/PaymentRegister';
-        // $this->url_void = 'https://simpg.sprintasia.net/PostAuth';
-        $this->url_ins = 'https://pay.sprintasia.net/PaymentRegister';
-        $this->url_void = 'https://pay.sprintasia.net/PostAuth';
+         $this->url_ins = 'https://simpg.sprintasia.net/PaymentRegister';
+         $this->url_void = 'https://simpg.sprintasia.net/PostAuth';
+//        $this->url_ins = 'https://pay.sprintasia.net/PaymentRegister';
+//        $this->url_void = 'https://pay.sprintasia.net/PostAuth';
     }
     /**
      * Display a listing of the resource.
