@@ -202,7 +202,7 @@ class PaygateController extends Controller
 
         $custAcc = $pg->company_code.$ca;
         $feeTransaction = 0;
-        $detailsItem  = array(array("itemName"=>"asdasd", "price"=>99000, "quantity"=>1,"itemURL"=>"https://staging.bayarind.id:28081/assets/img/iphone_xs.jpg"));
+        $detailsItem  = array(array("itemName"=>$data['desc'], "price"=>$data['amount'], "quantity"=>1,"itemURL"=>"https://dev.izidok.id/subskripsi/pilih-paket"));
         $req = [
             'channelId' => $pg->channel_id,
             'serviceCode' => '1083',
