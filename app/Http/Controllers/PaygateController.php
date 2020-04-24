@@ -219,7 +219,7 @@ class PaygateController extends Controller
             'transactionExpire' => $data['expired_pay'],
             'description' => $data['desc'],
             'callbackURL' => 'https://app.izidok.id/subskripsi',
-            'itemDetails' => json_encode($req),
+            'itemDetails' => $req,
             'customerAccount' => $custAcc,
             'customerName' => $user->nama,
             'authCode' => hash("sha256",$data['no_invoice'].$data['amount'].$pg->channel_id.$pg->secretkey)
