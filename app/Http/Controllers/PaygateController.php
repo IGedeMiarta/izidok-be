@@ -214,7 +214,7 @@ class PaygateController extends Controller
             'transactionNo' => $data['no_invoice'],
             'transactionAmount' => $data['amount'],
             'itemName' =>  $data['desc'],
-            'transactionFee' => '0',
+            'transactionFee' => 0,
             'transactionDate' => $data['trans_date'],
             'transactionExpire' => $data['expired_pay'],
             'description' => $data['desc'],
