@@ -162,6 +162,7 @@ class PaygateController extends Controller
                         'status' => true,
                         'message' => 'email konfirmasi pembayaran sudah dibuat',
                         'data' => $user->email,
+                        'redirect_url' => $res['redirectURL'],
                         'billing_id' => $bill->id
                     ]);
                 }
@@ -207,12 +208,12 @@ class PaygateController extends Controller
             'currency' => 'IDR',
             'transactionNo' => $data['no_invoice'],
             'transactionAmount' => $data['amount'],
-            'transactionFee' => $data['amount'],
+            'transactionFee' => '0',
             'transactionDate' => $data['trans_date'],
             'transactionExpire' => $data['expired_pay'],
             'description' => $data['desc'],
             'callbackURL' => 'https://app.izidok.id/subskripsi',
-            'itemDetails' => json_encode($data['no_invoice']),
+            'itemDetails' => json_encode($data['desc']),
             'customerAccount' => $custAcc,
             'customerName' => $user->nama,
             'authCode' => hash("sha256",$data['no_invoice'].$data['amount'].$pg->channel_id.$pg->secretkey)
