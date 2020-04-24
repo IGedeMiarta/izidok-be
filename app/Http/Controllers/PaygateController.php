@@ -159,23 +159,13 @@ class PaygateController extends Controller
 
 
                 if (\sendEmail($email_data, Constant::PAYMENT_CONFIRMATION)) {
-                    if($request->pg_id == 1){
-                        return response()->json([
-                            'status' => true,
-                            'message' => 'email konfirmasi pembayaran sudah dibuat',
-                            'data' => $user->email,
-                            'redirect_url' => $res['redirectURL'],
-                            'billing_id' => $bill->id
-                        ]);
-                    }else{
-                        return response()->json([
-                            'status' => true,
-                            'message' => 'email konfirmasi pembayaran sudah dibuat',
-                            'data' => $user->email,
-                            'billing_id' => $bill->id
-                        ]);
-                    }
-
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'email konfirmasi pembayaran sudah dibuat',
+                        'data' => $user->email,
+                        'redirect_url' => empty($res['redirectURL']) ? null : $res['redirectURL'],
+                        'billing_id' => $bill->id
+                    ]);
                 }
             } catch (\Exception $e) {
                 return response()->json([
