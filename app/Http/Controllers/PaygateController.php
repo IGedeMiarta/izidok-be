@@ -209,7 +209,7 @@ class PaygateController extends Controller
             'currency' => 'IDR',
             'transactionNo' => $data['no_invoice'],
             'transactionAmount' => $data['amount'],
-            'transactionFee' => $feeTransaction,
+            'transactionFee' => '3000',
             'transactionDate' => $data['trans_date'],
             'transactionExpire' => $data['expired_pay'],
             'description' => $data['desc'],
