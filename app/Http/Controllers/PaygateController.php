@@ -201,7 +201,10 @@ class PaygateController extends Controller
         }
 
         $custAcc = $pg->company_code.$ca;
-        $DetailsItem = array('itemName' => 'test', 'price' =>$data['amount'], 'quantity' => 1, 'itemURL' => '');
+        $DetailsItem =['itemName' => 'test',
+                        'price' =>$data['amount'],
+                        'quantity' => 1,
+                        'itemURL' => ''];
 
         $req = [
             'channelId' => $pg->channel_id,
@@ -214,7 +217,7 @@ class PaygateController extends Controller
             'transactionExpire' => $data['expired_pay'],
             'description' => $data['desc'],
             'callbackURL' => 'https://app.izidok.id/subskripsi',
-            'itemDetails' => json_encode($DetailsItem),
+            'itemDetails' => $DetailsItem,
             'customerAccount' => $custAcc,
             'customerName' => $user->nama,
             'authCode' => hash("sha256",$data['no_invoice'].$data['amount'].$pg->channel_id.$pg->secretkey)
