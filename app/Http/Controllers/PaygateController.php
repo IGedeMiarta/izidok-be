@@ -157,12 +157,13 @@ class PaygateController extends Controller
                     'data' => (array) $dtlPmbyrn->data
                 ];
 
+                $redirect_url = $res['redirectURL'];
                 if (\sendEmail($email_data, Constant::PAYMENT_CONFIRMATION)) {
                     return response()->json([
                         'status' => true,
                         'message' => 'email konfirmasi pembayaran sudah dibuat',
                         'data' => $user->email,
-                        'redirect_url' => $res['redirectURL'],
+                        'redirect_url' => $redirect_url,
                         'billing_id' => $bill->id
                     ]);
                 }
