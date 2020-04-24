@@ -202,7 +202,7 @@ class PaygateController extends Controller
 
         $custAcc = $pg->company_code.$ca;
         $feeTransaction = 0;
-        $req = ['itemName' =>  $data['desc'],
+        $req = ['itemName' =>  'asdasdad',
                 'price' => $data['amount'],
                 'quantity' => '1',
                 'itemURL' => ''
