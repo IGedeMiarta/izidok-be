@@ -163,7 +163,7 @@ class PaygateController extends Controller
                         'status' => true,
                         'message' => 'email konfirmasi pembayaran sudah dibuat',
                         'data' => $user->email,
-                        'redirect_url' => $res['redirectURL'] ? $res['redirectURL'] : null ,
+                        'redirect_url' => $res['redirectURL'],
                         'billing_id' => $bill->id
                     ]);
                 }
