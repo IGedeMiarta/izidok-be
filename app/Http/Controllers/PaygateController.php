@@ -202,11 +202,11 @@ class PaygateController extends Controller
 
         $custAcc = $pg->company_code.$ca;
         $feeTransaction = 0;
-        $itemdetail = ['itemName' =>  'test',
+        $itemdetail = array('itemName' =>  'test',
                 'price' => $data['amount'],
                 'quantity' => '1',
                 'itemURL' => 'test.com'
-            ];
+        );
         $req = [
             'channelId' => $pg->channel_id,
             'serviceCode' => '1083',
