@@ -201,6 +201,7 @@ class PaygateController extends Controller
         }
 
         $custAcc = $pg->company_code.$ca;
+        $feeTransaction = 0;
 
         $req = [
             'channelId' => $pg->channel_id,
@@ -208,7 +209,7 @@ class PaygateController extends Controller
             'currency' => 'IDR',
             'transactionNo' => $data['no_invoice'],
             'transactionAmount' => $data['amount'],
-            'transactionFee' => $data['amount'],
+            'transactionFee' => $feeTransaction,
             'transactionDate' => $data['trans_date'],
             'transactionExpire' => $data['expired_pay'],
             'description' => $data['desc'],
