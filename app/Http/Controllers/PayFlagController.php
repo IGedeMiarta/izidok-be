@@ -123,7 +123,7 @@ class PayFlagController extends Controller
                 return response()->json($this->payFlagResponse($request, '01', 'Invalid transactionNo (02)'), 200);
             }
 
-            if($pglog->customerAccount != $request->customerAccount) {
+            if($pglog->customerAccount != $request->customerAccount && $request->channelId != 'BWIZIDOK') {
                 return response()->json($this->payFlagResponse($request, '01', 'Invalid VA Number'), 200);
             }
 
