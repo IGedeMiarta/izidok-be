@@ -33,18 +33,18 @@ class PayFlagController extends Controller
                 'currency' => 'required',
                 'transactionNo' => 'required',
                 'transactionAmount' => 'required',
-                'channelType' => Rule::requiredIf(function () use ($request){
+                'channelType' => Rule::requiredIf(function() use ($request){
                     return $request->channelId != 'BWIZIDOK';
                 }),
                 'transactionStatus' => 'required',
                 'transactionMessage' => 'required',
-                'customerAccount' => Rule::requiredIf(function () use ($request){
+                'customerAccount' => Rule::requiredIf(function() use ($request){
                     return $request->channelId != 'BWIZIDOK';
                 }),
                 'flagType' => 'required',
                 'insertId' => 'required',
                 'authCode' => 'required',
-                'paymentMethod' =>  Rule::requiredIf(function () use ($request){
+                'paymentMethod' => Rule::requiredIf(function() use ($request){
                     return $request->channelId != 'BWIZIDOK';
                 }),
             ]);
