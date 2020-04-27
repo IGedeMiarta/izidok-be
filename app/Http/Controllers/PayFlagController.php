@@ -13,6 +13,7 @@ use App\User;
 use App\KlinikSubscribe;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -32,13 +33,20 @@ class PayFlagController extends Controller
                 'currency' => 'required',
                 'transactionNo' => 'required',
                 'transactionAmount' => 'required',
-                'channelType' => 'required',
+                'channelType' => Rule::requiredIf(function () use ($request){
+                    return $request->channelId != 'BWIZIDOK';
+                }),
                 'transactionStatus' => 'required',
                 'transactionMessage' => 'required',
-                'customerAccount' => 'required',
+                'customerAccount' => Rule::requiredIf(function () use ($request){
+                    return $request->channelId != 'BWIZIDOK';
+                }),
                 'flagType' => 'required',
                 'insertId' => 'required',
                 'authCode' => 'required',
+                'paymentMethod' =>  Rule::requiredIf(function () use ($request){
+                    return $request->channelId != 'BWIZIDOK';
+                }),
             ]);
 
             if ($validator->fails()) {
@@ -56,7 +64,7 @@ class PayFlagController extends Controller
             $pg = Paygate::select('secretkey')
                 ->where('channel_id', $request->channelId)
                 ->first();
-            
+
             if(!$pg) {
                 return response()->json($this->payFlagResponse($request, '01', 'Invalid channelId'), 200);
             }
@@ -77,7 +85,7 @@ class PayFlagController extends Controller
             $billing = Billing::select('expired_pay', 'amount_disc', 'amount_pay','status')
                 ->where('no_invoice', $request->transactionNo)
                 ->first();
-            
+
             if(!$billing) {
                 return response()->json($this->payFlagResponse($request, '01', 'Invalid transactionNo'), 200);
             }
