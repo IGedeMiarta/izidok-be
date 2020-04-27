@@ -18,7 +18,8 @@ class SingleDeviceMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::user()->email != 'customercare@medlinx.co.id') {
+        $email = array('customercare@medlinx.co.id','izidokid@gmail.com','product.izidok@gmail.com');
+        if (in_array(Auth::user()->email, $email)) {
             if (substr($request->bearerToken(), 10,20) != Auth::user()->last_session) {
                 abort(469);
             }
