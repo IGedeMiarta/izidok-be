@@ -45,7 +45,7 @@ class PayFlagController extends Controller
                 'insertId' => 'required',
                 'authCode' => 'required',
                 'paymentMethod' => Rule::requiredIf(function() use ($request){
-                    return $request->channelId != 'BWIZIDOK';
+                    return $request->channelId == 'BWIZIDOK';
                 }),
             ]);
 
