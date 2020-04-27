@@ -62,7 +62,7 @@ class TransKlinikController extends Controller
 			elseif(!$female) $gender = 1; // jika laki2
         }
 
-        if(empty($request->waktu_konsultasi)) {
+        if (empty($request->waktu_konsultasi)) {
             $consultation_date = date('Y-m-d');
         } else {
             $consultation_date = $request->waktu_konsultasi;
@@ -385,6 +385,7 @@ class TransKlinikController extends Controller
 
         $queue = TransKlinik::where('klinik_id', $klinikId)
             ->whereIn('status', $status)
+            ->where('extend', 0)
             ->get();
 
         foreach ($queue as $value) {
