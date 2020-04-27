@@ -191,7 +191,9 @@ class PaygateController extends Controller
     public function bayarind($data){
         $user = Auth::user();
         $pg = Paygate::find(1);
-        $bill = Billing::where('no_invoice', $data['no_invoice']);
+        $bill = Billing::where('no_invoice','===', $data['no_invoice']);
+        dd($bill);
+        return;
 
         if (strlen($user->nomor_telp) > 11) {
             $ca = substr($user->nomor_telp, -11);
