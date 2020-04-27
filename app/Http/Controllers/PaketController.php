@@ -288,6 +288,74 @@ class PaketController extends Controller
         }
     }
 
+    public function detailPembayaranBayarind($id)
+    {
+        $data['detail'] = DB::table('billing as b')
+            ->select('pl.id','b.id AS billing_id','pl.channelId','pl.serviceCode','pl.currency','pl.transactionNo','pl.transactionAmount','pl.transactionDate','pl.transactionExpire','pl.description','pl.customerAccount','pl.customerName',
+                DB::raw('case when b.status = 0 then "MENUNGGU PEMBAYARAN" else "LUNAS" end as status_billing'),
+                'b.pg_id','p.nama as paket','p.harga as harga_paket','a.nama as addson','a.harga as harga_addson','b.paket_bln as durasi_paket','b.amount_real','b.amount_disc','pr.value as diskon','pr.satuan as satuan_promo')
+            ->join('paygate_log as pl','b.no_invoice','=','pl.transactionNo')
+            ->leftJoin('paket as p','b.paket_id','=','p.id')
+            ->leftJoin('addson as a','b.addson_id','=','a.id')
+            ->leftJoin('promo as pr','b.promo_id','=','pr.id')
+            ->where('b.no_invoice',$id)->first();
+
+        if (!is_null($data['detail'])) {
+            $pgTutor = PaygateTutorial::where('pg_id',$data['detail']->pg_id)->get();
+
+            foreach ($pgTutor as $p) {
+                $arrDesc = [];
+                $desc = explode(';', $p['description']);
+
+                for ($i=0; $i < count($desc); $i++) {
+                    $arrDesc[$i+1] = $desc[$i];
+                }
+                $data['tutorial'][] = [
+                    'id' => $p['id'],
+                    'tipe' => $p['tipe'],
+                    'desc' => $arrDesc,
+                ];
+            }
+
+            $pg = Paygate::find($data['detail']->pg_id);
+            $data['paygate'] = [
+                'id' => $pg->id,
+                'nama' => $pg->nama,
+                'biaya_admin' => $pg->biaya_admin,
+                'logo' => 'https://api.izidok.id/paygate/'.$pg->logo,
+            ];
+
+            $user = Auth::user();
+            $dktr = Dokter::where('user_id', $user->id)->first();
+
+            if (!is_null($dktr)) {
+                $dokter = User::find($dktr->created_by);
+            } else {
+                $dokterId = Operator::where('user_id',$user->id)->first();
+                $dokter = User::find($dokterId->created_by);
+            }
+
+            $data['dokter'] = [
+                'nama' => $dokter->nama,
+                'nomor_telp' => $dokter->nomor_telp,
+                'email' => $dokter->email,
+            ];
+            $data['detail']->amount_pay = $data['detail']->amount_disc + $pg->biaya_admin;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'success',
+                'data' => $data,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'data not found',
+                'data' => null,
+            ], 200);
+        }
+    }
+
     /**
      * generate pdf from html
      *
@@ -441,7 +509,7 @@ class PaketController extends Controller
         //             'data' => $newPaket,
         //         ], 200);
         //     }
-        // } 
+        // }
         else {
             $billWaiting = Billing::
                 where('klinik_id',$klinikId)
