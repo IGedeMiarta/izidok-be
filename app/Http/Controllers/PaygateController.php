@@ -216,7 +216,7 @@ class PaygateController extends Controller
             'transactionDate' => $data['trans_date'],
             'transactionExpire' => $data['expired_pay'],
             'description' => $data['desc'],
-            'callbackURL' => 'https://dev.izidok.id/bayarind/',
+            'callbackURL' => 'https://dev.izidok.id/bayarind/'.$data['no_invoice'],
             'itemDetails' => json_encode($detailsItem),
             'customerAccount' => $custAcc,
             'customerName' => $user->nama,
