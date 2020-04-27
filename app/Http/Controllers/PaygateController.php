@@ -192,8 +192,6 @@ class PaygateController extends Controller
         $user = Auth::user();
         $pg = Paygate::find(1);
         $bill = Billing::where('no_invoice','===', $data['no_invoice']);
-        dd($bill);
-
 
         if (strlen($user->nomor_telp) > 11) {
             $ca = substr($user->nomor_telp, -11);
@@ -218,7 +216,7 @@ class PaygateController extends Controller
             'transactionDate' => $data['trans_date'],
             'transactionExpire' => $data['expired_pay'],
             'description' => $data['desc'],
-            'callbackURL' => 'https://dev.izidok.id/bayarind/',
+            'callbackURL' => 'https://dev.izidok.id/bayarind/'.$bill,
             'itemDetails' => json_encode($detailsItem),
             'customerAccount' => $custAcc,
             'customerName' => $user->nama,
