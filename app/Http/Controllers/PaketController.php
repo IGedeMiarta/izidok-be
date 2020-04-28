@@ -352,7 +352,7 @@ class PaketController extends Controller
                 'success' => false,
                 'message' => 'data not found',
                 'data' => null,
-            ], 200);
+            ], 404);
         }
     }
 
