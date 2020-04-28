@@ -284,8 +284,8 @@
                                                     </tr>
                                                 </table>
                                                 <br><br>
-                                                <p class="bold">Langkah-langkah pembayaran {{$data['paygate']->nama}} :</p>
-                                                @if(!empty($data['tutorial']))
+                                                @if($data['paygate']->nama != 'Bayarind')
+                                                    <p class="bold">Langkah-langkah pembayaran {{$data['paygate']->nama}} :</p>
                                                     @foreach($data['tutorial'] as $t)
                                                         <p class="bold">{{$t->tipe}}</p>
                                                         <ol>
