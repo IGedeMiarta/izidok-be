@@ -143,6 +143,7 @@ class PaygateController extends Controller
                 $bill->amount_disc = $amount_disc;
                 $bill->amount_real = $amount_real;
                 $bill->amount_pay = $amount_pay;
+                $bill->url_redirect = empty($res['redirectURL']) ? null : $res['redirectURL'];
                 $bill->created_by = $user->id;
                 $bill->created_at = $now;
                 $bill->save();

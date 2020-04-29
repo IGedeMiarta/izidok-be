@@ -74,7 +74,8 @@ class BillingController extends Controller
             DB::raw("CONCAT(paket_bln, ' bulan') AS periode_berlaku"),
             DB::raw("CONCAT('Rp. ', FORMAT(amount_disc + paygate.biaya_admin, 0, 'id_ID'), ',-') AS total_pembayaran"),
             DB::raw("DATE_FORMAT(pay_date, '%d/%m/%Y') AS tanggal_bayar"),
-            'billing.status'
+            'billing.status',
+            'url_redirect'
         ])
         ->join('paket', 'billing.paket_id', '=', 'paket.id')
         ->join('paygate', 'billing.pg_id', '=', 'paygate.id')
