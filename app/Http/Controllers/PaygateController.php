@@ -71,11 +71,11 @@ class PaygateController extends Controller
         $klinikId = $user->klinik_id;
         $noInvoice = substr('IZD'.date('ymdHis').rand(), 0,18);
         $now = date('Y-m-d H:i:s');
-        $expPay = date('Y-m-d H:i:s', strtotime($now."+1 days"));
+        $expPay = $request->pg_id == 1 ? date('Y-m-d H:i:s', strtotime($now."+10 minutes")) : date('Y-m-d H:i:s', strtotime($now."+1 days"));
         $pg = Paygate::find($request->pg_id);
         $paket = Paket::find($request->paket_id);
         $promo = Promo::find($request->promo_id);
-
+        dd($expPay);
         if (!$paket) {
             return response()->json([
                 'success' => false,
