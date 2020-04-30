@@ -75,7 +75,7 @@ class PaygateController extends Controller
         $pg = Paygate::find($request->pg_id);
         $paket = Paket::find($request->paket_id);
         $promo = Promo::find($request->promo_id);
-        dd($expPay);
+
         if (!$paket) {
             return response()->json([
                 'success' => false,
