@@ -289,9 +289,9 @@ class BillingController extends Controller
 
         if (count($cancel)) {
             foreach ($cancel as $c) {
-                $trans_klinik = Billing::find($c->id);
-                $trans_klinik->status = 2;
-                $trans_klinik->save();
+                $billing = Billing::find($c->id);
+                $billing->status = 2;
+                $billing->save();
             }
 
             return response()->json([
