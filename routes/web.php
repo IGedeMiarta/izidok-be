@@ -36,7 +36,9 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     //engagement
     $router->get('/email/reminder', ['uses' => 'TransKlinikController@emailReminder']);
 
+    //bayarind
     $router->get('/bayarind/expired', ['uses' => 'BillingController@cancelBayarind']);
+
     //registration
     // $router->post('/user', 'UserController@store');
     $router->post('/klinik', 'KlinikController@store');
