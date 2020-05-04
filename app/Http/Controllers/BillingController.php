@@ -288,10 +288,9 @@ class BillingController extends Controller
             ->get();
 
         if (count($cancel)) {
-            foreach ($cancel as $c) {
-                $billing = Billing::find($c->id);
-                $billing->status = 2;
-                $billing->save();
+            foreach ($cancel as $value) {
+                $value->status = 2;
+                $value->save();
             }
 
             return response()->json([
