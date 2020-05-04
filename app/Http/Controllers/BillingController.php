@@ -274,4 +274,35 @@ class BillingController extends Controller
             ]);
         }
     }
+
+     /**
+     * Update the specified resource in storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelBayarind(Request $request)
+    {
+        $cancel = Billing::where('pg_id', 1)
+            ->where('expired_pay', '<', Carbon::now())
+            ->where('status', 0)
+            ->get();
+
+        if (count($cancel)) {
+            foreach ($cancel as $c) {
+                $trans_klinik = Billing::find($c->id);
+                $trans_klinik->status = 2;
+                $trans_klinik->save();
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => "Bayarind status changed",
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => "Not found",
+            ]);
+        }
+    }
 }
