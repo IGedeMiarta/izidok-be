@@ -91,14 +91,15 @@ class TransKlinikController extends Controller
             'respirasi',
         ])
         ->join('pasien', 'pasien.id', '=', 'trans_klinik.pasien_id')
+        ->where('trans_klinik.klinik_id', $user->klinik_id)
         ->whereDate('waktu_konsultasi', $consultation_date)
-        ->orWhere(function($query) use ($previous_date) {
-            $query->whereDate('waktu_konsultasi', $previous_date)
+        ->orWhere(function($query) use ($previous_date, $user) {
+            $query->where('trans_klinik.klinik_id', $user->klinik_id)
+                ->whereDate('waktu_konsultasi', $previous_date)
                 ->where('status', Constant::TRX_MENUNGGU);
         })
         ->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
         ->where('status', 'like', "%{$request->status}%")
-        ->where('trans_klinik.klinik_id', $user->klinik_id)
         ->whereIn('status', $status)
         ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
         ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
