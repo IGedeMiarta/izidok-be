@@ -303,6 +303,93 @@ class TransKlinikController extends Controller
         return false;
     }
 
+    public function checkQueue()
+    {
+        $klinikId = Auth::user()->klinik_id;
+        $status = [Constant::TRX_MENUNGGU];
+
+        $queue = TransKlinik::where('klinik_id', $klinikId)
+            ->whereIn('status', $status)
+            ->where('extend', 0)
+            ->count();
+
+        if ($queue > 0) {
+            return response()->json([
+                'status' => true,
+                'message' => 'queue exist',
+                'data' => $queue
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'queue doesnt exist',
+            ]);
+        }
+    }
+
+    public function moveQueue()
+    {
+        $klinikId = Auth::user()->klinik_id;
+        $status = [Constant::TRX_MENUNGGU];
+
+        $queue = TransKlinik::where('klinik_id', $klinikId)
+            ->whereIn('status', $status)
+            ->where('extend', 0)
+            ->get();
+
+        foreach ($queue as $value) {
+            $value->extend = 1;
+            $value->save();
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'queue data successfully moved',
+            'data' => $queue,
+        ]);
+    }
+
+    public function checkSwitch()
+    {
+        $klinikId = Auth::user()->klinik_id;
+
+        $switch = TransKlinik::where('klinik_id', $klinikId)
+            ->whereDate('waktu_konsultasi', Carbon::yesterday())
+            ->where('switch', 1)
+            ->exists();
+
+        if ($switch) {
+            return response()->json([
+                'status' => true,
+                'message' => 'dont show popup',
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'show popup',
+            ]);
+        }
+    }
+
+    public function addSwitch()
+    {
+        $klinikId = Auth::user()->klinik_id;
+
+        $switch = TransKlinik::where('klinik_id', $klinikId)
+            ->whereDate('waktu_konsultasi', Carbon::yesterday())
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $switch->switch = 1;
+        $switch->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'switched to new queue',
+            'data' => $switch,
+        ]);
+    }
+
     public function emailReminder()
     {
         $list = TransKlinik::select([

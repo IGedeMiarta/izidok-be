@@ -141,6 +141,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/transaksi', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@index']);
         $router->get('/transaksi/queue/check', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@checkQueue']);
         $router->get('/transaksi/queue/move', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@moveQueue']);
+        $router->get('/transaksi/switch/check', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@checkSwitch']);
+        $router->get('/transaksi/switch/add', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@addSwitch']);
         $router->post('/transaksi', ['middleware' => 'permission:create-transklinik', 'uses' => 'TransKlinikController@store']);
         $router->get('/transaksi/{id}', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@show']);
         $router->put('/transaksi/{id}', ['middleware' => 'permission:update-transklinik', 'uses' => 'TransKlinikController@update']);
