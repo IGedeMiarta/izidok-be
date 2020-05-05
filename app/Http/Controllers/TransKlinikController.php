@@ -184,7 +184,7 @@ class TransKlinikController extends Controller
     $trans_klinik->klinik_id = $user->klinik_id;
     $trans_klinik->created_by = $request->user_id;
     $trans_klinik->waktu_konsultasi = Carbon::now();
-    $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id, $consultation_date);
+    $trans_klinik->nomor_antrian = $this->getNextOrderNumber();
     $trans_klinik->anamnesa = $request->anamnesis;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
     $trans_klinik->save();
@@ -265,19 +265,50 @@ class TransKlinikController extends Controller
     }
   }
 
-    public function getNextOrderNumber($klinik_id, $consultation_time)
+    public function getNextOrderNumber()
     {
-        $trans_klinik = TransKlinik::where('klinik_id', $klinik_id)
-        ->where(DB::raw('date(waktu_konsultasi)'), $consultation_time)
-        ->orderBy('nomor_antrian', 'desc')->first();
-
+        $klinikId = Auth::user()->klinik_id;
         $number = 1;
 
-        if (!$trans_klinik) {
-            return $number;
+        $switch = TransKlinik::where('klinik_id', $klinikId)
+            ->whereDate('waktu_konsultasi', Carbon::yesterday())
+            ->where('switch', 1)
+            ->exists();
+
+        if ($switch && date("His") >= "000001" && date("His") <= "030000") {
+            // Jika antrean di alihkan saat tengah malam & jam 00.01 - 03.00
+            $current_date = TransKlinik::select('nomor_antrian')
+                ->where('klinik_id',  $klinikId)
+                ->whereDate('waktu_konsultasi', Carbon::today())
+                ->orderBy('nomor_antrian', 'desc')
+                ->first();
+
+            return !$current_date ? $number : $current_date->nomor_antrian + 1;
+        } elseif (!$switch && date("His") >= "000001" && date("His") <= "030000") {
+            // Jika antrean tidak alihkan saat tengah malam & jam 00.01 - 03.00
+            $previous_date = TransKlinik::select('nomor_antrian')
+                ->where('klinik_id', $klinikId)
+                ->whereDate('waktu_konsultasi', Carbon::yesterday())
+                ->orderBy('nomor_antrian', 'desc')
+                ->first();
+
+            $current_date = TransKlinik::select('nomor_antrian')
+                ->where('klinik_id', $klinikId)
+                ->whereDate('waktu_konsultasi', Carbon::today())
+                ->orderBy('nomor_antrian', 'desc')
+                ->first();
+
+            $queue_number = max($previous_date, $current_date);
+
+            return !$queue_number ? $number : $queue_number->nomor_antrian + 1;
         } else {
-            $number = $trans_klinik->nomor_antrian + 1;
-            return $number;
+            // Jika antrean dialihkan atau tidak dialihkan
+            $current_date = TransKlinik::where('klinik_id', $klinikId)
+                ->whereDate('waktu_konsultasi', Carbon::today())
+                ->orderBy('nomor_antrian', 'desc')
+                ->first();
+
+            return !$current_date ? $number : $current_date->nomor_antrian + 1;
         }
     }
 
