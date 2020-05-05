@@ -435,50 +435,5 @@ class TransKlinikController extends Controller
         }
     }
 
-    public function checkQueue()
-    {
-        $klinikId = Auth::user()->klinik_id;
-        $status = [Constant::TRX_MENUNGGU];
-
-        $queue = TransKlinik::where('klinik_id', $klinikId)
-            ->whereIn('status', $status)
-            ->where('extend', 0)
-            ->count();
-
-        if ($queue > 0) {
-            return response()->json([
-                'status' => true,
-                'message' => 'queue exist',
-                'data' => $queue
-            ]);
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'queue doesnt exist',
-            ]);
-        }
-    }
-
-    public function moveQueue()
-    {
-        $klinikId = Auth::user()->klinik_id;
-        $status = [Constant::TRX_MENUNGGU];
-
-        $queue = TransKlinik::where('klinik_id', $klinikId)
-            ->whereIn('status', $status)
-            ->where('extend', 0)
-            ->get();
-
-        foreach ($queue as $value) {
-            $value->extend = 1;
-            $value->save();
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'queue data successfully moved',
-            'data' => $queue,
-        ]);
-    }
 
 }
