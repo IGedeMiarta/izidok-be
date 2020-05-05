@@ -397,14 +397,21 @@ class TransKlinikController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
-        $switch->switch = 1;
-        $switch->save();
+        if ($switch) {
+            $switch->switch = 1;
+            $switch->save();
 
-        return response()->json([
-            'status' => true,
-            'message' => 'switched to new queue',
-            'data' => $switch,
-        ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'switched to new queue',
+                'data' => $switch,
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'No queue',
+            ]);
+        }
     }
 
     public function emailReminder()
