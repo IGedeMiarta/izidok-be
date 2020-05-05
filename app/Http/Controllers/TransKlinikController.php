@@ -264,24 +264,18 @@ class TransKlinikController extends Controller
     }
   }
 
-    public function getNextOrderNumber($klinik_id, $consultation_date)
+    public function getNextOrderNumber($klinik_id, $consultation_time)
     {
-        $number = 1;
-
         $trans_klinik = TransKlinik::where('klinik_id', $klinik_id)
-            ->whereDate('waktu_konsultasi', $consultation_date)
-            ->orderBy('nomor_antrian', 'desc')
-            ->first();
+        ->where(DB::raw('date(waktu_konsultasi)'), $consultation_time)
+        ->orderBy('nomor_antrian', 'desc')->first();
+
+        $number = 1;
 
         if (!$trans_klinik) {
             return $number;
-        } elseif ($trans_klinik->extend === 0 && $trans_klinik->created_at->addHours(4) >= Carbon::now() === true) {
-            $number = $trans_klinik->nomor_antrian + 1;
-            return $number;
-        } elseif ($trans_klinik->extend === 1 && $trans_klinik->updated_at->addHours(4) >= Carbon::now() === true) {
-            $number = $trans_klinik->nomor_antrian + 1;
-            return $number;
         } else {
+            $number = $trans_klinik->nomor_antrian + 1;
             return $number;
         }
     }
