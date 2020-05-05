@@ -275,7 +275,7 @@ class TransKlinikController extends Controller
             ->where('switch', 1)
             ->exists();
 
-        if ($switch && date("His") >= "000001" && date("His") <= "030000") {
+        if ($switch && date("His") >= "160001" && date("His") <= "190000") {
             // Jika antrean di alihkan saat tengah malam & jam 00.01 - 03.00
             $current_date = TransKlinik::select('nomor_antrian')
                 ->where('klinik_id',  $klinikId)
@@ -284,7 +284,7 @@ class TransKlinikController extends Controller
                 ->first();
 
             return !$current_date ? $number : $current_date->nomor_antrian + 1;
-        } elseif (!$switch && date("His") >= "000001" && date("His") <= "030000") {
+        } elseif (!$switch && date("His") >= "160001" && date("His") <= "190000") {
             // Jika antrean tidak alihkan saat tengah malam & jam 00.01 - 03.00
             $previous_date = TransKlinik::select('nomor_antrian')
                 ->where('klinik_id', $klinikId)
