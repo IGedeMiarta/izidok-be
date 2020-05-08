@@ -314,7 +314,7 @@ class BillingController extends Controller
     {
         $failed = Billing::where('id', $request->id)->get();
 
-        if ($failed) {
+        if (count($failed)) {
             foreach ($failed as $value) {
                 $value->status = 2;
                 $value->save();
