@@ -280,15 +280,42 @@ class BillingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function cancelBayarind(Request $request)
+    public function expiredBayarind(Request $request)
     {
-        $cancel = Billing::where('pg_id', 1)
+        $expired = Billing::where('pg_id', 1)
             ->where('expired_pay', '<', Carbon::now())
             ->where('status', 0)
             ->get();
 
-        if (count($cancel)) {
-            foreach ($cancel as $value) {
+        if (count($expired)) {
+            foreach ($expired as $value) {
+                $value->status = 2;
+                $value->save();
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => "Bayarind status changed",
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => "Not found",
+            ]);
+        }
+    }
+
+      /**
+     * Update the specified resource in storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function failedBayarind(Request $request)
+    {
+        $failed = Billing::where('id', $request->id)->get();
+
+        if ($failed) {
+            foreach ($failed as $value) {
                 $value->status = 2;
                 $value->save();
             }

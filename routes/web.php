@@ -37,7 +37,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->get('/email/reminder', ['uses' => 'TransKlinikController@emailReminder']);
 
     //bayarind
-    $router->get('/bayarind/expired', ['uses' => 'BillingController@cancelBayarind']);
+    $router->get('/bayarind/expired', ['uses' => 'BillingController@expiredBayarind']);
 
     //registration
     // $router->post('/user', 'UserController@store');
@@ -141,6 +141,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/transaksi', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@index']);
         $router->get('/transaksi/queue/check', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@checkQueue']);
         $router->get('/transaksi/queue/move', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@moveQueue']);
+        $router->get('/transaksi/queue/number', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@getNextOrderNumber']);
         $router->get('/transaksi/switch/check', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@checkSwitch']);
         $router->get('/transaksi/switch/add', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@addSwitch']);
         $router->post('/transaksi', ['middleware' => 'permission:create-transklinik', 'uses' => 'TransKlinikController@store']);
@@ -196,6 +197,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->get('/billing/package-active/', ['uses' => 'BillingController@packageActive']);
             $router->get('/billing/package-unpaid/', ['uses' => 'BillingController@packageUnpaid']);
             $router->get('/billing/package/{id}', ['uses' => 'BillingController@packageDetails']);
+            $router->get('/bayarind/failed/{id}', ['uses' => 'BillingController@failedBayarind']);
         });
 
         //paket
