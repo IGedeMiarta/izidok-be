@@ -284,8 +284,6 @@ class OperatorController extends Controller
     } else {
       $user = User::find($operator->user_id);
       $user->nama = $request->nama;
-      $user->email = $request->email;
-      $user->nomor_telp = $request->nomor_telp;
       $user->save();
       $operator->nama = $request->nama;
       $operator->save();
