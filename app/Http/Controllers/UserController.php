@@ -334,7 +334,6 @@ class UserController extends Controller
                     return response()->json([
                         'status' => true,
                         'message' => 'forgot password telah dibuat',
-                        'data' => $forgot_password
                     ]);
                 }
             }else{
@@ -385,7 +384,6 @@ class UserController extends Controller
                         return response()->json([
                             'status' => true,
                             'message' => 'forgot password telah dibuat',
-                            'data' => $forgot_password
                         ]);
                     }
                 }
