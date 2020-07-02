@@ -147,7 +147,7 @@ class PembayaranController extends Controller
   public function show(Request $request)
   {
     $pembayaran = Pembayaran::with(['createdBy:id,nama','detail', 'transklinik.pasien'])->find($request->id);
-    if (empty($pembayaran)) {
+    if (empty($pembayaran) || $pembayaran->klinik_id != Auth::user()->klinik_id) {
       return response()->json([
         'status' => false,
         'message' => "Pembayaran not found",
