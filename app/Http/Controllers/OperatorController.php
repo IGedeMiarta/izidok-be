@@ -63,6 +63,16 @@ class OperatorController extends Controller
 
   public function store(Request $request)
   {
+    $checkOp = self::checkAvailableOp();
+    $data = $checkOp->getData();
+
+    if (!$data->status) {
+      return response()->json([
+        'status' => false,
+        'message' => 'Klinik sudah memiliki Asisten Dokter'
+      ]);
+    }
+
     $this->validate($request, [
       'nama' => 'required|string',
       'email' => 'required|email',
