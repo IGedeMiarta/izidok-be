@@ -17,10 +17,10 @@ use App\Http\Controllers\PaketController;
 class PaygateController extends Controller
 {
     public function __construct(){
-         $this->url_ins = 'https://simpg.sprintasia.net/PaymentRegister';
-         $this->url_void = 'https://simpg.sprintasia.net/PostAuth';
-//        $this->url_ins = 'https://pay.sprintasia.net/PaymentRegister';
-//        $this->url_void = 'https://pay.sprintasia.net/PostAuth';
+        // $this->url_ins = 'https://simpg.sprintasia.net/PaymentRegister';
+        // $this->url_void = 'https://simpg.sprintasia.net/PostAuth';
+        $this->url_ins = 'https://pay.sprintasia.net/PaymentRegister';
+        $this->url_void = 'https://pay.sprintasia.net/PostAuth';
     }
     /**
      * Display a listing of the resource.
@@ -71,7 +71,7 @@ class PaygateController extends Controller
         $klinikId = $user->klinik_id;
         $noInvoice = substr('IZD'.date('ymdHis').rand(), 0,18);
         $now = date('Y-m-d H:i:s');
-        $expPay = $request->pg_id == 1 ? date('Y-m-d H:i:s', strtotime($now."+10 minutes")) : date('Y-m-d H:i:s', strtotime($now."+1 days"));
+        $expPay = date('Y-m-d H:i:s', strtotime($now."+1 days"));
         $pg = Paygate::find($request->pg_id);
         $paket = Paket::find($request->paket_id);
         $promo = Promo::find($request->promo_id);
@@ -122,7 +122,7 @@ class PaygateController extends Controller
         ];
 
         if ($request->pg_id == 1) {
-            $res = $this->bayarind($dataPg);
+            return false;
         } elseif ($request->pg_id == 2) {
             $res = $this->bcaVa($dataPg);
         } else {
@@ -143,7 +143,6 @@ class PaygateController extends Controller
                 $bill->amount_disc = $amount_disc;
                 $bill->amount_real = $amount_real;
                 $bill->amount_pay = $amount_pay;
-                $bill->url_redirect = empty($res['redirectURL']) ? null : $res['redirectURL'];
                 $bill->created_by = $user->id;
                 $bill->created_at = $now;
                 $bill->save();
@@ -158,13 +157,11 @@ class PaygateController extends Controller
                     'data' => (array) $dtlPmbyrn->data
                 ];
 
-
                 if (\sendEmail($email_data, Constant::PAYMENT_CONFIRMATION)) {
                     return response()->json([
                         'status' => true,
                         'message' => 'email konfirmasi pembayaran sudah dibuat',
                         'data' => $user->email,
-                        'redirect_url' => empty($res['redirectURL']) ? null : $res['redirectURL'],
                         'billing_id' => $bill->id
                     ]);
                 }
@@ -187,59 +184,6 @@ class PaygateController extends Controller
                 'data' => $res,
             ], 200);
         }
-    }
-
-    public function bayarind($data){
-        $user = Auth::user();
-        $pg = Paygate::find(1);
-        $bill = Billing::where('no_invoice','===', $data['no_invoice']);
-
-        if (strlen($user->nomor_telp) > 11) {
-            $ca = substr($user->nomor_telp, -11);
-        } else {
-            $ca = $user->nomor_telp;
-            for ($i=strlen($user->nomor_telp); $i < 11; $i++) {
-                $ca = '0'.$ca;
-            }
-        }
-
-        $custAcc = $pg->company_code.$ca;
-        $feeTransaction = 0;
-        $detailsItem  = array(array("itemName"=>$data['desc'], "price"=>$data['amount'], "quantity"=>1,"itemURL"=>"https://dev.izidok.id/subskripsi/pilih-paket"));
-        $req = [
-            'channelId' => $pg->channel_id,
-            'serviceCode' => '1083',
-            'currency' => 'IDR',
-            'transactionNo' => $data['no_invoice'],
-            'transactionAmount' => $data['amount'],
-            'itemName' =>  $data['desc'],
-            'transactionFee' => 0,
-            'transactionDate' => $data['trans_date'],
-            'transactionExpire' => $data['expired_pay'],
-            'description' => $data['desc'],
-            'callbackURL' => 'https://dev.izidok.id/bayarind/'.$data['no_invoice'],
-            'itemDetails' => json_encode($detailsItem),
-            'customerAccount' => $custAcc,
-            'customerName' => $user->nama,
-            'authCode' => hash("sha256",$data['no_invoice'].$data['amount'].$pg->channel_id.$pg->secretkey)
-        ];
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->url_ins);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($req));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_POST,1);
-        $response = json_decode(curl_exec($ch), true);
-        curl_close($ch);
-
-        $req['rc'] = $response['insertStatus'];
-        $req['insertId'] = $response['insertId'];
-        $req['created_by'] = $user->id;
-        PaygateLog::create($req);
-
-        return $response;
     }
 
     public function bcaVa($data){

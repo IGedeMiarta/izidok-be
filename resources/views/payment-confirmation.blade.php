@@ -284,17 +284,15 @@
                                                     </tr>
                                                 </table>
                                                 <br><br>
-                                                @if($data['paygate']->nama != 'Bayarind')
-                                                    <p class="bold">Langkah-langkah pembayaran {{$data['paygate']->nama}} :</p>
-                                                    @foreach($data['tutorial'] as $t)
-                                                        <p class="bold">{{$t->tipe}}</p>
-                                                        <ol>
-                                                        @foreach($t->desc as $key => $d)
-                                                            <li>{{$d}}</li>
-                                                        @endforeach
-                                                        </ol>
+                                                <p class="bold">Langkah-langkah pembayaran {{$data['paygate']->nama}} :</p>
+                                                @foreach($data['tutorial'] as $t)
+                                                    <p class="bold">{{$t->tipe}}</p>
+                                                    <ol>
+                                                    @foreach($t->desc as $key => $d)
+                                                        <li>{{$d}}</li>
                                                     @endforeach
-                                                @endif
+                                                    </ol>
+                                                @endforeach
                                                 <hr>
                                                 <p class="bold">Detail Pembelian :</p>
                                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">

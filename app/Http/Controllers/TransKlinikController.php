@@ -37,7 +37,7 @@ class TransKlinikController extends Controller
 		}
 
         if(empty($request->column) && empty($request->order)) {
-            $column = 'waktu_konsultasi';
+            $column = 'id';
             $order = 'asc';
         } else {
             $column = $request->column;
@@ -62,13 +62,13 @@ class TransKlinikController extends Controller
 			elseif(!$female) $gender = 1; // jika laki2
         }
 
-        if (empty($request->waktu_konsultasi)) {
-            $consultation_date = date('Y-m-d');
+        if(empty($request->waktu_konsultasi)) {
+            $consultation_time = Carbon::today();
         } else {
-            $consultation_date = $request->waktu_konsultasi;
+            $consultation_time = $request->waktu_konsultasi;
         }
 
-        $previous_date = date('Y-m-d', strtotime('-1 day', strtotime($consultation_date)));
+        //$consultation_date = [$consultation_time, date('Y-m-d', strtotime('-1 day', strtotime($consultation_time)))];
         $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI];
 
         $trans_klinik = TransKlinik::select([
@@ -89,23 +89,18 @@ class TransKlinikController extends Controller
             'tinggi_badan',
             'berat_badan',
             'respirasi',
-        ])
-        ->join('pasien', 'pasien.id', '=', 'trans_klinik.pasien_id')
-        ->where('trans_klinik.klinik_id', $user->klinik_id)
-        ->whereDate('waktu_konsultasi', $consultation_date)
-        ->orWhere(function($query) use ($previous_date, $user) {
-            $query->where('trans_klinik.klinik_id', $user->klinik_id)
-                ->whereDate('waktu_konsultasi', $previous_date)
-                ->where('status', Constant::TRX_MENUNGGU);
-        })
-        ->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
-        ->where('status', 'like', "%{$request->status}%")
-        ->whereIn('status', $status)
-        ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
-        ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
-        ->where('pasien.nomor_hp', 'like', "%{$request->nomor_hp}%")
-        ->orderBy($column, $order)
-        ->paginate($request->limit);
+          ])
+          ->join('pasien', 'pasien.id', '=', 'trans_klinik.pasien_id')
+          ->where(DB::raw('date(waktu_konsultasi)'), $consultation_time)
+          ->where('nomor_antrian', 'like', "%{$request->nomor_antrian}%")
+          ->where('status', 'like', "%{$request->status}%")
+          ->where('trans_klinik.klinik_id', $user->klinik_id)
+          ->whereIn('status', $status)
+          ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
+          ->where('pasien.jenis_kelamin', 'like', "%{$gender}%")
+          ->where('pasien.nomor_hp', 'like', "%{$request->nomor_hp}%")
+          ->orderBy($column, $order)
+          ->paginate($request->limit);
 
         $data['role'] = $user->roles->first()->name;
     	$data['trans_klinik'] = $trans_klinik;
@@ -125,7 +120,7 @@ class TransKlinikController extends Controller
 		], 201);
 	}
 
-  public function store(Request $request, $array = [])
+  public function store(Request $request)
   {
     $this->validate($request, [
       'pasien_id' => 'required|integer',
@@ -143,8 +138,6 @@ class TransKlinikController extends Controller
       'tensi_sistole' => 'integer',
       'tensi_diastole' => 'integer',
       'nadi' => 'integer',
-      'alergi_kondisi_khusus' => 'string|nullable',
-      'keterangan_lain' => 'string|nullable'
     ]);
 
     #klinik exist?
@@ -161,9 +154,9 @@ class TransKlinikController extends Controller
 
     $pasien_id = $request->pasien_id;
     $klinik_id = $request->klinik_id;
-    $consultation_date = Carbon::today();
+    $consultation_time = Carbon::today();
 
-    if ($this->verifyConsultationDate($pasien_id, $klinik_id, $consultation_date)) {
+    if ($this->verifyConsultationDate($pasien_id, $klinik_id, $consultation_time)) {
         return response()->json(['status' => false, 'message' => 'Patient already registered']);
     }
 
@@ -184,7 +177,7 @@ class TransKlinikController extends Controller
     $trans_klinik->klinik_id = $user->klinik_id;
     $trans_klinik->created_by = $request->user_id;
     $trans_klinik->waktu_konsultasi = Carbon::now();
-    $trans_klinik->nomor_antrian = $this->getNextOrderNumber();
+    $trans_klinik->nomor_antrian = $this->getNextOrderNumber($user->klinik_id, $consultation_time);
     $trans_klinik->anamnesa = $request->anamnesis;
     $trans_klinik->status = Constant::TRX_MENUNGGU;
     $trans_klinik->save();
@@ -198,8 +191,6 @@ class TransKlinikController extends Controller
       $pasien->tensi_sistole = $request->tensi_sistole;
       $pasien->tensi_diastole = $request->tensi_diastole;
       $pasien->nadi = $request->nadi;
-      $pasien->alergi_kondisi_khusus = $request->alergi_kondisi_khusus;
-      $pasien->keterangan_lain = $request->keterangan_lain;
       $pasien->save();
     }
 
@@ -220,11 +211,7 @@ class TransKlinikController extends Controller
     if (!$trans_klinik) {
       return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
     } else {
-        if (Auth::user()->klinik_id == $trans_klinik->klinik_id) {
-            return response()->json(['status' => true, 'data' => $trans_klinik]);
-        }else{
-            return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
-        }
+      return response()->json(['status' => true, 'data' => $trans_klinik]);
     }
   }
 
@@ -269,51 +256,29 @@ class TransKlinikController extends Controller
     }
   }
 
-    public function getNextOrderNumber()
-    {
-        $klinikId = Auth::user()->klinik_id;
-        $number = 1;
+  public function getNextOrderNumber($klinik_id, $consultation_time)
+  {
+    $trans_klinik = TransKlinik::where('klinik_id', $klinik_id)
+      ->where(DB::raw('date(waktu_konsultasi)'), $consultation_time)
+      ->orderBy('nomor_antrian', 'desc')->first();
 
-        $switch = TransKlinik::where('klinik_id', $klinikId)
-            ->whereDate('waktu_konsultasi', Carbon::yesterday())
-            ->where('switch', 1)
-            ->exists();
+    $number = 1;
 
-        if (!$switch && date("His") >= "000001" && date("His") <= "030000") {
-            // Jika antrean tidak alihkan saat tengah malam & jam 00.01 - 03.00
-            $previous_date = TransKlinik::select('nomor_antrian')
-                ->where('klinik_id', $klinikId)
-                ->whereDate('waktu_konsultasi', Carbon::yesterday())
-                ->orderBy('nomor_antrian', 'desc')
-                ->first();
-
-            $current_date = TransKlinik::select('nomor_antrian')
-                ->where('klinik_id', $klinikId)
-                ->whereDate('waktu_konsultasi', Carbon::today())
-                ->orderBy('nomor_antrian', 'desc')
-                ->first();
-
-            $queue_number = max($previous_date, $current_date);
-
-            return !$queue_number ? $number : $queue_number->nomor_antrian + 1;
-        } else {
-            $current_date = TransKlinik::select('nomor_antrian')
-                ->where('klinik_id', $klinikId)
-                ->whereDate('waktu_konsultasi', Carbon::today())
-                ->orderBy('nomor_antrian', 'desc')
-                ->first();
-
-            return !$current_date ? $number : $current_date->nomor_antrian + 1;
-        }
+    if (!$trans_klinik) {
+        return $number;
+    } else {
+    	$number = $trans_klinik->nomor_antrian + 1;
+        return $number;
     }
+  }
 
-    public function verifyConsultationDate($pasien_id, $klinik_id, $consultation_date)
+    public function verifyConsultationDate($pasien_id, $klinik_id, $consultation_time)
     {
         $status = [Constant::TRX_BATAL, Constant::TRX_SELESAI];
 
         $exist = TransKlinik::where('pasien_id', $pasien_id)
             ->where('klinik_id', '=', $klinik_id)
-            ->whereDate('waktu_konsultasi',  $consultation_date)
+            ->where(DB::raw('date(waktu_konsultasi)'), '=', $consultation_time)
             ->whereNotIn('status', $status)
             ->exists();
 
@@ -322,100 +287,6 @@ class TransKlinikController extends Controller
         }
 
         return false;
-    }
-
-    public function checkQueue()
-    {
-        $klinikId = Auth::user()->klinik_id;
-        $status = [Constant::TRX_MENUNGGU];
-
-        $queue = TransKlinik::where('klinik_id', $klinikId)
-            ->whereIn('status', $status)
-            ->where('extend', 0)
-            ->count();
-
-        if ($queue > 0) {
-            return response()->json([
-                'status' => true,
-                'message' => 'queue exist',
-                'data' => $queue
-            ]);
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'queue doesnt exist',
-            ]);
-        }
-    }
-
-    public function moveQueue()
-    {
-        $klinikId = Auth::user()->klinik_id;
-        $status = [Constant::TRX_MENUNGGU];
-
-        $queue = TransKlinik::where('klinik_id', $klinikId)
-            ->whereIn('status', $status)
-            ->where('extend', 0)
-            ->get();
-
-        foreach ($queue as $value) {
-            $value->extend = 1;
-            $value->save();
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'queue data successfully moved',
-            'data' => $queue,
-        ]);
-    }
-
-    public function checkSwitch()
-    {
-        $klinikId = Auth::user()->klinik_id;
-
-        $switch = TransKlinik::where('klinik_id', $klinikId)
-            ->whereDate('waktu_konsultasi', Carbon::yesterday())
-            ->where('switch', 1)
-            ->exists();
-
-        if ($switch) {
-            return response()->json([
-                'status' => true,
-                'message' => 'dont show popup',
-            ]);
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'show popup',
-            ]);
-        }
-    }
-
-    public function addSwitch()
-    {
-        $klinikId = Auth::user()->klinik_id;
-
-        $switch = TransKlinik::where('klinik_id', $klinikId)
-            ->whereDate('waktu_konsultasi', Carbon::yesterday())
-            ->orderBy('created_at', 'desc')
-            ->first();
-
-        if ($switch) {
-            $switch->switch = 1;
-            $switch->save();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'switched to new queue',
-                'data' => $switch,
-            ]);
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'No queue',
-            ]);
-        }
     }
 
     public function emailReminder()
@@ -469,5 +340,26 @@ class TransKlinikController extends Controller
         }
     }
 
+    public function moveQueue()
+    {
+        $klinikId = Auth::user()->klinik_id;
+        $status = [Constant::TRX_MENUNGGU, Constant::TRX_KONSULTASI];
+
+        $queue = TransKlinik::where('klinik_id', $klinikId)
+            ->where('waktu_konsultasi', '=', Carbon::today())
+            ->whereIn('status', $status)
+            ->get();
+
+        foreach ($queue as $value) {
+            $value->extend = 1;
+            $value->save();
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'queue data successfully moved',
+            'data' => $queue,
+        ]);
+    }
 
 }

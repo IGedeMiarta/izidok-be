@@ -36,15 +36,7 @@ class UserController extends Controller
 
     public function show($id = null)
     {
-        if (!is_null($id) && Auth::user()->id != $id) {
-            return response()->json(['status' => false]);
-        }
-
         $user = User::with('klinik')->find($id);
-        if (is_null($user)) {
-            return response()->json(['status' => false]);
-        }
-        
         $user->klinik->provinsiDetail;
         $user->klinik->kotaDetail;
         $user->klinik->spesialisasi;
@@ -342,6 +334,7 @@ class UserController extends Controller
                     return response()->json([
                         'status' => true,
                         'message' => 'forgot password telah dibuat',
+                        'data' => $forgot_password
                     ]);
                 }
             }else{
@@ -392,6 +385,7 @@ class UserController extends Controller
                         return response()->json([
                             'status' => true,
                             'message' => 'forgot password telah dibuat',
+                            'data' => $forgot_password
                         ]);
                     }
                 }
