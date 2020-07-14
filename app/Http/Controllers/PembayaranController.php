@@ -95,7 +95,7 @@ class PembayaranController extends Controller
       'transklinik_id' => 'required|integer',
       'klinik_id' => 'required|integer',
       'jaminan' => 'required|in:UMUM,ASURANSI',
-      'potongan' => 'between:0,99.99',
+      'potongan' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
       'status' => 'required|string',
       'detail_pembayaran' => 'required|array',
       'detail_pembayaran[*].kode_layanan' => 'required|string',
@@ -112,7 +112,8 @@ class PembayaranController extends Controller
     $pembayaran->klinik_id = $request->klinik_id;
     $pembayaran->no_invoice = $noInvoice;
     $pembayaran->jaminan = $request->jaminan;
-    $pembayaran->potongan = $request->potongan;
+    $pembayaran->potongan =  $request->potongan;
+    $pembayaran->jenis_potongan =  $request->jenis_potongan_;
     $pembayaran->status = $request->status;
     $pembayaran->created_by = $request->user_id;
     $pembayaran->save();
@@ -146,7 +147,7 @@ class PembayaranController extends Controller
   public function show(Request $request)
   {
     $pembayaran = Pembayaran::with(['createdBy:id,nama','detail', 'transklinik.pasien'])->find($request->id);
-    if (empty($pembayaran)) {
+    if (empty($pembayaran) || $pembayaran->klinik_id != Auth::user()->klinik_id) {
       return response()->json([
         'status' => false,
         'message' => "Pembayaran not found",
@@ -269,6 +270,7 @@ class PembayaranController extends Controller
     $pembayaran->total = $request->total;
     $pembayaran->total_net = $request->total_nett;
     $pembayaran->potongan = $request->potongan;
+    $pembayaran->jenis_potongan = $request->jenis_potongan;
     $pembayaran->updated_at = date('Y-m-d H:i:s');
     $pembayaran->update();
 
@@ -299,6 +301,7 @@ class PembayaranController extends Controller
             'rekam_medis.created_at AS discharge_time',
             'total',
             'potongan',
+            'jenis_potongan',
             'total_net',
             'kota.nama AS kota'
         ])
@@ -423,14 +426,15 @@ class PembayaranController extends Controller
             DB::raw("CONCAT('Rp. ', FORMAT(total_net, 0, 'id_ID'), ',-') AS jumlah_transaksi"),
             'rekam_medis.diagnosa_id',
             'diagnosa.kode_penyakit_id',
+            'pembayaran.updated_at'
         ])
         ->leftJoin('trans_klinik', 'pembayaran.transklinik_id', '=', 'trans_klinik.id')
         ->leftJoin('pasien', 'trans_klinik.pasien_id', '=', 'pasien.id')
         ->leftJoin('rekam_medis', 'trans_klinik.id', '=', 'rekam_medis.transklinik_id')
         ->leftJoin('diagnosa', 'rekam_medis.diagnosa_id', '=', 'diagnosa.id')
-        ->whereBetween(DB::raw('date(waktu_konsultasi)'), [
-            date('Y-m-d', strtotime($request->from)),
-            date('Y-m-d', strtotime($request->to))
+        ->whereBetween('pembayaran.updated_at', [
+            date('Y-m-d 03:00:01', strtotime($request->from)),
+            date('Y-m-d 03:00:00', strtotime('+1 day', strtotime($request->to)))
         ])
         ->whereDate('waktu_konsultasi', 'like', "%{$request->waktu_konsultasi}%")
         ->where('pasien.nama', 'like', "%{$request->nama_pasien}%")
@@ -448,7 +452,7 @@ class PembayaranController extends Controller
             });
         }
 
-        $periode = date('d-M-Y', strtotime($request->from)).' - '.date('d-M-Y', strtotime($request->to));
+        $periode = date('d-M-Y 03:00:01', strtotime($request->from)).' - '.date('d-M-Y 03:00:00', strtotime('+1 day', strtotime($request->to)));
         $total_pasien = $pendapatan->count('pembayaran.id');
         $total_pendapatan = $pendapatan->sum('total_net');
         $pendapatan = $pendapatan->orderBy($column, $order)->paginate($request->limit);

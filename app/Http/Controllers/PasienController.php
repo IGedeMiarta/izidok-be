@@ -56,7 +56,7 @@ class PasienController extends Controller
 			elseif(!$female) $gender = 1; // jika laki2
 		}
 
-		$pasien = Pasien::select('id', DB::raw("CONCAT(nama,' (',DATE_FORMAT(tanggal_lahir, '%d-%m-%Y'),')') as nama"),'nomor_rekam_medis','jenis_kelamin','nomor_hp', 'klinik_id', 'tensi_sistole', 'tensi_diastole', 'nadi', 'suhu', 'tinggi_badan', 'berat_badan')
+		$pasien = Pasien::select('id', DB::raw("CONCAT(nama,' (',DATE_FORMAT(tanggal_lahir, '%d-%m-%Y'),')') as nama"), DB::raw("DATE_FORMAT(tanggal_lahir, '%Y-%m-%d') AS tanggal_lahir"), 'nomor_rekam_medis', 'jenis_kelamin', 'nomor_hp', 'klinik_id', 'tensi_sistole', 'tensi_diastole', 'nadi', 'suhu', 'tinggi_badan', 'berat_badan', 'alergi_kondisi_khusus', 'keterangan_lain')
 				->where('nomor_rekam_medis', 'like', "%{$request->nomor_rekam_medis}%")
 				->where('nama', 'like', "%{$request->nama_pasien}%")
 				->where('jenis_kelamin', 'like', "%{$gender}%")
@@ -122,7 +122,9 @@ class PasienController extends Controller
 			'respirasi' => 'integer',
 			'tinggi_badan' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
 			'berat_badan' => 'regex:/^(\d+(?:[\,]\d{1,9})?)$/',
-			'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15|nullable'
+            'nomor_hp_penanggung_jawab' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:8|max:15|nullable',
+            'alergi_kondisi_khusus' => 'string|nullable',
+            'keterangan_lain' => 'string|nullable'
 		]);
 
         $dob = $request->tanggal_lahir;
@@ -180,6 +182,8 @@ class PasienController extends Controller
 		$pasien->respirasi = $request->input('respirasi');
 		$pasien->tinggi_badan = str_replace(',','.',$request->input('tinggi_badan'));
 		$pasien->berat_badan = str_replace(',','.',$request->input('berat_badan'));
+        $pasien->alergi_kondisi_khusus = $request->input('alergi_kondisi_khusus');
+        $pasien->keterangan_lain = $request->input('keterangan_lain');
         $pasien->user_id = $request->user_id;
 
         $jenis_faskes = "";
@@ -386,6 +390,8 @@ class PasienController extends Controller
 		$pasien->berat_badan = str_replace(',','.',$request->input('berat_badan'));
 		$pasien->nomor_hp_penanggung_jawab = $request->input('nomor_hp_penanggung_jawab');
 		$pasien->hubungan_pasien = $request->input('hubungan_pasien');
+        $pasien->alergi_kondisi_khusus = $request->input('alergi_kondisi_khusus');
+        $pasien->keterangan_lain = $request->input('keterangan_lain');
 		$status = $pasien->save();
 
 		if (!$status) {

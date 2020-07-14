@@ -36,6 +36,9 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     //engagement
     $router->get('/email/reminder', ['uses' => 'TransKlinikController@emailReminder']);
 
+    //bayarind
+    $router->get('/bayarind/expired', ['uses' => 'BillingController@expiredBayarind']);
+
     //registration
     // $router->post('/user', 'UserController@store');
     $router->post('/klinik', 'KlinikController@store');
@@ -136,7 +139,11 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
         //transaksi klinik
         $router->get('/transaksi', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@index']);
-        $router->get('/transaksi/queue', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@moveQueue']);
+        $router->get('/transaksi/queue/check', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@checkQueue']);
+        $router->get('/transaksi/queue/move', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@moveQueue']);
+        $router->get('/transaksi/queue/number', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@getNextOrderNumber']);
+        $router->get('/transaksi/switch/check', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@checkSwitch']);
+        $router->get('/transaksi/switch/add', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@addSwitch']);
         $router->post('/transaksi', ['middleware' => 'permission:create-transklinik', 'uses' => 'TransKlinikController@store']);
         $router->get('/transaksi/{id}', ['middleware' => 'permission:read-transklinik', 'uses' => 'TransKlinikController@show']);
         $router->put('/transaksi/{id}', ['middleware' => 'permission:update-transklinik', 'uses' => 'TransKlinikController@update']);
@@ -190,12 +197,14 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->get('/billing/package-active/', ['uses' => 'BillingController@packageActive']);
             $router->get('/billing/package-unpaid/', ['uses' => 'BillingController@packageUnpaid']);
             $router->get('/billing/package/{id}', ['uses' => 'BillingController@packageDetails']);
+            $router->get('/bayarind/failed/{id}', ['uses' => 'BillingController@failedBayarind']);
         });
 
         //paket
         $router->get('/paket', ['uses' => 'PaketController@index']);
         $router->get('/paket/{id}', ['uses' => 'PaketController@show']);
         $router->get('/detailpembayaran/{id}', ['uses' => 'PaketController@detailPembayaran']);
+        $router->get('/detailpembayaranbayarind/{id}', ['uses' => 'PaketController@detailPembayaranBayarind']);
         $router->get('/invoice/{id}', ['uses' => 'PaketController@generatePdfInvoice']);
         $router->get('/cekPaket', ['uses' => 'PaketController@checkPackage']);
 

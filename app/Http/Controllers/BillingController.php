@@ -74,7 +74,8 @@ class BillingController extends Controller
             DB::raw("CONCAT(paket_bln, ' bulan') AS periode_berlaku"),
             DB::raw("CONCAT('Rp. ', FORMAT(amount_disc + paygate.biaya_admin, 0, 'id_ID'), ',-') AS total_pembayaran"),
             DB::raw("DATE_FORMAT(pay_date, '%d/%m/%Y') AS tanggal_bayar"),
-            'billing.status'
+            'billing.status',
+            'url_redirect'
         ])
         ->join('paket', 'billing.paket_id', '=', 'paket.id')
         ->join('paygate', 'billing.pg_id', '=', 'paygate.id')
@@ -270,6 +271,63 @@ class BillingController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'There are no unpaid transactions',
+            ]);
+        }
+    }
+
+     /**
+     * Update the specified resource in storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function expiredBayarind(Request $request)
+    {
+        $expired = Billing::where('pg_id', 1)
+            ->where('expired_pay', '<', Carbon::now())
+            ->where('status', 0)
+            ->get();
+
+        if (count($expired)) {
+            foreach ($expired as $value) {
+                $value->status = 2;
+                $value->save();
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => "Bayarind status changed",
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => "Not found",
+            ]);
+        }
+    }
+
+      /**
+     * Update the specified resource in storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function failedBayarind(Request $request)
+    {
+        $failed = Billing::where('id', $request->id)->get();
+
+        if (count($failed)) {
+            foreach ($failed as $value) {
+                $value->status = 2;
+                $value->save();
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => "Bayarind status changed",
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => "Not found",
             ]);
         }
     }
