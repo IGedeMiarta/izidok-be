@@ -72,7 +72,7 @@ class OperatorController extends Controller
         'message' => 'Klinik sudah memiliki Asisten Dokter'
       ]);
     }
-    
+
     $this->validate($request, [
       'nama' => 'required|string',
       'email' => 'required|email',
@@ -244,6 +244,13 @@ class OperatorController extends Controller
   public function show(Request $request)
   {
     $operator = Operator::find($request->id);
+    if (Auth::user()->id != $operator->created_by) {
+        return response()->json([
+        'status' => false,
+        'message' => "operator not found",
+        'data' => ''
+      ]);
+    }
 
     if (empty($operator)) {
       return response()->json([
