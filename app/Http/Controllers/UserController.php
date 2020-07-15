@@ -36,7 +36,15 @@ class UserController extends Controller
 
     public function show($id = null)
     {
+        if (!is_null($id) && Auth::user()->id != $id) {
+            return response()->json(['status' => false]);
+        }
+
         $user = User::with('klinik')->find($id);
+        if (is_null($user)) {
+            return response()->json(['status' => false]);
+        }
+
         $user->klinik->provinsiDetail;
         $user->klinik->kotaDetail;
         $user->klinik->spesialisasi;
@@ -63,6 +71,10 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
+        if (Auth::user()->id != $request->id) {
+            return response()->json(['status' => false]);
+        }
+
         $this->validate($request, [
             'nama' => 'required|string',
             'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
@@ -334,7 +346,6 @@ class UserController extends Controller
                     return response()->json([
                         'status' => true,
                         'message' => 'forgot password telah dibuat',
-                        'data' => $forgot_password
                     ]);
                 }
             }else{
@@ -385,7 +396,6 @@ class UserController extends Controller
                         return response()->json([
                             'status' => true,
                             'message' => 'forgot password telah dibuat',
-                            'data' => $forgot_password
                         ]);
                     }
                 }

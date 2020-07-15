@@ -63,6 +63,16 @@ class OperatorController extends Controller
 
   public function store(Request $request)
   {
+    $checkOp = self::checkAvailableOp();
+    $data = $checkOp->getData();
+
+    if (!$data->status) {
+      return response()->json([
+        'status' => false,
+        'message' => 'Klinik sudah memiliki Asisten Dokter'
+      ]);
+    }
+
     $this->validate($request, [
       'nama' => 'required|string',
       'email' => 'required|email',
@@ -234,6 +244,13 @@ class OperatorController extends Controller
   public function show(Request $request)
   {
     $operator = Operator::find($request->id);
+    if (Auth::user()->id != $operator->created_by) {
+        return response()->json([
+        'status' => false,
+        'message' => "operator not found",
+        'data' => ''
+      ]);
+    }
 
     if (empty($operator)) {
       return response()->json([
@@ -284,8 +301,6 @@ class OperatorController extends Controller
     } else {
       $user = User::find($operator->user_id);
       $user->nama = $request->nama;
-      $user->email = $request->email;
-      $user->nomor_telp = $request->nomor_telp;
       $user->save();
       $operator->nama = $request->nama;
       $operator->save();
