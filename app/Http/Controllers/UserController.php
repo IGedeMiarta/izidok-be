@@ -44,7 +44,7 @@ class UserController extends Controller
         if (is_null($user)) {
             return response()->json(['status' => false]);
         }
-        
+
         $user->klinik->provinsiDetail;
         $user->klinik->kotaDetail;
         $user->klinik->spesialisasi;
@@ -71,6 +71,10 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
+        if (Auth::user()->id != $request->id) {
+            return response()->json(['status' => false]);
+        }
+
         $this->validate($request, [
             'nama' => 'required|string',
             'nomor_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
