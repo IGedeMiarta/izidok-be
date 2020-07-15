@@ -211,7 +211,11 @@ class TransKlinikController extends Controller
     if (!$trans_klinik) {
       return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
     } else {
-      return response()->json(['status' => true, 'data' => $trans_klinik]);
+      if (Auth::user()->klinik_id == $trans_klinik->klinik_id) {
+          return response()->json(['status' => true, 'data' => $trans_klinik]);
+      }else{
+          return response()->json(['status' => false, 'message' => 'Rawat Jalan not found...']);
+      }
     }
   }
 
