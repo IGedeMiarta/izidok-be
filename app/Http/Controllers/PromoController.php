@@ -56,6 +56,10 @@ class PromoController extends Controller
                     ->where('klinik_id',$klinikId)
                     ->where('status','!=',3)
                     ->exists();
+                // special case untuk promo IZIDOK75
+                // bisa di gunakan berkali-kali
+                if ($request->kode == 'IZIDOK75') $bill = false;
+                
                 if ($bill) {
                     $status = false;
                     $message = 'Kode Promo sudah digunakan.';
