@@ -58,7 +58,7 @@ class PromoController extends Controller
                     ->exists();
                 // special case untuk promo IZIDOK75
                 // bisa di gunakan berkali-kali
-                if ($request->kode == 'IZIDOK75') $bill = false;
+                if (strtolower($request->kode) == 'izidok75') $bill = false;
                 
                 if ($bill) {
                     $status = false;
